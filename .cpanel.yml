@@ -1,0 +1,4 @@
+---
+isolation: per-user
+executors:
+  - /usr/bin/node server.js
