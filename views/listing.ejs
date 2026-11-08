@@ -1,0 +1,31 @@
+<%- include('partials/head') %>
+<section class="section">
+  <div class="container listing-detail">
+    <div>
+      <p class="crumb"><a href="/">Trang chủ</a> › <a href="/san-pham-bds">Sản phẩm BĐS</a></p>
+      <div class="gallery">
+        <img id="mainImg" src="<%= item.images[0] || '/img/placeholder.svg' %>" alt="<%= item.title %>">
+        <% if (item.images.length > 1) { %>
+          <div class="thumbs"><% item.images.forEach(function (u) { %><button type="button" data-src="<%= u %>"><img src="<%= u %>" alt="" loading="lazy"></button><% }) %></div>
+        <% } %>
+      </div>
+      <h1><%= item.title %></h1>
+      <div class="prose"><%- md(item.description) %></div>
+    </div>
+    <aside class="side-box">
+      <p class="price big"><%= item.price || 'Liên hệ' %></p>
+      <% if (item.status === 'da-ban') { %><span class="badge badge-dark">Đã bán</span><% } %>
+      <ul class="facts">
+        <li><span>Loại hình</span><b><%= item.type %></b></li>
+        <li><span>Diện tích</span><b><%= item.area %> m²</b></li>
+        <% if (item.bedrooms) { %><li><span>Phòng ngủ</span><b><%= item.bedrooms %></b></li><% } %>
+        <% if (item.legal) { %><li><span>Pháp lý</span><b><%= item.legal %></b></li><% } %>
+        <li><span>Hỗ trợ vay</span><b><%= item.bankSupport ? 'Có' : 'Liên hệ' %></b></li>
+        <li><span>Vị trí</span><b><%= item.address %></b></li>
+      </ul>
+      <a class="btn btn-gold block" href="/lien-he?ref=<%= encodeURIComponent(item.title) %>">Đặt lịch xem nhà</a>
+      <% if (s.phone) { %><a class="btn btn-ghost-dark block" href="tel:<%= s.phone.replace(/\s/g, '') %>">📞 <%= s.phone %></a><% } %>
+    </aside>
+  </div>
+</section>
+<%- include('partials/foot') %>

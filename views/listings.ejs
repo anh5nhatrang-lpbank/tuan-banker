@@ -1,0 +1,19 @@
+<%- include('partials/head') %>
+<section class="page-head">
+  <div class="container">
+    <p class="eyebrow">🏠 Sản phẩm</p>
+    <h1>Bất động sản đang bán</h1>
+    <p class="lead">Sản phẩm thứ cấp đã kiểm tra pháp lý, hỗ trợ tư vấn phương án vay ngân hàng.</p>
+    <div class="filters">
+      <a href="/san-pham-bds" class="<%= !type ? 'on' : '' %>">Tất cả</a>
+      <% listingTypes.forEach(function (t) { %><a href="/san-pham-bds?loai=<%= encodeURIComponent(t) %>" class="<%= type === t ? 'on' : '' %>"><%= t %></a><% }) %>
+    </div>
+  </div>
+</section>
+<section class="section"><div class="container">
+  <% if (!items.length) { %><p class="empty">Chưa có sản phẩm trong mục này.</p><% } else { %>
+    <div class="grid"><% items.forEach(function (l) { %><%- include('partials/listing_card', { l: l }) %><% }) %></div>
+    <%- include('partials/pager', { base: '/san-pham-bds', extra: type ? '&loai=' + encodeURIComponent(type) : '' }) %>
+  <% } %>
+</div></section>
+<%- include('partials/foot') %>

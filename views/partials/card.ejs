@@ -1,0 +1,9 @@
+<article class="card post-card">
+  <a href="/bai-viet/<%= p.slug %>" class="thumb"><img src="<%= imgOf(p) %>" alt="" loading="lazy"></a>
+  <div class="card-body">
+    <a class="tag" href="/<%= p.category %>"><%= cats[p.category] ? cats[p.category].short : '' %></a>
+    <h3><a href="/bai-viet/<%= p.slug %>"><%= p.title %></a></h3>
+    <p><%= p.excerpt %></p>
+    <time class="muted"><%= fmtDate(p.createdAt) %></time>
+  </div>
+</article>

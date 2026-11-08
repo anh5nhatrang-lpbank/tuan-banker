@@ -1,0 +1,22 @@
+<%- include('_head') %>
+<h1><%= post.id ? 'Sửa bài viết' : 'Bài viết mới' %></h1>
+<form class="form card" method="post" action="/admin/posts/save" enctype="multipart/form-data">
+  <input type="hidden" name="id" value="<%= post.id %>">
+  <label>Tiêu đề<input name="title" value="<%= post.title %>" maxlength="200" required></label>
+  <label>Chuyên mục
+    <select name="category">
+      <% Object.values(cats).forEach(function (c) { %><option value="<%= c.key %>" <%= post.category === c.key ? 'selected' : '' %>><%= c.name %></option><% }) %>
+    </select>
+  </label>
+  <label>Mô tả ngắn (hiển thị ở danh sách, tối đa 300 ký tự)<textarea name="excerpt" rows="2" maxlength="300"><%= post.excerpt %></textarea></label>
+  <label>Nội dung <small class="muted">(hỗ trợ Markdown: ## Tiêu đề, **đậm**, - danh sách, [chữ](link))</small>
+    <textarea name="content" rows="18" required><%= post.content %></textarea>
+  </label>
+  <label>Ảnh đại diện (JPG/PNG/WebP, tối đa 5MB)
+    <% if (post.image) { %><img class="preview" src="<%= post.image %>" alt=""><label class="inline"><input type="checkbox" name="removeImage"> Xóa ảnh hiện tại</label><% } %>
+    <input type="file" name="image" accept="image/jpeg,image/png,image/webp">
+  </label>
+  <label class="inline"><input type="checkbox" name="published" <%= post.published ? 'checked' : '' %>> Đăng công khai (bỏ chọn để lưu nháp)</label>
+  <div class="form-actions"><button class="btn btn-primary">Lưu bài viết</button><a class="btn btn-ghost-dark" href="/admin/posts">Hủy</a></div>
+</form>
+<%- include('_foot') %>

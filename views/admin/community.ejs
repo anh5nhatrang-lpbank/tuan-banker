@@ -1,0 +1,16 @@
+<%- include('_head') %>
+<h1>Cộng đồng - Hỏi đáp</h1>
+<% if (!items.length) { %><p class="empty">Chưa có câu hỏi.</p><% } %>
+<% items.forEach(function (q) { %>
+  <form class="card qa-admin" method="post" action="/admin/community/<%= q.id %>">
+    <p><b><%= q.name %></b> · <span class="muted"><%= fmtDate(q.createdAt) %></span> · <span class="<%= q.approved ? 'ok' : 'warn' %>"><%= q.approved ? 'Đã hiển thị' : 'Chờ duyệt' %></span></p>
+    <p><%= q.message %></p>
+    <label>Trả lời<textarea name="answer" rows="2" maxlength="2000"><%= q.answer %></textarea></label>
+    <div class="form-actions">
+      <button class="btn btn-sm btn-primary" name="action" value="approve">Duyệt &amp; lưu</button>
+      <% if (q.approved) { %><button class="btn btn-sm btn-ghost-dark" name="action" value="hide">Ẩn</button><% } %>
+      <button class="btn btn-sm btn-danger" name="action" value="delete" data-confirm="Xóa câu hỏi này?">Xóa</button>
+    </div>
+  </form>
+<% }) %>
+<%- include('_foot') %>

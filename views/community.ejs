@@ -1,0 +1,33 @@
+<%- include('partials/head') %>
+<section class="page-head">
+  <div class="container">
+    <p class="eyebrow">🤝 Kết nối</p>
+    <h1>Cộng đồng Tuấn Banker</h1>
+    <p class="lead">Nơi trao đổi về vay vốn, bất động sản và công nghệ. Câu hỏi được duyệt trước khi hiển thị.</p>
+    <div class="hero-cta">
+      <% if (s.zaloGroup) { %><a class="btn btn-gold" href="<%= s.zaloGroup %>" target="_blank" rel="noopener">Vào nhóm Zalo</a><% } %>
+      <% if (s.facebookGroup) { %><a class="btn btn-ghost" href="<%= s.facebookGroup %>" target="_blank" rel="noopener">Nhóm Facebook</a><% } %>
+    </div>
+  </div>
+</section>
+<section class="section"><div class="container two-col">
+  <div>
+    <h2>Hỏi đáp</h2>
+    <% questions.forEach(function (q) { %>
+      <div class="qa card">
+        <p><%= q.message %></p>
+        <small class="muted"><b><%= q.name %></b> · <%= fmtDate(q.createdAt) %></small>
+        <% if (q.answer) { %><div class="answer"><b>Trả lời:</b> <%= q.answer %></div><% } %>
+      </div>
+    <% }) %>
+  </div>
+  <form class="form card" method="post" action="/cong-dong">
+    <h2>Đặt câu hỏi</h2>
+    <label>Tên của bạn<input name="name" maxlength="60" required></label>
+    <label>Nội dung câu hỏi<textarea name="message" rows="5" minlength="10" maxlength="1000" required></textarea></label>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn btn-primary">Gửi câu hỏi</button>
+    <p class="muted small">Không nên đăng số điện thoại, số tài khoản hay thông tin cá nhân ở đây.</p>
+  </form>
+</div></section>
+<%- include('partials/foot') %>

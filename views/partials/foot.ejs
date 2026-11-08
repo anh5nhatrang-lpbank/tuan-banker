@@ -1,0 +1,37 @@
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h3><%= s.siteName %></h3>
+      <p><%= s.tagline %></p>
+      <p class="muted"><%= s.address %></p>
+    </div>
+    <div>
+      <h4>Chuyên mục</h4>
+      <% Object.values(cats).forEach(function (c) { %><a href="/<%= c.key %>"><%= c.name %></a><% }) %>
+      <a href="/san-pham-bds">Sản phẩm BĐS</a>
+      <a href="/cong-dong">Cộng đồng</a>
+    </div>
+    <div>
+      <h4>Liên hệ</h4>
+      <% if (s.phone) { %><a href="tel:<%= s.phone.replace(/\s/g, '') %>">📞 <%= s.phone %></a><% } %>
+      <% if (s.zalo) { %><a href="https://zalo.me/<%= s.zalo %>" rel="noopener" target="_blank">💬 Zalo</a><% } %>
+      <% if (s.email) { %><a href="mailto:<%= s.email %>">✉️ <%= s.email %></a><% } %>
+      <% if (s.facebook) { %><a href="<%= s.facebook %>" rel="noopener" target="_blank">Facebook</a><% } %>
+      <% if (s.tiktok) { %><a href="<%= s.tiktok %>" rel="noopener" target="_blank">TikTok</a><% } %>
+      <% if (s.youtube) { %><a href="<%= s.youtube %>" rel="noopener" target="_blank">YouTube</a><% } %>
+    </div>
+  </div>
+  <div class="container disclaimer"><%= s.disclaimer %></div>
+  <div class="container copy">© <%= new Date().getFullYear() %> <%= s.siteName %>. <a href="/admin">Quản trị</a></div>
+</footer>
+<% if (s.phone) { %>
+<div class="float-contact">
+  <% if (s.zalo) { %><a class="fc-zalo" href="https://zalo.me/<%= s.zalo %>" target="_blank" rel="noopener" aria-label="Chat Zalo">Zalo</a><% } %>
+  <a class="fc-call" href="tel:<%= s.phone.replace(/\s/g, '') %>" aria-label="Gọi điện">📞</a>
+</div>
+<% } %>
+<script src="/js/main.js"></script>
+<% if (typeof calc !== 'undefined' && calc) { %><script src="/js/calc.js"></script><% } %>
+</body>
+</html>

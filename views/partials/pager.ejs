@@ -1,0 +1,7 @@
+<% if (pages > 1) { %>
+<nav class="pager" aria-label="Phân trang">
+  <% for (var i = 1; i <= pages; i++) { %>
+    <a href="<%= base %>?page=<%= i %><%= extra || '' %>" class="<%= i === page ? 'on' : '' %>"><%= i %></a>
+  <% } %>
+</nav>
+<% } %>

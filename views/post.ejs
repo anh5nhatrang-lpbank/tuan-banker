@@ -1,0 +1,22 @@
+<%- include('partials/head') %>
+<article class="section">
+  <div class="container article">
+    <p class="crumb"><a href="/">Trang chủ</a> › <a href="/<%= post.category %>"><%= cats[post.category].name %></a></p>
+    <h1><%= post.title %></h1>
+    <p class="muted"><%= fmtDate(post.createdAt) %> · <%= post.views %> lượt xem</p>
+    <% if (post.image) { %><img class="cover" src="<%= post.image %>" alt=""><% } %>
+    <div class="prose"><%- md(post.content) %></div>
+    <div class="note"><%= s.disclaimer %></div>
+    <div class="cta-box">
+      <b>Cần tư vấn trực tiếp?</b>
+      <a class="btn btn-gold" href="/lien-he?ref=<%= encodeURIComponent(post.title) %>">Liên hệ ngay</a>
+    </div>
+  </div>
+</article>
+<% if (related.length) { %>
+<section class="section alt"><div class="container">
+  <div class="section-head"><h2>Bài viết liên quan</h2></div>
+  <div class="grid"><% related.forEach(function (p) { %><%- include('partials/card', { p: p }) %><% }) %></div>
+</div></section>
+<% } %>
+<%- include('partials/foot') %>

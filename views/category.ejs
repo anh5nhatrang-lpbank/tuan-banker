@@ -1,0 +1,26 @@
+<%- include('partials/head') %>
+<section class="page-head">
+  <div class="container">
+    <p class="eyebrow"><%= cat.icon %> Chuyên mục</p>
+    <h1><%= cat.name %></h1>
+    <p class="lead"><%= cat.desc %></p>
+    <form class="search" method="get" action="/<%= cat.key %>" role="search">
+      <input type="search" name="q" value="<%= q %>" placeholder="Tìm bài viết..." aria-label="Tìm bài viết">
+      <button class="btn btn-gold btn-sm">Tìm</button>
+    </form>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <% if (cat.key === 'tai-chinh-ngan-hang' && page === 1 && !q) { %>
+      <div class="narrow" style="margin-bottom:2rem"><%- include('partials/calc') %></div>
+    <% } %>
+    <% if (!items.length) { %>
+      <p class="empty">Chưa có bài viết phù hợp.</p>
+    <% } else { %>
+      <div class="grid"><% items.forEach(function (p) { %><%- include('partials/card', { p: p }) %><% }) %></div>
+      <%- include('partials/pager', { base: '/' + cat.key, extra: q ? '&q=' + encodeURIComponent(q) : '' }) %>
+    <% } %>
+  </div>
+</section>
+<%- include('partials/foot', { calc: cat.key === 'tai-chinh-ngan-hang' }) %>

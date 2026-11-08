@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title && title !== s.siteName ? title + ' | ' + s.siteName : s.siteName + ' - ' + s.tagline %></title>
+  <meta name="description" content="<%= desc || s.heroSub %>">
+  <meta property="og:title" content="<%= title || s.siteName %>">
+  <meta property="og:description" content="<%= desc || s.heroSub %>">
+  <meta property="og:type" content="website">
+  <% if (ogImage && siteUrl) { %><meta property="og:image" content="<%= siteUrl + ogImage %>"><% } %>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="/" aria-label="<%= s.siteName %>">
+      <img src="/img/favicon.svg" alt="" width="36" height="36">
+      <span><b><%= s.siteName %></b><small><%= s.tagline %></small></span>
+    </a>
+    <button class="menu-btn" aria-label="Mở menu" aria-expanded="false" id="menuBtn">☰</button>
+    <nav id="mainNav" aria-label="Menu chính">
+      <a href="/" class="<%= path === '/' ? 'on' : '' %>">Trang chủ</a>
+      <% Object.values(cats).forEach(function (c) { %>
+        <a href="/<%= c.key %>" class="<%= path.indexOf('/' + c.key) === 0 ? 'on' : '' %>"><%= c.short %></a>
+      <% }) %>
+      <a href="/san-pham-bds" class="<%= path.indexOf('/san-pham-bds') === 0 ? 'on' : '' %>">Sản phẩm BĐS</a>
+      <a href="/cong-dong" class="<%= path === '/cong-dong' ? 'on' : '' %>">Cộng đồng</a>
+      <a href="/gioi-thieu" class="<%= path === '/gioi-thieu' ? 'on' : '' %>">Giới thiệu</a>
+      <a href="/lien-he" class="btn btn-gold btn-sm">Liên hệ</a>
+    </nav>
+  </div>
+</header>
+<main>
+<% if (flash) { %><div class="container"><div class="alert alert-<%= flash.type %>" role="status"><%= flash.msg %></div></div><% } %>

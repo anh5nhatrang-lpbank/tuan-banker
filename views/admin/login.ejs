@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Đăng nhập quản trị</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin login-page">
+  <form class="form card login-box" method="post" action="/admin/login">
+    <h1>🔐 Đăng nhập</h1>
+    <% if (flash) { %><div class="alert alert-<%= flash.type %>"><%= flash.msg %></div><% } %>
+    <label>Tài khoản<input name="user" autocomplete="username" required autofocus></label>
+    <label>Mật khẩu<input name="password" type="password" autocomplete="current-password" required></label>
+    <button class="btn btn-primary block">Đăng nhập</button>
+    <a href="/" class="muted small">← Về website</a>
+  </form>
+</body>
+</html>

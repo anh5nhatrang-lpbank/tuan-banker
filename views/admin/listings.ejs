@@ -1,0 +1,19 @@
+<%- include('_head') %>
+<div class="admin-title"><h1>Sản phẩm BĐS</h1><a class="btn btn-gold" href="/admin/listings/new">+ Thêm sản phẩm</a></div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Tiêu đề</th><th>Giá</th><th>Loại</th><th>Trạng thái</th><th></th></tr></thead>
+  <tbody>
+  <% items.forEach(function (l) { %>
+    <tr>
+      <td><a href="/admin/listings/<%= l.id %>/edit"><%= l.title %></a><%= l.featured ? ' ⭐' : '' %></td>
+      <td><%= l.price %></td><td><%= l.type %></td>
+      <td><%= l.status === 'da-ban' ? 'Đã bán' : 'Đang bán' %></td>
+      <td class="actions">
+        <a class="btn btn-sm btn-ghost-dark" href="/admin/listings/<%= l.id %>/edit">Sửa</a>
+        <form method="post" action="/admin/listings/<%= l.id %>/delete" data-confirm="Xóa sản phẩm này?"><button class="btn btn-sm btn-danger">Xóa</button></form>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table></div>
+<%- include('_foot') %>

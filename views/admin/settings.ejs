@@ -1,0 +1,22 @@
+<%- include('_head') %>
+<h1>Cài đặt website</h1>
+<%
+  var labels = {
+    siteName: 'Tên website', tagline: 'Khẩu hiệu', heroTitle: 'Tiêu đề trang chủ', heroSub: 'Mô tả trang chủ',
+    phone: 'Số điện thoại', zalo: 'Số Zalo (không dấu cách)', email: 'Email', address: 'Khu vực / địa chỉ',
+    facebook: 'Link Facebook', tiktok: 'Link TikTok', youtube: 'Link YouTube',
+    zaloGroup: 'Link nhóm Zalo cộng đồng', facebookGroup: 'Link nhóm Facebook cộng đồng',
+    aboutTitle: 'Tiêu đề trang Giới thiệu', aboutText: 'Nội dung Giới thiệu (Markdown)', disclaimer: 'Tuyên bố miễn trừ trách nhiệm (chân trang)'
+  };
+  var long = ['heroSub', 'aboutText', 'disclaimer'];
+%>
+<form class="form card" method="post" action="/admin/settings">
+  <% keys.forEach(function (k) { %>
+    <label><%= labels[k] || k %>
+      <% if (long.indexOf(k) >= 0) { %><textarea name="<%= k %>" rows="<%= k === 'aboutText' ? 8 : 3 %>"><%= s[k] %></textarea>
+      <% } else { %><input name="<%= k %>" value="<%= s[k] %>"><% } %>
+    </label>
+  <% }) %>
+  <div class="form-actions"><button class="btn btn-primary">Lưu cài đặt</button></div>
+</form>
+<%- include('_foot') %>

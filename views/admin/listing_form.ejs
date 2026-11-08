@@ -1,0 +1,36 @@
+<%- include('_head') %>
+<h1><%= item.id ? 'Sửa sản phẩm' : 'Thêm sản phẩm' %></h1>
+<form class="form card" method="post" action="/admin/listings/save" enctype="multipart/form-data">
+  <input type="hidden" name="id" value="<%= item.id %>">
+  <label>Tiêu đề<input name="title" value="<%= item.title %>" maxlength="200" required></label>
+  <div class="row">
+    <label>Loại hình
+      <select name="type"><% listingTypes.forEach(function (t) { %><option <%= item.type === t ? 'selected' : '' %>><%= t %></option><% }) %></select>
+    </label>
+    <label>Giá (ví dụ: 2,8 tỷ)<input name="price" value="<%= item.price %>" maxlength="40"></label>
+  </div>
+  <div class="row">
+    <label>Diện tích (m²)<input name="area" type="number" step="0.1" min="0" value="<%= item.area %>"></label>
+    <label>Số phòng ngủ<input name="bedrooms" type="number" min="0" value="<%= item.bedrooms %>"></label>
+    <label>Pháp lý<input name="legal" value="<%= item.legal %>" maxlength="100" placeholder="Sổ hồng riêng"></label>
+  </div>
+  <label>Địa chỉ<input name="address" value="<%= item.address %>" maxlength="200"></label>
+  <label>Mô tả (Markdown)<textarea name="description" rows="10"><%= item.description %></textarea></label>
+  <% if (item.images.length) { %>
+    <div class="img-grid">
+      <% item.images.forEach(function (u) { %>
+        <label class="inline"><img class="preview" src="<%= u %>" alt=""><input type="checkbox" name="removeImg" value="<%= u %>"> Xóa</label>
+      <% }) %>
+    </div>
+  <% } %>
+  <label>Thêm ảnh (tối đa 6 ảnh mỗi lần, mỗi ảnh ≤ 5MB)<input type="file" name="images" multiple accept="image/jpeg,image/png,image/webp"></label>
+  <div class="row">
+    <label>Trạng thái
+      <select name="status"><option value="dang-ban" <%= item.status === 'dang-ban' ? 'selected' : '' %>>Đang bán</option><option value="da-ban" <%= item.status === 'da-ban' ? 'selected' : '' %>>Đã bán</option></select>
+    </label>
+    <label class="inline"><input type="checkbox" name="bankSupport" <%= item.bankSupport ? 'checked' : '' %>> Hỗ trợ vay ngân hàng</label>
+    <label class="inline"><input type="checkbox" name="featured" <%= item.featured ? 'checked' : '' %>> Hiện ở trang chủ</label>
+  </div>
+  <div class="form-actions"><button class="btn btn-primary">Lưu sản phẩm</button><a class="btn btn-ghost-dark" href="/admin/listings">Hủy</a></div>
+</form>
+<%- include('_foot') %>

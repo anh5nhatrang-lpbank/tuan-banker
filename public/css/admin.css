@@ -1,0 +1,31 @@
+body.admin { background: #f1f4f8; }
+.admin-bar { background: var(--navy); color: #fff; }
+.admin-nav { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; min-height: 56px; padding: .4rem 0; }
+.admin-nav nav { display: flex; gap: .2rem; flex-wrap: wrap; flex: 1; }
+.admin-nav a { color: #dbe6f3; padding: .4rem .7rem; border-radius: 8px; font-size: .92rem; }
+.admin-nav a:hover { background: rgba(255,255,255,.12); color: #fff; }
+.admin-nav .brand-sm { font-weight: 700; color: var(--gold); }
+.admin-nav .btn-ghost-dark { color: #fff; border-color: rgba(255,255,255,.4); }
+.admin-main { padding: 1.5rem 0 4rem; }
+.admin-title { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; margin: 1rem 0 1.5rem; }
+.stat { padding: 1.2rem; text-align: center; color: var(--ink); }
+.stat b { display: block; font-size: 2.2rem; color: var(--navy); }
+.stat span { color: var(--muted); }
+.quick { display: flex; gap: .8rem; flex-wrap: wrap; }
+.table-wrap { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 560px; }
+th, td { padding: .75rem 1rem; text-align: left; border-bottom: 1px solid var(--line); font-size: .93rem; }
+th { background: var(--alt); color: var(--muted); font-weight: 600; }
+td.actions { display: flex; gap: .4rem; justify-content: flex-end; }
+td.actions form { margin: 0; }
+.form-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; align-items: end; }
+.preview { max-height: 120px; border-radius: 8px; margin: .3rem 0; }
+.img-grid { display: flex; gap: 1rem; flex-wrap: wrap; }
+.qa-admin, .msg { padding: 1.1rem 1.3rem; margin-bottom: 1rem; display: grid; gap: .5rem; }
+.msg.unread { border-left: 4px solid var(--gold); }
+.ok { color: var(--ok); }
+.warn { color: #b7791f; }
+.login-page { display: grid; place-items: center; min-height: 100vh; padding: 1rem; }
+.login-box { width: min(380px, 100%); }

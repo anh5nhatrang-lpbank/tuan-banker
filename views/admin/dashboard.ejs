@@ -1,0 +1,13 @@
+<%- include('_head') %>
+<h1>Tổng quan</h1>
+<div class="stat-grid">
+  <a class="stat card" href="/admin/posts"><b><%= stats.posts %></b><span>Bài viết</span></a>
+  <a class="stat card" href="/admin/listings"><b><%= stats.listings %></b><span>Sản phẩm BĐS</span></a>
+  <a class="stat card" href="/admin/community"><b><%= stats.pending %></b><span>Câu hỏi chờ duyệt</span></a>
+  <a class="stat card" href="/admin/messages"><b><%= stats.unread %></b><span>Tin nhắn mới</span></a>
+</div>
+<div class="quick">
+  <a class="btn btn-primary" href="/admin/posts/new">+ Viết bài mới</a>
+  <a class="btn btn-gold" href="/admin/listings/new">+ Thêm sản phẩm BĐS</a>
+</div>
+<%- include('_foot') %>

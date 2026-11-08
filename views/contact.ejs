@@ -1,0 +1,26 @@
+<%- include('partials/head') %>
+<section class="page-head"><div class="container">
+  <p class="eyebrow">Liên hệ</p>
+  <h1>Nhận tư vấn miễn phí</h1>
+  <p class="lead">Để lại thông tin, tôi sẽ gọi lại cho bạn trong thời gian sớm nhất.</p>
+</div></section>
+<section class="section"><div class="container two-col">
+  <form class="form card" method="post" action="/lien-he">
+    <label>Họ và tên<input name="name" maxlength="60" required></label>
+    <label>Số điện thoại<input name="phone" type="tel" maxlength="20" required inputmode="tel"></label>
+    <label>Nội dung cần tư vấn<textarea name="message" rows="5" maxlength="1500"><%= ref ? 'Tôi quan tâm: ' + ref : '' %></textarea></label>
+    <input type="hidden" name="ref" value="<%= ref %>">
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn btn-primary">Gửi thông tin</button>
+  </form>
+  <aside class="side-box">
+    <h3>Thông tin liên hệ</h3>
+    <ul class="facts">
+      <% if (s.phone) { %><li><span>Điện thoại</span><b><a href="tel:<%= s.phone.replace(/\s/g, '') %>"><%= s.phone %></a></b></li><% } %>
+      <% if (s.zalo) { %><li><span>Zalo</span><b><a href="https://zalo.me/<%= s.zalo %>" target="_blank" rel="noopener">Nhắn Zalo</a></b></li><% } %>
+      <% if (s.email) { %><li><span>Email</span><b><a href="mailto:<%= s.email %>"><%= s.email %></a></b></li><% } %>
+      <li><span>Khu vực</span><b><%= s.address %></b></li>
+    </ul>
+  </aside>
+</div></section>
+<%- include('partials/foot') %>

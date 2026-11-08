@@ -1,0 +1,13 @@
+<article class="card listing-card">
+  <a href="/san-pham-bds/<%= l.slug %>" class="thumb">
+    <img src="<%= l.images[0] || '/img/placeholder.svg' %>" alt="" loading="lazy">
+    <% if (l.status === 'da-ban') { %><span class="badge badge-dark">Đã bán</span><% } else if (l.bankSupport) { %><span class="badge">Hỗ trợ vay</span><% } %>
+  </a>
+  <div class="card-body">
+    <span class="tag"><%= l.type %></span>
+    <h3><a href="/san-pham-bds/<%= l.slug %>"><%= l.title %></a></h3>
+    <p class="price"><%= l.price || 'Liên hệ' %></p>
+    <p class="muted">📍 <%= l.address %></p>
+    <p class="meta"><span><%= l.area %> m²</span><% if (l.bedrooms) { %><span><%= l.bedrooms %> phòng ngủ</span><% } %><% if (l.legal) { %><span><%= l.legal %></span><% } %></p>
+  </div>
+</article>

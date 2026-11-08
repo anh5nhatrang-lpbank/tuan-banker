@@ -1,0 +1,80 @@
+<%- include('partials/head') %>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <p class="eyebrow"><%= s.tagline %></p>
+      <h1><%= s.heroTitle %></h1>
+      <p class="lead"><%= s.heroSub %></p>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="/lien-he">Nhận tư vấn miễn phí</a>
+        <a class="btn btn-ghost" href="/san-pham-bds">Xem bất động sản</a>
+      </div>
+    </div>
+    <div class="hero-card" aria-hidden="true">
+      <div class="hc-row"><span>🏦</span><div><b>Tài chính - Ngân hàng</b><small>Vay vốn, lãi suất, tiết kiệm</small></div></div>
+      <div class="hc-row"><span>🏠</span><div><b>Bất động sản thứ cấp</b><small>Pháp lý rõ, nhận nhà nhanh</small></div></div>
+      <div class="hc-row"><span>🤖</span><div><b>Công nghệ &amp; AI</b><small>Làm nghề thông minh hơn</small></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="pillars">
+      <% Object.values(cats).forEach(function (c) { %>
+        <a class="pillar" href="/<%= c.key %>">
+          <span class="pi"><%= c.icon %></span>
+          <h3><%= c.name %></h3>
+          <p><%= c.desc %></p>
+          <span class="more">Xem chuyên mục →</span>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<% if (featured.length) { %>
+<section class="section alt">
+  <div class="container">
+    <div class="section-head"><h2>Bất động sản nổi bật</h2><a href="/san-pham-bds">Xem tất cả →</a></div>
+    <div class="grid">
+      <% featured.forEach(function (l) { %><%- include('partials/listing_card', { l: l }) %><% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2>Bài viết mới nhất</h2></div>
+    <div class="grid">
+      <% latest.forEach(function (p) { %><%- include('partials/card', { p: p }) %><% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="container narrow"><%- include('partials/calc') %></div>
+</section>
+
+<section class="section">
+  <div class="container community-cta">
+    <div>
+      <h2>Kết nối cộng đồng</h2>
+      <p>Đặt câu hỏi về vay vốn, bất động sản, công nghệ. Cùng trao đổi với những người quan tâm đến tài chính và an cư.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/cong-dong">Đặt câu hỏi</a>
+        <% if (s.zaloGroup) { %><a class="btn btn-ghost-dark" href="<%= s.zaloGroup %>" target="_blank" rel="noopener">Vào nhóm Zalo</a><% } %>
+        <% if (s.facebookGroup) { %><a class="btn btn-ghost-dark" href="<%= s.facebookGroup %>" target="_blank" rel="noopener">Nhóm Facebook</a><% } %>
+      </div>
+    </div>
+    <div class="qa-mini">
+      <% questions.forEach(function (q) { %>
+        <blockquote><p><%= q.message %></p><cite>- <%= q.name %></cite></blockquote>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/foot', { calc: true }) %>

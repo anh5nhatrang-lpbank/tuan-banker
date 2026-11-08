@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title><%= title %> | Quản trị</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin">
+<header class="admin-bar">
+  <div class="container admin-nav">
+    <a class="brand-sm" href="/admin">⚙️ Quản trị</a>
+    <nav>
+      <a href="/admin/posts">Bài viết</a>
+      <a href="/admin/listings">Sản phẩm BĐS</a>
+      <a href="/admin/community">Cộng đồng</a>
+      <a href="/admin/messages">Liên hệ</a>
+      <a href="/admin/settings">Cài đặt</a>
+      <a href="/" target="_blank">Xem website ↗</a>
+    </nav>
+    <form method="post" action="/admin/logout"><button class="btn btn-sm btn-ghost-dark">Đăng xuất</button></form>
+  </div>
+</header>
+<main class="container admin-main">
+<% if (flash) { %><div class="alert alert-<%= flash.type %>"><%= flash.msg %></div><% } %>
