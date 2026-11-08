@@ -1,4 +1,4 @@
-body.admin { background: #f1f4f8; }
+body.admin { background: #f5efe8; }
 .admin-bar { background: var(--navy); color: #fff; }
 .admin-nav { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; min-height: 56px; padding: .4rem 0; }
 .admin-nav nav { display: flex; gap: .2rem; flex-wrap: wrap; flex: 1; }
