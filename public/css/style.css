@@ -197,3 +197,16 @@ textarea { resize: vertical; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 .site-footer .muted { color: #d9c4b0; }
+
+/* Phóng to ảnh (lightbox) */
+.gallery > img.zoomable { cursor: zoom-in; }
+body.lb-open { overflow: hidden; }
+.lb { position: fixed; inset: 0; z-index: 1000; background: rgba(20, 12, 8, .92); display: none; align-items: center; justify-content: center; padding: 3.5rem 1rem 4.5rem; }
+.lb.open { display: flex; }
+.lb-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; }
+.lb-bar { position: absolute; left: 0; right: 0; bottom: 0; display: flex; gap: .6rem; justify-content: center; align-items: center; flex-wrap: wrap; padding: .8rem 1rem; color: #fff; }
+.lb-count { opacity: .8; font-size: .9rem; margin-right: .4rem; }
+.lb-btn { background: var(--gold); color: var(--ink); border: 0; border-radius: 999px; padding: .5rem 1rem; font: inherit; font-weight: 600; font-size: .9rem; cursor: pointer; text-decoration: none; }
+.lb-close { position: absolute; top: .8rem; right: .8rem; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(255,255,255,.15); color: #fff; font-size: 1.1rem; cursor: pointer; }
+.lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 64px; border: 0; background: rgba(255,255,255,.15); color: #fff; font-size: 2rem; cursor: pointer; border-radius: 8px; }
+.lb-prev { left: .6rem; } .lb-next { right: .6rem; }
