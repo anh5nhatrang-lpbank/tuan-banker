@@ -20,7 +20,7 @@
     </div>
     <label>Địa chỉ / khu vực<input name="address" maxlength="200" required></label>
     <label>Mô tả chi tiết (vị trí, kết cấu, nội thất, lý do bán...)<textarea name="description" rows="8" minlength="20" maxlength="5000" required></textarea></label>
-    <label>Hình ảnh (tối đa 6 ảnh JPG/PNG/WebP, mỗi ảnh ≤ 5MB)<input type="file" name="images" id="subImages" multiple accept="image/jpeg,image/png,image/webp"></label>
+    <label>Hình ảnh (tối đa 6 ảnh JPG/PNG/WebP, tự nén còn khoảng 1,5MB mỗi ảnh)<input type="file" name="images" id="subImages" data-compress multiple accept="image/jpeg,image/png,image/webp"></label>
     <div class="img-grid" id="subPreview"></div>
     <label class="inline"><input type="checkbox" name="bankSupport"> Có thể vay ngân hàng</label>
     <hr>
@@ -33,4 +33,4 @@
     <div class="form-actions"><button class="btn btn-primary">Gửi tin chờ duyệt</button><a class="btn btn-ghost-dark" href="/san-pham-bds">Hủy</a></div>
   </form>
 </div></section>
-<%- include('partials/foot') %>
+<%- include('partials/foot', { compress: true }) %>

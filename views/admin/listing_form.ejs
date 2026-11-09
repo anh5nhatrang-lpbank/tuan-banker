@@ -23,7 +23,7 @@
       <% }) %>
     </div>
   <% } %>
-  <label>Thêm ảnh (tối đa 6 ảnh mỗi lần, mỗi ảnh ≤ 5MB)<input type="file" name="images" multiple accept="image/jpeg,image/png,image/webp"></label>
+  <label>Thêm ảnh (tối đa 6 ảnh mỗi lần, tự nén còn khoảng 1,5MB mỗi ảnh)<input type="file" name="images" data-compress multiple accept="image/jpeg,image/png,image/webp"></label>
   <div class="row">
     <label>Trạng thái
       <select name="status"><option value="dang-ban" <%= item.status === 'dang-ban' ? 'selected' : '' %>>Đang bán</option><option value="da-ban" <%= item.status === 'da-ban' ? 'selected' : '' %>>Đã bán</option></select>

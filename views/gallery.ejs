@@ -1,0 +1,44 @@
+<%- include('partials/head') %>
+<section class="page-head">
+  <div class="container">
+    <p class="eyebrow">📷 Khoảnh khắc</p>
+    <h1>Hình ảnh</h1>
+    <p class="lead">Những buổi sinh hoạt tập thể và khoảnh khắc cá nhân, sắp xếp theo dòng thời gian.</p>
+    <div class="filters">
+      <a href="/hinh-anh" class="<%= !kind ? 'on' : '' %>">Tất cả</a>
+      <% kinds.forEach(function (k) { %><a href="/hinh-anh?loai=<%= encodeURIComponent(k) %>" class="<%= kind === k ? 'on' : '' %>"><%= k %></a><% }) %>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <% if (!years.length) { %>
+      <p class="empty">Chưa có hình ảnh nào.</p>
+    <% } else { %>
+      <div class="timeline">
+        <% years.forEach(function (y) { %>
+          <h2 class="tl-year"><%= y.year %></h2>
+          <% y.items.forEach(function (g) { %>
+            <article class="tl-item">
+              <span class="tl-dot" aria-hidden="true"></span>
+              <div class="tl-card card">
+                <p class="tl-meta"><time datetime="<%= g.date %>"><%= (g.date || '').split('-').reverse().join('/') %></time> <span class="tag"><%= g.kind %></span></p>
+                <h3><%= g.title %></h3>
+                <% if (g.caption) { %><p class="tl-caption"><%= g.caption %></p><% } %>
+                <% if (g.images.length) { %>
+                  <div class="tl-photos" data-gallery>
+                    <% g.images.forEach(function (u, i) { %>
+                      <button type="button" class="tl-photo" data-src="<%= u %>" aria-label="Xem ảnh <%= i + 1 %> / <%= g.images.length %>"><img src="<%= u %>" alt="<%= g.title %>" loading="lazy" decoding="async"></button>
+                    <% }) %>
+                  </div>
+                <% } %>
+              </div>
+            </article>
+          <% }) %>
+        <% }) %>
+      </div>
+      <%- include('partials/pager', { base: '/hinh-anh', extra: kind ? '&loai=' + encodeURIComponent(kind) : '' }) %>
+    <% } %>
+  </div>
+</section>
+<%- include('partials/foot', { galleryJs: true }) %>

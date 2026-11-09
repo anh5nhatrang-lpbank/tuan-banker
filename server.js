@@ -139,6 +139,34 @@ app.get('/bai-viet/:slug', (req, res, next) => {
   });
 });
 
+// ---------- Hình ảnh (timeline) ----------
+const GALLERY_KINDS = ['Tập thể', 'Cá nhân', 'Khác'];
+const sortedGallery = () =>
+  db().gallery.slice().sort((a, b) => (b.date || '').localeCompare(a.date || '') || b.id - a.id);
+
+app.get('/hinh-anh', (req, res) => {
+  const kind = GALLERY_KINDS.includes(req.query.loai) ? req.query.loai : '';
+  let list = sortedGallery();
+  if (kind) list = list.filter((g) => g.kind === kind);
+  const pg = paginate(list, req.query.page, 10);
+  const years = [];
+  pg.items.forEach((g) => {
+    const y = (g.date || '').slice(0, 4) || 'Khác';
+    let grp = years.find((x) => x.year === y);
+    if (!grp) years.push((grp = { year: y, items: [] }));
+    grp.items.push(g);
+  });
+  res.render('gallery', {
+    ...pg,
+    years,
+    kind,
+    kinds: GALLERY_KINDS,
+    title: 'Hình ảnh',
+    desc: 'Hình ảnh các buổi sinh hoạt tập thể và hoạt động cá nhân của TUẤN BANKER theo dòng thời gian.',
+    ogImage: ((list[0] || {}).images || [])[0] || '',
+  });
+});
+
 app.get('/san-pham-bds', (req, res) => {
   const type = req.query.loai || '';
   let list = activeListings();
@@ -409,7 +437,7 @@ app.get('/robots.txt', (req, res) => {
 
 app.get('/sitemap.xml', (req, res) => {
   const base = SITE_URL || `${req.protocol}://${req.get('host')}`;
-  const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/san-pham-bds', '/san-pham-vay', '/cong-dong', '/gioi-thieu', '/lien-he']
+  const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/hinh-anh', '/san-pham-bds', '/san-pham-vay', '/cong-dong', '/gioi-thieu', '/lien-he']
     .concat(publishedPosts().map((p) => '/bai-viet/' + p.slug))
     .concat(activeListings().map((l) => '/san-pham-bds/' + l.slug));
   res
@@ -478,6 +506,7 @@ admin.get('/', (req, res) => {
     stats: {
       posts: d.posts.length,
       listings: d.listings.length,
+      gallery: d.gallery.length,
       pendingListings: d.listings.filter((l) => l.approved === false).length,
       pending: d.questions.filter((q) => !q.approved).length,
       unread: d.messages.filter((m) => !m.read).length,
@@ -657,6 +686,70 @@ admin.post('/settings', (req, res) => {
   store.save();
   flash(req, 'ok', 'Đã lưu cài đặt.');
   res.redirect('/admin/settings');
+});
+
+// Hình ảnh (timeline)
+const galleryUpload = multer({
+  storage: multer.diskStorage({
+    destination: UPLOAD_DIR,
+    filename: (req, file, cb) => cb(null, crypto.randomBytes(12).toString('hex') + EXT[file.mimetype]),
+  }),
+  limits: { fileSize: 5 * 1024 * 1024, files: 12 },
+  fileFilter: (req, file, cb) => cb(null, !!EXT[file.mimetype]),
+});
+const todayStr = () => new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10); // giờ Việt Nam (UTC+7)
+const emptyGallery = { id: 0, title: '', date: todayStr(), kind: 'Tập thể', caption: '', images: [] };
+admin.get('/gallery', (req, res) => res.render('admin/gallery', { title: 'Hình ảnh', items: sortedGallery() }));
+admin.get('/gallery/new', (req, res) => res.render('admin/gallery_form', { title: 'Thêm hình ảnh', item: emptyGallery, kinds: GALLERY_KINDS }));
+admin.get('/gallery/:id/edit', (req, res, next) => {
+  const item = db().gallery.find((g) => g.id === +req.params.id);
+  if (!item) return next();
+  res.render('admin/gallery_form', { title: 'Sửa hình ảnh', item, kinds: GALLERY_KINDS });
+});
+admin.post('/gallery/save', galleryUpload.array('images', 12), (req, res) => {
+  const b = req.body;
+  const id = +b.id || 0;
+  const title = clip(b.title, 200);
+  const files = req.files || [];
+  if (!title) {
+    files.forEach((f) => removeFile(fileUrl(f)));
+    flash(req, 'error', 'Thiếu tiêu đề.');
+    return res.redirect(id ? `/admin/gallery/${id}/edit` : '/admin/gallery/new');
+  }
+  let item = db().gallery.find((g) => g.id === id);
+  if (!item) {
+    item = { id: store.nextId('gallery'), images: [], createdAt: new Date().toISOString() };
+    db().gallery.push(item);
+  }
+  Object.assign(item, {
+    title,
+    date: /^\d{4}-\d{2}-\d{2}$/.test(b.date || '') ? b.date : todayStr(),
+    kind: GALLERY_KINDS.includes(b.kind) ? b.kind : 'Khác',
+    caption: clip(b.caption, 5000),
+  });
+  const remove = [].concat(b.removeImg || []);
+  item.images = item.images.filter((u) => {
+    if (remove.includes(u)) { removeFile(u); return false; }
+    return true;
+  });
+  files.forEach((f) => item.images.push(fileUrl(f)));
+  if (item.images.length > 60) {
+    item.images.slice(60).forEach(removeFile);
+    item.images = item.images.slice(0, 60);
+  }
+  store.save();
+  flash(req, 'ok', 'Đã lưu hình ảnh.');
+  res.redirect('/admin/gallery');
+});
+admin.post('/gallery/:id/delete', (req, res) => {
+  const i = db().gallery.findIndex((g) => g.id === +req.params.id);
+  if (i >= 0) {
+    db().gallery[i].images.forEach(removeFile);
+    db().gallery.splice(i, 1);
+    store.save();
+    flash(req, 'ok', 'Đã xóa.');
+  }
+  res.redirect('/admin/gallery');
 });
 
 app.use('/admin', admin);

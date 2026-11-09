@@ -14,7 +14,7 @@
   </label>
   <label>Ảnh đại diện (JPG/PNG/WebP, tối đa 5MB)
     <% if (post.image) { %><img class="preview" src="<%= post.image %>" alt=""><label class="inline"><input type="checkbox" name="removeImage"> Xóa ảnh hiện tại</label><% } %>
-    <input type="file" name="image" accept="image/jpeg,image/png,image/webp">
+    <input type="file" name="image" data-compress accept="image/jpeg,image/png,image/webp">
   </label>
   <label class="inline"><input type="checkbox" name="published" <%= post.published ? 'checked' : '' %>> Đăng công khai (bỏ chọn để lưu nháp)</label>
   <div class="form-actions"><button class="btn btn-primary">Lưu bài viết</button><a class="btn btn-ghost-dark" href="/admin/posts">Hủy</a></div>

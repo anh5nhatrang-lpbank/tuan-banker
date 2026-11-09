@@ -25,6 +25,7 @@
     <button class="menu-btn" aria-label="Mở menu" aria-expanded="false" id="menuBtn">☰</button>
     <nav id="mainNav" aria-label="Menu chính">
       <a href="/" class="<%= path === '/' ? 'on' : '' %>">Trang chủ</a>
+      <a href="/hinh-anh" class="<%= path === '/hinh-anh' ? 'on' : '' %>">Hình ảnh</a>
       <% Object.values(cats).forEach(function (c) { %>
         <a href="/<%= c.key %>" class="<%= path.indexOf('/' + c.key) === 0 ? 'on' : '' %>"><%= c.short %></a>
       <% }) %>

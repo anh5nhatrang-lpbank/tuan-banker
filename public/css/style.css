@@ -225,3 +225,20 @@ ul.check { list-style: none; padding: 0; margin: .2rem 0 .6rem; }
 ul.check li { position: relative; padding-left: 1.4rem; margin: .3rem 0; font-size: .95rem; }
 ul.check li::before { content: "✓"; position: absolute; left: 0; color: var(--gold-d); font-weight: 700; }
 .loan-card .facts b { text-align: right; max-width: 62%; }
+
+/* Hình ảnh: timeline */
+.timeline { position: relative; max-width: 900px; margin: 0 auto; padding-left: 2rem; }
+.timeline::before { content: ""; position: absolute; left: .55rem; top: 0; bottom: 0; width: 3px; background: var(--line); border-radius: 3px; }
+.tl-year { display: inline-block; margin: 1.2rem 0 1rem -2rem; padding: .25rem .9rem; background: var(--navy); color: #fff; border-radius: 999px; font-size: 1.05rem; }
+.tl-item { position: relative; margin-bottom: 1.4rem; }
+.tl-dot { position: absolute; left: -1.95rem; top: 1.3rem; width: 15px; height: 15px; border-radius: 50%; background: var(--gold); border: 3px solid #fff; box-shadow: 0 0 0 2px var(--gold-d, var(--gold)); }
+.tl-card { padding: 1.1rem 1.2rem; }
+.tl-card h3 { margin: .2rem 0 .4rem; }
+.tl-meta { margin: 0; color: var(--muted); font-size: .9rem; display: flex; align-items: center; gap: .5rem; }
+.tl-caption { white-space: pre-line; margin: .3rem 0 .8rem; }
+.tl-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .5rem; margin-top: .6rem; }
+.tl-photo { padding: 0; border: 0; background: var(--alt); border-radius: 10px; overflow: hidden; cursor: zoom-in; aspect-ratio: 4 / 3; }
+.tl-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
+.tl-photo:hover img { transform: scale(1.05); }
+@media (max-width: 520px) { .tl-photos { grid-template-columns: repeat(2, 1fr); } .timeline { padding-left: 1.6rem; } .tl-dot { left: -1.6rem; } .tl-year { margin-left: -1.6rem; } }
+.compress-status { display: block; margin-top: .3rem; }

@@ -1,0 +1,23 @@
+<%- include('_head') %>
+<h1><%= item.id ? 'Sửa hình ảnh' : 'Thêm hình ảnh' %></h1>
+<form class="form card" method="post" action="/admin/gallery/save" enctype="multipart/form-data">
+  <input type="hidden" name="id" value="<%= item.id %>">
+  <label>Tiêu đề (ví dụ: Team building Đà Lạt 2026)<input name="title" value="<%= item.title %>" maxlength="200" required></label>
+  <div class="row">
+    <label>Ngày diễn ra<input type="date" name="date" value="<%= item.date %>" required></label>
+    <label>Loại
+      <select name="kind"><% kinds.forEach(function (k) { %><option <%= item.kind === k ? 'selected' : '' %>><%= k %></option><% }) %></select>
+    </label>
+  </div>
+  <label>Mô tả ngắn<textarea name="caption" rows="4" maxlength="5000"><%= item.caption %></textarea></label>
+  <% if (item.images.length) { %>
+    <div class="img-grid">
+      <% item.images.forEach(function (u) { %>
+        <label class="inline"><img class="preview" src="<%= u %>" alt=""><input type="checkbox" name="removeImg" value="<%= u %>"> Xóa</label>
+      <% }) %>
+    </div>
+  <% } %>
+  <label>Thêm ảnh (tối đa 12 ảnh mỗi lần lưu, tự nén còn khoảng 1,5MB mỗi ảnh; cần thêm thì lưu rồi sửa tiếp)<input type="file" name="images" data-compress multiple accept="image/jpeg,image/png,image/webp"></label>
+  <div class="form-actions"><button class="btn btn-primary">Lưu</button><a class="btn btn-ghost-dark" href="/admin/gallery">Hủy</a></div>
+</form>
+<%- include('_foot') %>

@@ -1,0 +1,21 @@
+<%- include('_head') %>
+<div class="admin-title"><h1>Hình ảnh</h1><a class="btn btn-gold" href="/admin/gallery/new">+ Thêm hình ảnh</a></div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Ngày</th><th>Tiêu đề</th><th>Loại</th><th>Số ảnh</th><th></th></tr></thead>
+  <tbody>
+  <% items.forEach(function (g) { %>
+    <tr>
+      <td><%= (g.date || '').split('-').reverse().join('/') %></td>
+      <td><a href="/admin/gallery/<%= g.id %>/edit"><%= g.title %></a></td>
+      <td><%= g.kind %></td>
+      <td><%= g.images.length %></td>
+      <td class="actions">
+        <a class="btn btn-sm btn-ghost-dark" href="/admin/gallery/<%= g.id %>/edit">Sửa</a>
+        <form method="post" action="/admin/gallery/<%= g.id %>/delete" data-confirm="Xóa mục này và toàn bộ ảnh trong đó?"><button class="btn btn-sm btn-danger">Xóa</button></form>
+      </td>
+    </tr>
+  <% }) %>
+  <% if (!items.length) { %><tr><td colspan="5">Chưa có mục nào. Bấm “+ Thêm hình ảnh” để bắt đầu.</td></tr><% } %>
+  </tbody>
+</table></div>
+<%- include('_foot') %>
