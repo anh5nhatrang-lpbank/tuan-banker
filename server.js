@@ -698,7 +698,7 @@ const galleryUpload = multer({
   fileFilter: (req, file, cb) => cb(null, !!EXT[file.mimetype]),
 });
 const todayStr = () => new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10); // giờ Việt Nam (UTC+7)
-const emptyGallery = { id: 0, title: '', date: todayStr(), kind: 'Tập thể', caption: '', images: [] };
+const emptyGallery = { id: 0, title: '', date: todayStr(), kind: 'Tập thể', caption: '', link: '', linkText: '', images: [] };
 admin.get('/gallery', (req, res) => res.render('admin/gallery', { title: 'Hình ảnh', items: sortedGallery() }));
 admin.get('/gallery/new', (req, res) => res.render('admin/gallery_form', { title: 'Thêm hình ảnh', item: emptyGallery, kinds: GALLERY_KINDS }));
 admin.get('/gallery/:id/edit', (req, res, next) => {
@@ -726,6 +726,8 @@ admin.post('/gallery/save', galleryUpload.array('images', 12), (req, res) => {
     date: /^\d{4}-\d{2}-\d{2}$/.test(b.date || '') ? b.date : todayStr(),
     kind: GALLERY_KINDS.includes(b.kind) ? b.kind : 'Khác',
     caption: clip(b.caption, 5000),
+    link: /^https?:\/\/\S+$/i.test(clip(b.link, 500)) ? clip(b.link, 500) : '',
+    linkText: clip(b.linkText, 80),
   });
   const remove = [].concat(b.removeImg || []);
   item.images = item.images.filter((u) => {

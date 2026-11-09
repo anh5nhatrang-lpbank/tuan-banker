@@ -242,3 +242,6 @@ ul.check li::before { content: "✓"; position: absolute; left: 0; color: var(--
 .tl-photo:hover img { transform: scale(1.05); }
 @media (max-width: 520px) { .tl-photos { grid-template-columns: repeat(2, 1fr); } .timeline { padding-left: 1.6rem; } .tl-dot { left: -1.6rem; } .tl-year { margin-left: -1.6rem; } }
 .compress-status { display: block; margin-top: .3rem; }
+
+.tl-link { margin: .2rem 0 .8rem; }
+.tl-link a { font-weight: 600; color: var(--gold-d, var(--navy)); text-decoration: underline; }

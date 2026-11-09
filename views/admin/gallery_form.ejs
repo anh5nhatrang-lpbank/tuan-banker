@@ -10,6 +10,10 @@
     </label>
   </div>
   <label>Mô tả ngắn<textarea name="caption" rows="4" maxlength="5000"><%= item.caption %></textarea></label>
+  <div class="row">
+    <label>Link bài báo / nguồn (không bắt buộc, bắt đầu bằng https://)<input type="url" name="link" value="<%= item.link || '' %>" maxlength="500" placeholder="https://baokhanhhoa.vn/..."></label>
+    <label>Chữ hiện trên nút link (ví dụ: Xem bài trên Báo Khánh Hòa)<input name="linkText" value="<%= item.linkText || '' %>" maxlength="80"></label>
+  </div>
   <% if (item.images.length) { %>
     <div class="img-grid">
       <% item.images.forEach(function (u) { %>

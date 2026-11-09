@@ -25,6 +25,7 @@
                 <p class="tl-meta"><time datetime="<%= g.date %>"><%= (g.date || '').split('-').reverse().join('/') %></time> <span class="tag"><%= g.kind %></span></p>
                 <h3><%= g.title %></h3>
                 <% if (g.caption) { %><p class="tl-caption"><%= g.caption %></p><% } %>
+                <% if (g.link) { %><p class="tl-link"><a href="<%= g.link %>" target="_blank" rel="noopener nofollow">🔗 <%= g.linkText || 'Xem bài viết gốc' %></a></p><% } %>
                 <% if (g.images.length) { %>
                   <div class="tl-photos" data-gallery>
                     <% g.images.forEach(function (u, i) { %>
