@@ -16,11 +16,15 @@
       <div class="narrow" style="margin-bottom:2rem"><%- include('partials/calc') %></div>
       <div class="narrow" style="margin-bottom:2rem"><%- include('partials/deposit_calc') %></div>
     <% } %>
-    <% if (!items.length) { %>
+    <% if (!items.length && !listings.length) { %>
       <p class="empty">Chưa có bài viết phù hợp.</p>
-    <% } else { %>
+    <% } else if (items.length) { %>
       <div class="grid"><% items.forEach(function (p) { %><%- include('partials/card', { p: p }) %><% }) %></div>
       <%- include('partials/pager', { base: '/' + cat.key, extra: q ? '&q=' + encodeURIComponent(q) : '' }) %>
+    <% } %>
+    <% if (listings.length) { %>
+      <div class="section-head" style="margin-top:2rem"><h2>Bất động sản đang bán</h2><a href="/san-pham-bds">Xem tất cả →</a></div>
+      <div class="grid"><% listings.forEach(function (l) { %><%- include('partials/listing_card', { l: l }) %><% }) %></div>
     <% } %>
   </div>
 </section>

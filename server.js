@@ -118,7 +118,9 @@ Object.values(CATS).forEach((cat) => {
     let list = publishedPosts().filter((p) => p.category === cat.key);
     if (q) list = list.filter((p) => (p.title + ' ' + p.excerpt).toLowerCase().includes(q));
     const pg = paginate(list, req.query.page, 9);
-    res.render('category', { cat, ...pg, q, title: cat.name, desc: cat.desc });
+    // Chuyên mục BĐS: kèm các tin Sản phẩm BĐS để trang không bị trống khi chưa có bài viết.
+    const listings = cat.key === 'bat-dong-san' && !q && pg.page === 1 ? activeListings().slice(0, 6) : [];
+    res.render('category', { cat, ...pg, q, listings, title: cat.name, desc: cat.desc });
   });
 });
 
