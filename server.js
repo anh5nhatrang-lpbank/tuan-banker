@@ -80,6 +80,9 @@ app.use((req, res, next) => {
   res.locals.desc = '';
   res.locals.ogImage = '';
   req.session.flash = null;
+  // Số điện thoại dạng quốc tế (84905491125) để tạo link WhatsApp/Viber/Telegram
+  res.locals.intl = (p) => { const d = String(p || '').replace(/\D/g, ''); return d.startsWith('0') ? '84' + d.slice(1) : d; };
+  res.locals.emails = (e) => String(e || '').split(',').map((x) => x.trim()).filter(Boolean);
   res.locals.imgOf = (x) => (x && x.image ? x.image : '/img/placeholder.svg');
   next();
 });
