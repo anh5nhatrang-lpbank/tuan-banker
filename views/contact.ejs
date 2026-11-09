@@ -18,7 +18,7 @@
     <ul class="facts">
       <% if (s.phone) { %><li><span>Điện thoại</span><b><a href="tel:<%= s.phone.replace(/\s/g, '') %>"><%= s.phone %></a></b></li><% } %>
       <% if (s.zalo) { %><li><span>Zalo</span><b><a href="https://zalo.me/<%= s.zalo %>" target="_blank" rel="noopener">Nhắn Zalo</a></b></li><% } %>
-      <% if (s.email) { %><li><span>Email</span><b><a href="mailto:<%= s.email %>"><%= s.email %></a></b></li><% } %>
+      <% if (s.email) { %><li><span>Email</span><b><% s.email.split(",").map(e => e.trim()).filter(Boolean).forEach((e, i) => { %><%= i ? " hoặc " : "" %><a href="mailto:<%= e %>"><%= e %></a><% }) %></b></li><% } %>
       <li><span>Khu vực</span><b><%= s.address %></b></li>
     </ul>
   </aside>
