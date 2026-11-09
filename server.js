@@ -10,6 +10,7 @@ const multer = require('multer');
 const { marked } = require('marked');
 
 const store = require('./lib/store');
+const mailer = require('./lib/mailer');
 const { CATS, LISTING_TYPES } = require('./lib/config');
 const { uniqueSlug, fmtDate, clip, paginate } = require('./lib/util');
 
@@ -192,6 +193,27 @@ app.post('/cong-dong', formLimiter, (req, res) => {
   res.redirect('/cong-dong');
 });
 
+// Gửi mail báo cho chủ website mỗi khi có tin nhắn liên hệ mới (lỗi mail không ảnh hưởng người gửi form).
+function notifyNewMessage({ name, phone, message, ref }) {
+  if (!mailer.enabled()) return console.warn('[MAIL] Chưa cấu hình SMTP, bỏ qua email báo tin nhắn mới.');
+  const to = process.env.NOTIFY_EMAIL || 'anh5nhatrang@gmail.com';
+  const text = [
+    'Có tin nhắn liên hệ mới trên tuanbanker.com',
+    '',
+    `Họ tên: ${name}`,
+    `Số điện thoại: ${phone}`,
+    ref ? `Liên quan tới: ${ref}` : null,
+    `Thời gian: ${new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}`,
+    '',
+    'Nội dung:',
+    message || '(không có)',
+    '',
+    SITE_URL ? `Xem trong trang quản trị: ${SITE_URL}/admin/messages` : '',
+  ].filter((l) => l !== null).join('\n');
+  mailer.sendMail({ to, subject: `[TUẤN BANKER] Tin nhắn mới từ ${name} - ${phone}`, text })
+    .catch((e) => console.error('[MAIL] Gửi thất bại:', e.message));
+}
+
 app.get('/lien-he', (req, res) =>
   res.render('contact', { title: 'Liên hệ', desc: 'Liên hệ tư vấn vay vốn và bất động sản.', ref: clip(req.query.ref, 120) })
 );
@@ -216,6 +238,7 @@ app.post('/lien-he', formLimiter, (req, res) => {
     createdAt: new Date().toISOString(),
   });
   store.save();
+  notifyNewMessage({ name, phone, message, ref });
   flash(req, 'ok', 'Đã gửi thông tin. Tôi sẽ liên hệ lại với bạn sớm nhất!');
   res.redirect('/lien-he');
 });
