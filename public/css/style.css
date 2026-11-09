@@ -210,3 +210,7 @@ body.lb-open { overflow: hidden; }
 .lb-close { position: absolute; top: .8rem; right: .8rem; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(255,255,255,.15); color: #fff; font-size: 1.1rem; cursor: pointer; }
 .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 64px; border: 0; background: rgba(255,255,255,.15); color: #fff; font-size: 2rem; cursor: pointer; border-radius: 8px; }
 .lb-prev { left: .6rem; } .lb-next { right: .6rem; }
+
+/* Trang khách đăng tin BĐS */
+.img-grid { display: flex; gap: .8rem; flex-wrap: wrap; }
+.img-grid .preview { max-height: 110px; border-radius: 8px; }

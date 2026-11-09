@@ -5,10 +5,11 @@
   <tbody>
   <% items.forEach(function (l) { %>
     <tr>
-      <td><a href="/admin/listings/<%= l.id %>/edit"><%= l.title %></a><%= l.featured ? ' ⭐' : '' %></td>
+      <td><a href="/admin/listings/<%= l.id %>/edit"><%= l.title %></a><%= l.featured ? ' ⭐' : '' %><% if (l.source === 'khach') { %><br><small>👤 <%= l.contactName %> - <%= l.contactPhone %></small><% } %></td>
       <td><%= l.price %></td><td><%= l.type %></td>
-      <td><%= l.status === 'da-ban' ? 'Đã bán' : 'Đang bán' %></td>
+      <td><% if (l.approved === false) { %><b style="color:#b45309">Chờ duyệt</b><% } else { %><%= l.status === 'da-ban' ? 'Đã bán' : 'Đang bán' %><% } %></td>
       <td class="actions">
+        <% if (l.approved === false) { %><form method="post" action="/admin/listings/<%= l.id %>/approve"><button class="btn btn-sm btn-gold">Duyệt</button></form><% } %>
         <a class="btn btn-sm btn-ghost-dark" href="/admin/listings/<%= l.id %>/edit">Sửa</a>
         <form method="post" action="/admin/listings/<%= l.id %>/delete" data-confirm="Xóa sản phẩm này?"><button class="btn btn-sm btn-danger">Xóa</button></form>
       </td>

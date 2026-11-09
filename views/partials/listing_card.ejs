@@ -4,7 +4,7 @@
     <% if (l.status === 'da-ban') { %><span class="badge badge-dark">Đã bán</span><% } else if (l.bankSupport) { %><span class="badge">Hỗ trợ vay</span><% } %>
   </a>
   <div class="card-body">
-    <span class="tag"><%= l.type %></span>
+    <span class="tag"><%= l.type %></span><% if (l.source === 'khach') { %> <span class="tag">Khách đăng</span><% } %>
     <h3><a href="/san-pham-bds/<%= l.slug %>"><%= l.title %></a></h3>
     <p class="price"><%= l.price || 'Liên hệ' %></p>
     <p class="muted">📍 <%= l.address %></p>

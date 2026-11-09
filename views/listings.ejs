@@ -4,6 +4,7 @@
     <p class="eyebrow">🏠 Sản phẩm</p>
     <h1>Bất động sản đang bán</h1>
     <p class="lead">Sản phẩm thứ cấp đã kiểm tra pháp lý, hỗ trợ tư vấn phương án vay ngân hàng.</p>
+    <p><a class="btn btn-gold" href="/dang-tin">+ Đăng tin BĐS của bạn</a></p>
     <div class="filters">
       <a href="/san-pham-bds" class="<%= !type ? 'on' : '' %>">Tất cả</a>
       <% listingTypes.forEach(function (t) { %><a href="/san-pham-bds?loai=<%= encodeURIComponent(t) %>" class="<%= type === t ? 'on' : '' %>"><%= t %></a><% }) %>

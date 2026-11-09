@@ -69,3 +69,20 @@
     else if (e.key === 'ArrowRight') show(cur + 1);
   });
 })();
+
+// Xem trước ảnh khi khách chọn ảnh ở trang đăng tin
+(function () {
+  var input = document.getElementById('subImages');
+  var box = document.getElementById('subPreview');
+  if (!input || !box) return;
+  input.addEventListener('change', function () {
+    box.innerHTML = '';
+    Array.prototype.slice.call(input.files, 0, 6).forEach(function (f) {
+      var img = document.createElement('img');
+      img.className = 'preview';
+      img.alt = '';
+      img.src = URL.createObjectURL(f);
+      box.appendChild(img);
+    });
+  });
+})();

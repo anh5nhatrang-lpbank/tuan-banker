@@ -10,7 +10,8 @@
         <% } %>
       </div>
       <h1><%= item.title %></h1>
-      <div class="prose"><%- md(item.description) %></div>
+      <div class="prose"><% if (item.plain) { %><p style="white-space:pre-line"><%= item.description %></p><% } else { %><%- md(item.description) %><% } %></div>
+      <% if (item.source === 'khach') { %><p class="muted"><small>Tin do khách đăng, TUẤN BANKER chưa thẩm định. Vui lòng kiểm tra pháp lý trước khi giao dịch.</small></p><% } %>
     </div>
     <aside class="side-box">
       <p class="price big"><%= item.price || 'Liên hệ' %></p>

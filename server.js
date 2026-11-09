@@ -14,6 +14,7 @@ const mailer = require('./lib/mailer');
 const { CATS, LISTING_TYPES } = require('./lib/config');
 const { uniqueSlug, fmtDate, clip, paginate } = require('./lib/util');
 
+const EXT_IMG = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp' };
 const PROD = process.env.NODE_ENV === 'production';
 const PORT = process.env.PORT || 3000;
 const SITE_URL = (process.env.SITE_URL || '').replace(/\/$/, '');
@@ -86,8 +87,11 @@ const db = () => store.db;
 const flash = (req, type, msg) => (req.session.flash = { type, msg });
 const publishedPosts = () =>
   db().posts.filter((p) => p.published).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-const activeListings = () =>
+const allListings = () =>
   db().listings.slice().sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+// Tin khách gửi có approved=false cho tới khi admin duyệt; tin cũ (không có trường này) vẫn hiện.
+const isVisible = (l) => l.approved !== false;
+const activeListings = () => allListings().filter(isVisible);
 
 // ---------- trang công khai ----------
 app.get('/', (req, res) => {
@@ -139,7 +143,7 @@ app.get('/san-pham-bds', (req, res) => {
 
 app.get('/san-pham-bds/:slug', (req, res, next) => {
   const item = db().listings.find((l) => l.slug === req.params.slug);
-  if (!item) return next();
+  if (!item || !isVisible(item)) return next();
   res.render('listing', {
     item,
     title: item.title,
@@ -243,6 +247,120 @@ app.post('/lien-he', formLimiter, (req, res) => {
   res.redirect('/lien-he');
 });
 
+
+// ---------- khách tự đăng tin BĐS (chờ admin duyệt mới hiện) ----------
+const listingLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 4,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    flash(req, 'error', 'Bạn đăng tin quá nhiều lần, vui lòng thử lại sau.');
+    res.redirect('/dang-tin');
+  },
+});
+
+// Kiểm tra đúng định dạng ảnh qua chữ ký đầu tệp (không tin mimetype do trình duyệt gửi).
+function isRealImage(file) {
+  try {
+    const fd = fs.openSync(file.path, 'r');
+    const b = Buffer.alloc(12);
+    fs.readSync(fd, b, 0, 12, 0);
+    fs.closeSync(fd);
+    return (
+      (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) ||
+      b.slice(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) ||
+      (b.slice(0, 4).toString() === 'RIFF' && b.slice(8, 12).toString() === 'WEBP')
+    );
+  } catch (e) {
+    return false;
+  }
+}
+const dropFiles = (files) => (files || []).forEach((f) => fs.unlink(f.path, () => {}));
+
+function notifyNewListing(item) {
+  const to = process.env.NOTIFY_EMAIL || 'anh5nhatrang@gmail.com';
+  const text = [
+    'Có tin BĐS mới do khách đăng trên tuanbanker.com, đang chờ duyệt.',
+    '',
+    `Tiêu đề: ${item.title}`,
+    `Giá: ${item.price || '(không ghi)'} - ${item.area} m² - ${item.address}`,
+    `Người đăng: ${item.contactName} - ${item.contactPhone}`,
+    '',
+    SITE_URL ? `Duyệt tại: ${SITE_URL}/admin/listings` : '',
+  ].join('\n');
+  mailer.sendMail({ to, subject: `[TUẤN BANKER] Tin BĐS chờ duyệt: ${item.title}`, text })
+    .catch((e) => console.error('[MAIL] Gửi thất bại:', e.message));
+}
+
+app.get('/dang-tin', (req, res) =>
+  res.render('submit_listing', {
+    title: 'Đăng tin bất động sản',
+    desc: 'Gửi tin bán bất động sản của bạn lên TUẤN BANKER, kèm hình ảnh. Tin được duyệt trước khi hiển thị.',
+  })
+);
+
+app.post(
+  '/dang-tin',
+  listingLimiter,
+  (req, res, next) => {
+    require('./lib/pubupload')(UPLOAD_DIR, EXT_IMG)(req, res, (err) => {
+      if (err) {
+        flash(req, 'error', err.code === 'LIMIT_FILE_SIZE' ? 'Mỗi ảnh tối đa 5MB.' : 'Không tải được ảnh (tối đa 6 ảnh, mỗi ảnh ≤ 5MB).');
+        return res.redirect('/dang-tin');
+      }
+      next();
+    });
+  },
+  (req, res) => {
+    const files = req.files || [];
+    const b = req.body;
+    if (b.website) { dropFiles(files); return res.redirect('/san-pham-bds'); } // honeypot
+    const title = clip(b.title, 200);
+    const contactName = clip(b.contactName, 60);
+    const contactPhone = clip(b.contactPhone, 20);
+    const description = clip(b.description, 5000);
+    const area = Math.max(0, parseFloat(b.area) || 0);
+    const bad =
+      title.length < 10 || !contactName || !/^[0-9+\s.()-]{8,20}$/.test(contactPhone) ||
+      description.length < 20 || !area || !clip(b.address, 200) || b.agree !== 'on';
+    if (bad) {
+      dropFiles(files);
+      flash(req, 'error', 'Vui lòng nhập đủ: tiêu đề (≥10 ký tự), địa chỉ, diện tích, mô tả (≥20 ký tự), họ tên, số điện thoại hợp lệ và tích đồng ý.');
+      return res.redirect('/dang-tin');
+    }
+    const good = files.filter(isRealImage);
+    dropFiles(files.filter((f) => !good.includes(f)));
+    const item = {
+      id: store.nextId('listings'),
+      images: good.map((f) => '/uploads/' + f.filename),
+      createdAt: new Date().toISOString(),
+      title,
+      type: LISTING_TYPES.includes(b.type) ? b.type : 'Khác',
+      price: clip(b.price, 40),
+      area,
+      bedrooms: Math.max(0, parseInt(b.bedrooms, 10) || 0),
+      address: clip(b.address, 200),
+      legal: clip(b.legal, 100),
+      bankSupport: b.bankSupport === 'on',
+      featured: false,
+      status: 'dang-ban',
+      description,
+      plain: true, // mô tả của khách hiển thị dạng văn bản thuần, không render Markdown/HTML
+      approved: false,
+      source: 'khach',
+      contactName,
+      contactPhone,
+    };
+    db().listings.push(item);
+    item.slug = uniqueSlug(title, db().listings, item.id);
+    store.save();
+    notifyNewListing(item);
+    flash(req, 'ok', 'Cảm ơn bạn! Tin đã được gửi và sẽ hiển thị sau khi được duyệt.');
+    res.redirect('/san-pham-bds');
+  }
+);
+
 app.get('/robots.txt', (req, res) => {
   res.type('text/plain').send(`User-agent: *\nDisallow: /admin\n${SITE_URL ? 'Sitemap: ' + SITE_URL + '/sitemap.xml\n' : ''}`);
 });
@@ -251,7 +369,7 @@ app.get('/sitemap.xml', (req, res) => {
   const base = SITE_URL || `${req.protocol}://${req.get('host')}`;
   const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/san-pham-bds', '/cong-dong', '/gioi-thieu', '/lien-he']
     .concat(publishedPosts().map((p) => '/bai-viet/' + p.slug))
-    .concat(db().listings.map((l) => '/san-pham-bds/' + l.slug));
+    .concat(activeListings().map((l) => '/san-pham-bds/' + l.slug));
   res
     .type('application/xml')
     .send(
@@ -318,6 +436,7 @@ admin.get('/', (req, res) => {
     stats: {
       posts: d.posts.length,
       listings: d.listings.length,
+      pendingListings: d.listings.filter((l) => l.approved === false).length,
       pending: d.questions.filter((q) => !q.approved).length,
       unread: d.messages.filter((m) => !m.read).length,
     },
@@ -390,7 +509,7 @@ const emptyListing = {
   id: 0, title: '', type: 'Nhà phố', price: '', area: '', bedrooms: 0, address: '', legal: '',
   bankSupport: true, status: 'dang-ban', featured: false, images: [], description: '',
 };
-admin.get('/listings', (req, res) => res.render('admin/listings', { title: 'Sản phẩm BĐS', items: activeListings() }));
+admin.get('/listings', (req, res) => res.render('admin/listings', { title: 'Sản phẩm BĐS', items: allListings() }));
 admin.get('/listings/new', (req, res) => res.render('admin/listing_form', { title: 'Thêm sản phẩm', item: emptyListing }));
 admin.get('/listings/:id/edit', (req, res, next) => {
   const item = db().listings.find((l) => l.id === +req.params.id);
@@ -433,6 +552,15 @@ admin.post('/listings/save', upload.array('images', 6), (req, res) => {
   item.images = item.images.slice(0, 8);
   store.save();
   flash(req, 'ok', 'Đã lưu sản phẩm.');
+  res.redirect('/admin/listings');
+});
+admin.post('/listings/:id/approve', (req, res) => {
+  const item = db().listings.find((l) => l.id === +req.params.id);
+  if (item) {
+    item.approved = true;
+    store.save();
+    flash(req, 'ok', 'Đã duyệt, tin đã hiển thị công khai.');
+  }
   res.redirect('/admin/listings');
 });
 admin.post('/listings/:id/delete', (req, res) => {

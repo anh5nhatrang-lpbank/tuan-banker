@@ -1,0 +1,36 @@
+<%- include('partials/head') %>
+<section class="page-head"><div class="container">
+  <p class="eyebrow">🏠 Đăng tin</p>
+  <h1>Đăng tin bất động sản của bạn</h1>
+  <p class="lead">Điền thông tin và đính kèm hình ảnh. Tin sẽ được kiểm tra và hiển thị công khai sau khi được duyệt. Số điện thoại của bạn chỉ dùng để liên hệ lại, không hiển thị công khai.</p>
+</div></section>
+<section class="section"><div class="container narrow">
+  <form class="form card" method="post" action="/dang-tin" enctype="multipart/form-data">
+    <label>Tiêu đề tin (ví dụ: Bán nhà 2 tầng hẻm ô tô, gần chợ)<input name="title" maxlength="200" minlength="10" required></label>
+    <div class="row">
+      <label>Loại hình
+        <select name="type"><% listingTypes.forEach(function (t) { %><option><%= t %></option><% }) %></select>
+      </label>
+      <label>Giá (ví dụ: 2,8 tỷ)<input name="price" maxlength="40"></label>
+    </div>
+    <div class="row">
+      <label>Diện tích (m²)<input name="area" type="number" step="0.1" min="1" required></label>
+      <label>Số phòng ngủ<input name="bedrooms" type="number" min="0" value="0"></label>
+      <label>Pháp lý<input name="legal" maxlength="100" placeholder="Sổ hồng riêng"></label>
+    </div>
+    <label>Địa chỉ / khu vực<input name="address" maxlength="200" required></label>
+    <label>Mô tả chi tiết (vị trí, kết cấu, nội thất, lý do bán...)<textarea name="description" rows="8" minlength="20" maxlength="5000" required></textarea></label>
+    <label>Hình ảnh (tối đa 6 ảnh JPG/PNG/WebP, mỗi ảnh ≤ 5MB)<input type="file" name="images" id="subImages" multiple accept="image/jpeg,image/png,image/webp"></label>
+    <div class="img-grid" id="subPreview"></div>
+    <label class="inline"><input type="checkbox" name="bankSupport"> Có thể vay ngân hàng</label>
+    <hr>
+    <div class="row">
+      <label>Họ và tên của bạn<input name="contactName" maxlength="60" required></label>
+      <label>Số điện thoại<input name="contactPhone" type="tel" maxlength="20" required inputmode="tel"></label>
+    </div>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="inline"><input type="checkbox" name="agree" required> Tôi cam kết thông tin và hình ảnh là của tôi, chính xác, và đồng ý để TUẤN BANKER chỉnh sửa hoặc từ chối đăng nếu không phù hợp.</label>
+    <div class="form-actions"><button class="btn btn-primary">Gửi tin chờ duyệt</button><a class="btn btn-ghost-dark" href="/san-pham-bds">Hủy</a></div>
+  </form>
+</div></section>
+<%- include('partials/foot') %>
