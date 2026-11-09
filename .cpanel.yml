@@ -1,4 +1,6 @@
 ---
-isolation: per-user
-executors:
-  - /usr/bin/node server.js
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/tuanbank/tuanbanker/
+    - /bin/cp -R lib public views server.js package.json package-lock.json $DEPLOYPATH
+    
