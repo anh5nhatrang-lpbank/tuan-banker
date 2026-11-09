@@ -1,0 +1,33 @@
+<section class="calc card" id="depositCalc" aria-labelledby="depositTitle">
+  <h2 id="depositTitle">💰 Máy tính lãi tiền gửi LPBank</h2>
+  <p class="muted">Chọn số tiền, kỳ hạn và hình thức lĩnh lãi để ước tính tiền lãi theo biểu lãi suất tiết kiệm tại quầy của LPBank.</p>
+  <form id="depForm" class="calc-grid" novalidate>
+    <label>Số tiền gửi (triệu đồng)
+      <input type="number" id="dAmount" value="500" min="1" step="10" inputmode="numeric">
+    </label>
+    <label>Nhóm khách hàng
+      <select id="dSegment">
+        <option value="priority">Khách hàng Priority</option>
+        <option value="mass">Khách hàng thường (Mass)</option>
+      </select>
+    </label>
+    <label>Hình thức lĩnh lãi
+      <select id="dMethod">
+        <option value="cuoi-ky">Cuối kỳ (trả sau)</option>
+        <option value="tra-truoc">Trả trước (nhận lãi ngay khi gửi)</option>
+        <option value="hang-thang">Hàng tháng</option>
+        <option value="hang-quy">Hàng quý</option>
+      </select>
+    </label>
+    <label>Kỳ hạn
+      <select id="dTerm"></select>
+    </label>
+  </form>
+  <div class="calc-result" aria-live="polite">
+    <div><span>Lãi suất áp dụng</span><b id="dRate">-</b></div>
+    <div><span id="dPerLabel">Tiền lãi nhận</span><b id="dPer">-</b></div>
+    <div><span>Tổng tiền lãi</span><b id="dInterest">-</b></div>
+    <div><span>Tổng gốc + lãi</span><b id="dTotal">-</b></div>
+  </div>
+  <p class="muted" id="dNote" style="margin-top:.8rem;font-size:.85rem"></p>
+</section>

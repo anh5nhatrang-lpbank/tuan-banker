@@ -14,6 +14,7 @@
   <div class="container">
     <% if (cat.key === 'tai-chinh-ngan-hang' && page === 1 && !q) { %>
       <div class="narrow" style="margin-bottom:2rem"><%- include('partials/calc') %></div>
+      <div class="narrow" style="margin-bottom:2rem"><%- include('partials/deposit_calc') %></div>
     <% } %>
     <% if (!items.length) { %>
       <p class="empty">Chưa có bài viết phù hợp.</p>
