@@ -1,0 +1,70 @@
+<%- include('partials/head') %>
+<section class="page-head"><div class="container">
+  <p class="eyebrow">🏦 Khay sản phẩm</p>
+  <h1>Sản phẩm vay bán lẻ LPBank</h1>
+  <p class="lead">Vay mua nhà, mua xe, tiêu dùng, kinh doanh. Điều kiện, giấy tờ, thời hạn vay được tóm tắt dưới đây. Lãi suất thay đổi theo từng thời kỳ và hồ sơ khách hàng, vui lòng liên hệ để được báo mức lãi suất hiện hành.</p>
+  <p>
+    <a class="btn btn-gold" href="#dang-ky">Để lại thông tin nhận tư vấn</a>
+    <% if (s.phone) { %><a class="btn btn-ghost-dark" href="tel:<%= s.phone.replace(/\s/g, '') %>">📞 Gọi <%= s.phone %></a><% } %>
+  </p>
+</div></section>
+
+<section class="section"><div class="container">
+  <div class="card loan-common"><div class="card-body">
+    <h2>Điều kiện chung và giấy tờ cần chuẩn bị</h2>
+    <div class="two-col-simple">
+      <div>
+        <h3>Ai có thể vay?</h3>
+        <ul class="check"><% common.who.forEach(function (t) { %><li><%= t %></li><% }) %></ul>
+      </div>
+      <div>
+        <h3>Giấy tờ thường cần</h3>
+        <ul class="check"><% common.docs.forEach(function (t) { %><li><%= t %></li><% }) %></ul>
+      </div>
+    </div>
+    <p class="muted"><small>Danh mục hồ sơ cụ thể có thể thay đổi tùy sản phẩm và từng trường hợp. Cán bộ tư vấn sẽ hướng dẫn chi tiết khi liên hệ.</small></p>
+  </div></div>
+
+  <div class="loan-grid">
+    <% loans.forEach(function (l) { %>
+    <article class="card loan-card" id="<%= l.key %>"><div class="card-body">
+      <span class="tag"><%= l.tag %></span>
+      <h2><%= l.icon %> <%= l.name %></h2>
+      <p><%= l.summary %></p>
+      <h4>Mục đích vay</h4>
+      <ul class="check"><% l.purposes.forEach(function (t) { %><li><%= t %></li><% }) %></ul>
+      <ul class="facts">
+        <li><span>Thời gian vay</span><b><%= l.term %></b></li>
+        <li><span>Hạn mức vay</span><b><%= l.limit %></b></li>
+        <li><span>Tài sản bảo đảm</span><b><%= l.collateral %></b></li>
+        <li><span>Lãi suất</span><b>Liên hệ<% if (s.phone) { %>: <a href="tel:<%= s.phone.replace(/\s/g, '') %>"><%= s.phone %></a><% } %></b></li>
+      </ul>
+      <h4>Hồ sơ cần chuẩn bị</h4>
+      <ul class="check"><% l.docs.forEach(function (t) { %><li><%= t %></li><% }) %></ul>
+      <a class="btn btn-gold block" href="/san-pham-vay?sp=<%= l.key %>#dang-ky">Đăng ký tư vấn sản phẩm này</a>
+    </div></article>
+    <% }) %>
+  </div>
+
+  <div class="card" id="dang-ky" style="margin-top:2rem"><div class="card-body">
+    <h2>Để lại thông tin, tôi sẽ liên hệ tư vấn</h2>
+    <p class="muted">Miễn phí, không ràng buộc. Tôi sẽ gọi lại báo lãi suất, hướng dẫn hồ sơ và phương án phù hợp.</p>
+    <form class="form" method="post" action="/san-pham-vay">
+      <div class="row">
+        <label>Họ và tên<input name="name" maxlength="60" required></label>
+        <label>Số điện thoại<input name="phone" type="tel" maxlength="20" required inputmode="tel"></label>
+      </div>
+      <div class="row">
+        <label>Sản phẩm quan tâm
+          <select name="product"><% loans.forEach(function (l) { %><option value="<%= l.key %>" <%= sel === l.key ? 'selected' : '' %>><%= l.name %></option><% }) %><option value="khac">Chưa rõ, cần tư vấn</option></select>
+        </label>
+        <label>Số tiền cần vay (ví dụ: 1,5 tỷ)<input name="amount" maxlength="40"></label>
+        <label>Thời gian vay dự kiến<input name="term" maxlength="40" placeholder="Ví dụ: 15 năm"></label>
+      </div>
+      <label>Ghi chú thêm (tài sản bảo đảm, khu vực, nguồn thu nhập...)<textarea name="note" rows="3" maxlength="800"></textarea></label>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="btn btn-primary">Gửi thông tin</button>
+    </form>
+  </div></div>
+</div></section>
+<%- include('partials/foot') %>

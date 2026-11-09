@@ -214,3 +214,14 @@ body.lb-open { overflow: hidden; }
 /* Trang khách đăng tin BĐS */
 .img-grid { display: flex; gap: .8rem; flex-wrap: wrap; }
 .img-grid .preview { max-height: 110px; border-radius: 8px; }
+
+/* Khay sản phẩm vay */
+.loan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.4rem; margin-top: 1.6rem; }
+.loan-card h2, .loan-common h2 { font-size: 1.25rem; margin: .2rem 0 .4rem; }
+.loan-card h4 { margin: .9rem 0 .3rem; color: var(--navy); }
+.loan-card .btn { margin-top: 1rem; }
+.two-col-simple { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+ul.check { list-style: none; padding: 0; margin: .2rem 0 .6rem; }
+ul.check li { position: relative; padding-left: 1.4rem; margin: .3rem 0; font-size: .95rem; }
+ul.check li::before { content: "✓"; position: absolute; left: 0; color: var(--gold-d); font-weight: 700; }
+.loan-card .facts b { text-align: right; max-width: 62%; }

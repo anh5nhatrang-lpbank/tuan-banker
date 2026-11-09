@@ -12,6 +12,7 @@ const { marked } = require('marked');
 const store = require('./lib/store');
 const mailer = require('./lib/mailer');
 const { CATS, LISTING_TYPES } = require('./lib/config');
+const { LOANS, COMMON } = require('./lib/loans');
 const { uniqueSlug, fmtDate, clip, paginate } = require('./lib/util');
 
 const EXT_IMG = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp' };
@@ -248,6 +249,42 @@ app.post('/lien-he', formLimiter, (req, res) => {
 });
 
 
+// ---------- khay sản phẩm vay bán lẻ + form để lại thông tin ----------
+app.get('/san-pham-vay', (req, res) =>
+  res.render('loans', {
+    title: 'Sản phẩm vay bán lẻ LPBank',
+    desc: 'Vay mua nhà, mua ô tô, tiêu dùng, kinh doanh tại LPBank: điều kiện, giấy tờ, thời gian vay. Để lại thông tin nhận tư vấn lãi suất.',
+    loans: LOANS,
+    common: COMMON,
+    sel: clip(req.query.sp, 20),
+  })
+);
+
+app.post('/san-pham-vay', formLimiter, (req, res) => {
+  if (req.body.website) return res.redirect('/san-pham-vay'); // honeypot
+  const b = req.body;
+  const name = clip(b.name, 60);
+  const phone = clip(b.phone, 20);
+  if (!name || !/^[0-9+\s.()-]{8,20}$/.test(phone)) {
+    flash(req, 'error', 'Vui lòng nhập họ tên và số điện thoại hợp lệ.');
+    return res.redirect('/san-pham-vay#dang-ky');
+  }
+  const loan = LOANS.find((l) => l.key === b.product);
+  const ref = 'Đăng ký vay: ' + (loan ? loan.name : 'Chưa rõ, cần tư vấn');
+  const message = [
+    b.amount ? `Số tiền cần vay: ${clip(b.amount, 40)}` : '',
+    b.term ? `Thời gian vay: ${clip(b.term, 40)}` : '',
+    b.note ? `Ghi chú: ${clip(b.note, 800)}` : '',
+  ].filter(Boolean).join('\n');
+  db().messages.push({
+    id: store.nextId('messages'), name, phone, message, ref, read: false, createdAt: new Date().toISOString(),
+  });
+  store.save();
+  notifyNewMessage({ name, phone, message, ref });
+  flash(req, 'ok', 'Đã gửi thông tin. Tôi sẽ liên hệ lại với bạn sớm nhất!');
+  res.redirect('/san-pham-vay');
+});
+
 // ---------- khách tự đăng tin BĐS (chờ admin duyệt mới hiện) ----------
 const listingLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
@@ -367,7 +404,7 @@ app.get('/robots.txt', (req, res) => {
 
 app.get('/sitemap.xml', (req, res) => {
   const base = SITE_URL || `${req.protocol}://${req.get('host')}`;
-  const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/san-pham-bds', '/cong-dong', '/gioi-thieu', '/lien-he']
+  const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/san-pham-bds', '/san-pham-vay', '/cong-dong', '/gioi-thieu', '/lien-he']
     .concat(publishedPosts().map((p) => '/bai-viet/' + p.slug))
     .concat(activeListings().map((l) => '/san-pham-bds/' + l.slug));
   res
