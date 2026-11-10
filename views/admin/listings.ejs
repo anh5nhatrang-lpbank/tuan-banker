@@ -1,11 +1,12 @@
 <%- include('_head') %>
 <div class="admin-title"><h1>Sản phẩm BĐS</h1><a class="btn btn-gold" href="/admin/listings/new">+ Thêm sản phẩm</a></div>
+<p class="muted small">📍 = đã ghim trên Bản đồ giá. Tin chưa có 📍: bấm Sửa, dán link Google Maps vào ô "Vị trí trên bản đồ".</p>
 <div class="table-wrap"><table>
   <thead><tr><th>Tiêu đề</th><th>Giá</th><th>Loại</th><th>Trạng thái</th><th></th></tr></thead>
   <tbody>
   <% items.forEach(function (l) { %>
     <tr>
-      <td><a href="/admin/listings/<%= l.id %>/edit"><%= l.title %></a><%= l.featured ? ' ⭐' : '' %><% if (l.source === 'khach') { %><br><small>👤 <%= l.contactName %> - <%= l.contactPhone %></small><% } %></td>
+      <td><a href="/admin/listings/<%= l.id %>/edit"><%= l.title %></a><%= l.featured ? ' ⭐' : '' %><%= (l.lat != null && l.lng != null) ? ' 📍' : '' %><% if (l.source === 'khach') { %><br><small>👤 <%= l.contactName %> - <%= l.contactPhone %></small><% } %></td>
       <td><%= l.price %></td><td><%= l.type %></td>
       <td><% if (l.approved === false) { %><b style="color:#b45309">Chờ duyệt</b><% } else { %><%= l.status === 'da-ban' ? 'Đã bán' : 'Đang bán' %><% } %></td>
       <td class="actions">

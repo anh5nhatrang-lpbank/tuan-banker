@@ -11,6 +11,7 @@
     </div>
   </div>
 </section>
+<%- include('partials/price_map') %>
 <section class="section"><div class="container">
   <% if (!items.length) { %><p class="empty">Chưa có sản phẩm trong mục này.</p><% } else { %>
     <div class="grid"><% items.forEach(function (l) { %><%- include('partials/listing_card', { l: l }) %><% }) %></div>

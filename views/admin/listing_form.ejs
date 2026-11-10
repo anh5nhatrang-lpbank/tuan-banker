@@ -15,6 +15,15 @@
     <label>Pháp lý<input name="legal" value="<%= item.legal %>" maxlength="100" placeholder="Sổ hồng riêng"></label>
   </div>
   <label>Địa chỉ<input name="address" value="<%= item.address %>" maxlength="200"></label>
+  <div class="row">
+    <label>Khu vực (phường/xã)
+      <select name="ward"><option value="">Tự nhận diện từ địa chỉ</option><% areas.forEach(function (w) { %><option value="<%= w %>" <%= item.ward === w ? 'selected' : '' %>><%= w %></option><% }) %></select>
+    </label>
+    <label>Vị trí trên bản đồ (dán link Google Maps hoặc tọa độ)
+      <input name="mapInput" value="<%= (item.lat != null && item.lng != null) ? item.lat + ', ' + item.lng : '' %>" maxlength="600" placeholder="https://maps.app.goo.gl/... hoặc 12.2388, 109.1967">
+    </label>
+  </div>
+  <p class="muted small">Có vị trí thì tin được ghim lên "Bản đồ giá" ở mục Sản phẩm BĐS. Để trống ô vị trí thì tin không hiện trên bản đồ.</p>
   <label>Mô tả (Markdown)<textarea name="description" rows="10"><%= item.description %></textarea></label>
   <% if (item.images.length) { %>
     <div class="img-grid">

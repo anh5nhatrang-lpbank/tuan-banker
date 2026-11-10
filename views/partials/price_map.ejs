@@ -1,0 +1,32 @@
+<% if (typeof pmap !== 'undefined' && pmap && pmap.pins.length) { %>
+<section class="pmap-sec" id="ban-do-gia" aria-label="Bản đồ giá bất động sản">
+  <div class="container">
+    <p class="eyebrow">🗺️ Bản đồ giá trực quan</p>
+    <h2>Bức tranh BĐS Nha Trang – Khánh Hòa trong một bản đồ</h2>
+    <p class="muted">Mỗi ghim là một sản phẩm, hiện giá ngay trên bản đồ. Lọc theo mức giá hoặc khu vực, bấm vào ghim để xem chi tiết.</p>
+    <div class="pm-stats">
+      <div><b><%= pmap.pins.length %></b><span>Sản phẩm</span></div>
+      <% if (pmap.min) { %><div><b><%= pmap.min %></b><span>Giá từ</span></div><div><b><%= pmap.max %></b><span>Đến</span></div><% } %>
+    </div>
+    <div class="pm-filters" id="pmTiers" role="group" aria-label="Lọc theo mức giá"></div>
+    <div class="pm-filters pm-wards" id="pmWards" role="group" aria-label="Lọc theo khu vực"></div>
+    <div class="pm-wrap" id="pmWrap">
+      <div id="pmMap" class="pm-map" role="application" aria-label="Bản đồ giá bất động sản"></div>
+      <div class="pm-tools">
+        <button type="button" id="pmSat" title="Chế độ vệ tinh" aria-label="Chế độ vệ tinh">🛰️</button>
+        <button type="button" id="pmLoc" title="Vị trí của tôi" aria-label="Vị trí của tôi">📍</button>
+        <button type="button" id="pmFull" title="Toàn màn hình" aria-label="Toàn màn hình">⤢</button>
+      </div>
+      <button type="button" class="pm-lock" id="pmLock">Chạm để khám phá bản đồ ⤢</button>
+      <p class="pm-empty" id="pmEmpty" hidden>Không có sản phẩm nào trong bộ lọc này.</p>
+    </div>
+    <p class="muted small">Chỉ hiển thị sản phẩm đã có vị trí · Cập nhật khi có tin mới · Nền bản đồ © OpenStreetMap</p>
+  </div>
+  <script type="application/json" id="pmData"><%- JSON.stringify(pmap).replace(/</g, '\\u003c') %></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" integrity="sha256-YU3qCpj/P06tdPBJGPax0bm6Q1wltfwjsho5TR4+TYc=" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" integrity="sha256-Hk4dIpcqOSb0hZjgyvFOP+cEmDXUKKNE/tT542ZbNQg=" crossorigin="" defer></script>
+  <script src="/js/pricemap.js" defer></script>
+</section>
+<% } %>

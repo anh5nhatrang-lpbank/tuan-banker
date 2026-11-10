@@ -12,6 +12,7 @@ const { marked } = require('marked');
 const store = require('./lib/store');
 const mailer = require('./lib/mailer');
 const { CATS, LISTING_TYPES } = require('./lib/config');
+const geo = require('./lib/geo');
 const { LOANS, COMMON } = require('./lib/loans');
 const { uniqueSlug, fmtDate, clip, paginate } = require('./lib/util');
 
@@ -34,11 +35,14 @@ app.disable('x-powered-by');
 
 app.use(
   helmet({
+    // Cần gửi Referer cho máy chủ ảnh bản đồ (OpenStreetMap từ chối khi không có Referer)
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'"],
-        styleSrc: ["'self'", 'https://fonts.googleapis.com'],
+        // unpkg.com: thư viện bản đồ Leaflet (có kiểm tra SRI trong view)
+        scriptSrc: ["'self'", 'https://unpkg.com'],
+        styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://unpkg.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         imgSrc: ["'self'", 'data:', 'https:'],
         frameSrc: ["'self'", 'https://www.youtube.com', 'https://www.google.com'],
@@ -70,6 +74,7 @@ app.use((req, res, next) => {
   res.locals.s = store.db.settings;
   res.locals.cats = CATS;
   res.locals.listingTypes = LISTING_TYPES;
+  res.locals.areas = geo.AREAS;
   res.locals.path = req.path;
   res.locals.siteUrl = SITE_URL;
   res.locals.fmtDate = fmtDate;
@@ -97,6 +102,40 @@ const allListings = () =>
 const isVisible = (l) => l.approved !== false;
 const activeListings = () => allListings().filter(isVisible);
 
+// Dữ liệu cho "Bản đồ giá": chỉ tin đang bán, đã hiện công khai và đã có tọa độ.
+function mapData() {
+  const pins = activeListings()
+    .filter((l) => l.status !== 'da-ban' && isFinite(l.lat) && isFinite(l.lng) && l.lat !== null && l.lng !== null)
+    .map((l) => {
+      const v = geo.parsePrice(l.price);
+      return {
+        id: l.id,
+        slug: l.slug,
+        title: l.title,
+        type: l.type,
+        price: l.price || '',
+        vnd: v || 0,
+        label: geo.priceLabel(v),
+        tier: geo.tierOf(v),
+        area: l.area || 0,
+        address: l.address || '',
+        ward: l.ward || geo.guessArea(l.address) || geo.NO_AREA,
+        img: (l.images || [])[0] || '',
+        bank: !!l.bankSupport,
+        lat: +l.lat,
+        lng: +l.lng,
+      };
+    });
+  const priced = pins.filter((p) => p.vnd);
+  return {
+    pins,
+    tiers: geo.TIERS.map((t) => ({ key: t.key, label: t.label })),
+    wards: geo.AREAS.filter((w) => geo.NHA_TRANG_WARDS.includes(w) || pins.some((p) => p.ward === w)),
+    min: priced.length ? geo.priceLabel(Math.min(...priced.map((p) => p.vnd))) : '',
+    max: priced.length ? geo.priceLabel(Math.max(...priced.map((p) => p.vnd))) : '',
+  };
+}
+
 // ---------- trang công khai ----------
 app.get('/', (req, res) => {
   const all = publishedPosts();
@@ -120,7 +159,8 @@ Object.values(CATS).forEach((cat) => {
     const pg = paginate(list, req.query.page, 9);
     // Chuyên mục BĐS: kèm các tin Sản phẩm BĐS để trang không bị trống khi chưa có bài viết.
     const listings = cat.key === 'bat-dong-san' && !q && pg.page === 1 ? activeListings().slice(0, 6) : [];
-    res.render('category', { cat, ...pg, q, listings, title: cat.name, desc: cat.desc });
+    const pmap = cat.key === 'bat-dong-san' && !q && pg.page === 1 ? mapData() : null;
+    res.render('category', { cat, ...pg, q, listings, pmap, title: cat.name, desc: cat.desc });
   });
 });
 
@@ -172,7 +212,7 @@ app.get('/san-pham-bds', (req, res) => {
   let list = activeListings();
   if (type) list = list.filter((l) => l.type === type);
   const pg = paginate(list, req.query.page, 9);
-  res.render('listings', { ...pg, type, title: 'Sản phẩm bất động sản', desc: 'Danh sách bất động sản đang bán, hỗ trợ vay ngân hàng.' });
+  res.render('listings', { ...pg, type, pmap: pg.page === 1 && !type ? mapData() : null, title: 'Sản phẩm bất động sản', desc: 'Danh sách bất động sản đang bán, hỗ trợ vay ngân hàng.' });
 });
 
 app.get('/san-pham-bds/:slug', (req, res, next) => {
@@ -579,6 +619,7 @@ admin.post('/posts/:id/delete', (req, res) => {
 const emptyListing = {
   id: 0, title: '', type: 'Nhà phố', price: '', area: '', bedrooms: 0, address: '', legal: '',
   bankSupport: true, status: 'dang-ban', featured: false, images: [], description: '',
+  ward: '', lat: null, lng: null,
 };
 admin.get('/listings', (req, res) => res.render('admin/listings', { title: 'Sản phẩm BĐS', items: allListings() }));
 admin.get('/listings/new', (req, res) => res.render('admin/listing_form', { title: 'Thêm sản phẩm', item: emptyListing }));
@@ -587,7 +628,7 @@ admin.get('/listings/:id/edit', (req, res, next) => {
   if (!item) return next();
   res.render('admin/listing_form', { title: 'Sửa sản phẩm', item });
 });
-admin.post('/listings/save', upload.array('images', 6), (req, res) => {
+admin.post('/listings/save', upload.array('images', 6), async (req, res) => {
   const b = req.body;
   const id = +b.id || 0;
   const title = clip(b.title, 200);
@@ -613,7 +654,19 @@ admin.post('/listings/save', upload.array('images', 6), (req, res) => {
     featured: b.featured === 'on',
     status: b.status === 'da-ban' ? 'da-ban' : 'dang-ban',
     description: clip(b.description, 20000),
+    ward: geo.AREAS.includes(b.ward) ? b.ward : '',
   });
+  // Vị trí trên bản đồ: tọa độ hoặc link Google Maps. Để trống = gỡ khỏi bản đồ.
+  let geoWarn = '';
+  const mapInput = clip(b.mapInput, 600);
+  if (!mapInput) {
+    delete item.lat;
+    delete item.lng;
+  } else {
+    const g = await geo.resolveMapInput(mapInput);
+    if (g) { item.lat = g.lat; item.lng = g.lng; }
+    else geoWarn = ' Chưa đọc được vị trí trên bản đồ: hãy dán tọa độ dạng 12.2388, 109.1967 (hoặc link Google Maps đầy đủ).';
+  }
   const remove = [].concat(b.removeImg || []);
   item.images = item.images.filter((u) => {
     if (remove.includes(u)) { removeFile(u); return false; }
@@ -622,7 +675,7 @@ admin.post('/listings/save', upload.array('images', 6), (req, res) => {
   (req.files || []).forEach((f) => item.images.push(fileUrl(f)));
   item.images = item.images.slice(0, 8);
   store.save();
-  flash(req, 'ok', 'Đã lưu sản phẩm.');
+  flash(req, geoWarn ? 'error' : 'ok', 'Đã lưu sản phẩm.' + geoWarn);
   res.redirect('/admin/listings');
 });
 admin.post('/listings/:id/approve', (req, res) => {
