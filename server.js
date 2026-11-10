@@ -760,6 +760,15 @@ admin.get('/test-notify', async (req, res) => {
   } catch (e) {
     lines.push('Kết quả: LỖI - ' + e.message + (e.cause ? ' | ' + (e.cause.code || e.cause.message) : ''));
   }
+  // Thử gửi email báo tin
+  lines.push('', `SMTP_HOST: ${process.env.SMTP_HOST || '(trống, dùng máy chủ mail nội bộ)'}`, `SMTP_USER: ${process.env.SMTP_USER ? 'đã cấu hình' : 'CHƯA CÓ'}`, `SMTP_PASS: ${process.env.SMTP_PASS ? 'đã cấu hình' : 'CHƯA CÓ'}`);
+  try {
+    const to = process.env.NOTIFY_EMAIL || 'anh5nhatrang@gmail.com';
+    await mailer.sendMail({ to, subject: '[TUẤN BANKER] Gửi thử email từ trang quản trị', text: 'Nếu bạn đọc được thư này thì email báo tin trên tuanbanker.com đã hoạt động.' });
+    lines.push('Email: ĐÃ GỬI tới ' + to + ', hãy kiểm tra hộp thư (và Thư rác).');
+  } catch (e) {
+    lines.push('Email: LỖI - ' + e.message + (e.cause ? ' | ' + (e.cause.code || e.cause.message) : ''));
+  }
   res.type('text/plain; charset=utf-8').send(lines.join('\n'));
 });
 
