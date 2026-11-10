@@ -15,7 +15,7 @@ const telegram = require('./lib/telegram');
 
 // Báo tức thì về Telegram (lỗi Telegram không ảnh hưởng người gửi form).
 function pushTelegram(text) {
-  telegram.sendTelegram(text).catch((e) => console.error('[TELEGRAM] Gửi thất bại:', e.message));
+  telegram.sendTelegram(text).catch((e) => console.error('[TELEGRAM] Gửi thất bại:', e.message, e.cause ? (e.cause.code || e.cause.message) : ''));
 }
 const { CATS, LISTING_TYPES } = require('./lib/config');
 const geo = require('./lib/geo');
@@ -745,6 +745,22 @@ admin.post('/community/:id', (req, res) => {
     flash(req, 'ok', 'Đã cập nhật.');
   }
   res.redirect('/admin/community');
+});
+
+// Gửi thử thông báo Telegram và hiện kết quả/lỗi (không hiện token)
+admin.get('/test-notify', async (req, res) => {
+  const lines = [
+    `TELEGRAM_BOT_TOKEN: ${process.env.TELEGRAM_BOT_TOKEN ? 'đã cấu hình' : 'CHƯA CÓ'}`,
+    `TELEGRAM_CHAT_ID: ${process.env.TELEGRAM_CHAT_ID ? 'đã cấu hình' : 'CHƯA CÓ'}`,
+    `Node: ${process.version}`,
+  ];
+  try {
+    await telegram.sendTelegram('🔔 Gửi thử từ trang quản trị tuanbanker.com: thông báo Telegram hoạt động.');
+    lines.push('Kết quả: ĐÃ GỬI, hãy kiểm tra Telegram.');
+  } catch (e) {
+    lines.push('Kết quả: LỖI - ' + e.message + (e.cause ? ' | ' + (e.cause.code || e.cause.message) : ''));
+  }
+  res.type('text/plain; charset=utf-8').send(lines.join('\n'));
 });
 
 // Tin nhắn liên hệ
