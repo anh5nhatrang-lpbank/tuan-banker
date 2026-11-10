@@ -11,6 +11,12 @@ const { marked } = require('marked');
 
 const store = require('./lib/store');
 const mailer = require('./lib/mailer');
+const telegram = require('./lib/telegram');
+
+// Báo tức thì về Telegram (lỗi Telegram không ảnh hưởng người gửi form).
+function pushTelegram(text) {
+  telegram.sendTelegram(text).catch((e) => console.error('[TELEGRAM] Gửi thất bại:', e.message));
+}
 const { CATS, LISTING_TYPES } = require('./lib/config');
 const geo = require('./lib/geo');
 const { LOANS, COMMON } = require('./lib/loans');
@@ -270,12 +276,26 @@ app.post('/cong-dong', formLimiter, (req, res) => {
     createdAt: new Date().toISOString(),
   });
   store.save();
+  pushTelegram([
+    '❓ Câu hỏi cộng đồng mới chờ duyệt',
+    `Người hỏi: ${name}`,
+    `Nội dung: ${message}`,
+    SITE_URL ? `Duyệt: ${SITE_URL}/admin/community` : null,
+  ].filter(Boolean).join('\n'));
   flash(req, 'ok', 'Cảm ơn bạn! Câu hỏi sẽ hiển thị sau khi được duyệt.');
   res.redirect('/cong-dong');
 });
 
 // Gửi mail báo cho chủ website mỗi khi có tin nhắn liên hệ mới (lỗi mail không ảnh hưởng người gửi form).
 function notifyNewMessage({ name, phone, message, ref }) {
+  pushTelegram([
+    '📩 Tin nhắn liên hệ mới',
+    `Họ tên: ${name}`,
+    `SĐT: ${phone}`,
+    ref ? `Liên quan: ${ref}` : null,
+    message ? `Nội dung: ${message}` : null,
+    SITE_URL ? `Xem: ${SITE_URL}/admin/messages` : null,
+  ].filter(Boolean).join('\n'));
   if (!mailer.enabled()) return console.warn('[MAIL] Chưa cấu hình SMTP, bỏ qua email báo tin nhắn mới.');
   const to = process.env.NOTIFY_EMAIL || 'anh5nhatrang@gmail.com';
   const text = [
@@ -392,6 +412,14 @@ function isRealImage(file) {
 const dropFiles = (files) => (files || []).forEach((f) => fs.unlink(f.path, () => {}));
 
 function notifyNewListing(item) {
+  pushTelegram([
+    '🏠 Tin BĐS mới chờ duyệt',
+    `Tiêu đề: ${item.title}`,
+    `Giá: ${item.price || '(không ghi)'} - ${item.area} m² - ${item.address}`,
+    `Người đăng: ${item.contactName} - ${item.contactPhone}`,
+    `Số ảnh: ${(item.images || []).length}`,
+    SITE_URL ? `Duyệt: ${SITE_URL}/admin/listings` : null,
+  ].filter(Boolean).join('\n'));
   const to = process.env.NOTIFY_EMAIL || 'anh5nhatrang@gmail.com';
   const text = [
     'Có tin BĐS mới do khách đăng trên tuanbanker.com, đang chờ duyệt.',
