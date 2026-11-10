@@ -27,6 +27,8 @@ const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toSt
 if (!ADMIN_PASSWORD) console.warn('[CẢNH BÁO] Chưa đặt ADMIN_PASSWORD, không thể đăng nhập trang quản trị.');
 if (!process.env.SESSION_SECRET) console.warn('[CẢNH BÁO] Chưa đặt SESSION_SECRET, đăng nhập sẽ mất mỗi lần khởi động lại.');
 
+// Đổi mỗi lần khởi động lại: ép trình duyệt tải CSS/JS mới sau khi deploy
+const ASSET_V = Date.now().toString(36);
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -75,6 +77,7 @@ app.use((req, res, next) => {
   res.locals.cats = CATS;
   res.locals.listingTypes = LISTING_TYPES;
   res.locals.areas = geo.AREAS;
+  res.locals.assetV = ASSET_V;
   res.locals.path = req.path;
   res.locals.siteUrl = SITE_URL;
   res.locals.fmtDate = fmtDate;
