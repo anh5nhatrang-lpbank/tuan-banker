@@ -14,6 +14,11 @@ const mailer = require('./lib/mailer');
 const telegram = require('./lib/telegram');
 
 // Báo tức thì về Telegram (lỗi Telegram không ảnh hưởng người gửi form).
+// Link Zalo của người gửi (bấm là mở chat); bỏ qua nếu số không hợp lệ.
+function zaloLine(phone) {
+  const d = String(phone || '').replace(/\D/g, '');
+  return d.length >= 9 ? `Zalo: https://zalo.me/${d}` : null;
+}
 function pushTelegram(text) {
   telegram.sendTelegram(text).catch((e) => console.error('[TELEGRAM] Gửi thất bại:', e.message, e.cause ? (e.cause.code || e.cause.message) : ''));
 }
@@ -292,6 +297,7 @@ function notifyNewMessage({ name, phone, message, ref }) {
     '📩 Tin nhắn liên hệ mới',
     `Họ tên: ${name}`,
     `SĐT: ${phone}`,
+    zaloLine(phone),
     ref ? `Liên quan: ${ref}` : null,
     message ? `Nội dung: ${message}` : null,
     SITE_URL ? `Xem: ${SITE_URL}/admin/messages` : null,
@@ -417,6 +423,7 @@ function notifyNewListing(item) {
     `Tiêu đề: ${item.title}`,
     `Giá: ${item.price || '(không ghi)'} - ${item.area} m² - ${item.address}`,
     `Người đăng: ${item.contactName} - ${item.contactPhone}`,
+    zaloLine(item.contactPhone),
     `Số ảnh: ${(item.images || []).length}`,
     SITE_URL ? `Duyệt: ${SITE_URL}/admin/listings` : null,
   ].filter(Boolean).join('\n'));
