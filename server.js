@@ -287,6 +287,21 @@ app.post('/cong-dong', formLimiter, (req, res) => {
     `Nội dung: ${message}`,
     SITE_URL ? `Duyệt: ${SITE_URL}/admin/community` : null,
   ].filter(Boolean).join('\n'));
+  mailer.sendMail({
+    to: process.env.NOTIFY_EMAIL || 'anh5nhatrang@gmail.com',
+    subject: `[TUẤN BANKER] Câu hỏi cộng đồng mới từ ${name}`,
+    text: [
+      'Có câu hỏi cộng đồng mới trên tuanbanker.com, đang chờ duyệt.',
+      '',
+      `Người hỏi: ${name}`,
+      `Thời gian: ${new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}`,
+      '',
+      'Nội dung:',
+      message,
+      '',
+      SITE_URL ? `Duyệt tại: ${SITE_URL}/admin/community` : '',
+    ].join('\n'),
+  }).catch((e) => console.error('[MAIL] Gửi thất bại:', e.message));
   flash(req, 'ok', 'Cảm ơn bạn! Câu hỏi sẽ hiển thị sau khi được duyệt.');
   res.redirect('/cong-dong');
 });
@@ -309,6 +324,7 @@ function notifyNewMessage({ name, phone, message, ref }) {
     '',
     `Họ tên: ${name}`,
     `Số điện thoại: ${phone}`,
+    zaloLine(phone),
     ref ? `Liên quan tới: ${ref}` : null,
     `Thời gian: ${new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}`,
     '',
@@ -434,6 +450,7 @@ function notifyNewListing(item) {
     `Tiêu đề: ${item.title}`,
     `Giá: ${item.price || '(không ghi)'} - ${item.area} m² - ${item.address}`,
     `Người đăng: ${item.contactName} - ${item.contactPhone}`,
+    zaloLine(item.contactPhone) || '',
     '',
     SITE_URL ? `Duyệt tại: ${SITE_URL}/admin/listings` : '',
   ].join('\n');
