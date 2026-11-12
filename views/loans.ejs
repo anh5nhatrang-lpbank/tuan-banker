@@ -55,13 +55,29 @@
         <label>Số điện thoại<input name="phone" type="tel" maxlength="20" required inputmode="tel"></label>
       </div>
       <div class="row">
-        <label>Sản phẩm quan tâm
+        <label>Dịch vụ quan tâm
           <select name="product"><% loans.forEach(function (l) { %><option value="<%= l.key %>" <%= sel === l.key ? 'selected' : '' %>><%= l.name %></option><% }) %><option value="khac">Chưa rõ, cần tư vấn</option></select>
         </label>
-        <label>Số tiền cần vay (ví dụ: 1,5 tỷ)<input name="amount" maxlength="40"></label>
+        <label>Khu vực (phường/xã)<input name="area" maxlength="80" placeholder="Ví dụ: Nha Trang, Diên Khánh"></label>
+      </div>
+      <div class="row">
+        <label>Số tiền cần vay
+          <select name="amount"><option value="">- Chọn -</option><% ['Dưới 500 triệu','500 triệu - 1 tỷ','1 - 2 tỷ','2 - 5 tỷ','Trên 5 tỷ'].forEach(function (t) { %><option><%= t %></option><% }) %></select>
+        </label>
         <label>Thời gian vay dự kiến<input name="term" maxlength="40" placeholder="Ví dụ: 15 năm"></label>
       </div>
-      <label>Ghi chú thêm (tài sản bảo đảm, khu vực, nguồn thu nhập...)<textarea name="note" rows="3" maxlength="800"></textarea></label>
+      <div class="row">
+        <label>Thu nhập hàng tháng
+          <select name="income"><option value="">- Chọn -</option><% ['Dưới 10 triệu','10 - 20 triệu','20 - 50 triệu','Trên 50 triệu'].forEach(function (t) { %><option><%= t %></option><% }) %></select>
+        </label>
+        <label>Hình thức nhận thu nhập
+          <select name="incomeType"><option value="">- Chọn -</option><option>Chuyển khoản</option><option>Tiền mặt / Tự doanh</option></select>
+        </label>
+        <label>Giờ tiện liên lạc
+          <select name="contactTime"><option value="">- Chọn -</option><% ['Sáng (8h00 - 12h00)','Chiều (13h30 - 17h00)','Tối (sau 18h00)','Bất cứ lúc nào'].forEach(function (t) { %><option><%= t %></option><% }) %></select>
+        </label>
+      </div>
+      <label>Ghi chú thêm (tài sản bảo đảm, nguồn thu nhập...)<textarea name="note" rows="3" maxlength="800"></textarea></label>
       <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button class="btn btn-primary">Gửi thông tin</button>
     </form>

@@ -5,7 +5,7 @@
   <div class="card msg <%= m.read ? '' : 'unread' %>">
     <p><b><%= m.name %></b> · <a href="tel:<%= m.phone.replace(/\s/g, '') %>"><%= m.phone %></a> · <span class="muted"><%= new Date(m.createdAt).toLocaleString('vi-VN') %></span></p>
     <% if (m.ref) { %><p class="muted small">Quan tâm: <%= m.ref %></p><% } %>
-    <p><%= m.message %></p>
+    <p style="white-space:pre-line"><%= m.message %></p>
     <form method="post" action="/admin/messages/<%= m.id %>/delete" data-confirm="Xóa tin nhắn này?"><button class="btn btn-sm btn-danger">Xóa</button></form>
   </div>
 <% }) %>

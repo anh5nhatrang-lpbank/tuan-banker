@@ -11,6 +11,7 @@ const { marked } = require('marked');
 
 const store = require('./lib/store');
 const mailer = require('./lib/mailer');
+const mailtpl = require('./lib/mailtpl');
 const telegram = require('./lib/telegram');
 
 // Báo tức thì về Telegram (lỗi Telegram không ảnh hưởng người gửi form).
@@ -307,9 +308,12 @@ app.post('/cong-dong', formLimiter, (req, res) => {
 });
 
 // Gửi mail báo cho chủ website mỗi khi có tin nhắn liên hệ mới (lỗi mail không ảnh hưởng người gửi form).
-function notifyNewMessage({ name, phone, message, ref }) {
+// extra: [[nhãn, giá trị]] các trường chi tiết (form vay vốn).
+const nowVN = () => new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
+function notifyNewMessage({ name, phone, message, ref, extra }) {
+  const isLoan = !!(extra && extra.length);
   pushTelegram([
-    '📩 Tin nhắn liên hệ mới',
+    isLoan ? '🏦 Khách đăng ký tư vấn vay mới' : '📩 Tin nhắn liên hệ mới',
     `Họ tên: ${name}`,
     `SĐT: ${phone}`,
     zaloLine(phone),
@@ -319,21 +323,21 @@ function notifyNewMessage({ name, phone, message, ref }) {
   ].filter(Boolean).join('\n'));
   if (!mailer.enabled()) return console.warn('[MAIL] Chưa cấu hình SMTP, bỏ qua email báo tin nhắn mới.');
   const to = process.env.NOTIFY_EMAIL || 'anh5nhatrang@gmail.com';
-  const text = [
-    'Có tin nhắn liên hệ mới trên tuanbanker.com',
-    '',
-    `Họ tên: ${name}`,
-    `Số điện thoại: ${phone}`,
-    zaloLine(phone),
-    ref ? `Liên quan tới: ${ref}` : null,
-    `Thời gian: ${new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })}`,
-    '',
-    'Nội dung:',
-    message || '(không có)',
-    '',
-    SITE_URL ? `Xem trong trang quản trị: ${SITE_URL}/admin/messages` : '',
-  ].filter((l) => l !== null).join('\n');
-  mailer.sendMail({ to, subject: `[TUẤN BANKER] Tin nhắn mới từ ${name} - ${phone}`, text })
+  const d = String(phone || '').replace(/\D/g, '');
+  const mail = mailtpl.build({
+    heading: isLoan ? 'Khách hàng đăng ký tư vấn vay' : 'Tin nhắn liên hệ mới',
+    intro: 'Ghi nhận từ tuanbanker.com lúc ' + nowVN(),
+    rows: [
+      ['Họ và tên', name],
+      ['Số điện thoại', phone, { href: 'tel:' + String(phone).replace(/\s/g, '') }],
+      d.length >= 9 ? ['Zalo', 'Mở chat Zalo', { href: 'https://zalo.me/' + d }] : null,
+      ...(isLoan ? extra : [['Liên quan tới', ref], ['Nội dung', message || '(không có)']]),
+    ],
+    link: SITE_URL ? SITE_URL + '/admin/messages' : '',
+    linkText: 'Xem trong trang quản trị',
+    footer: 'Vui lòng liên hệ khách hàng sớm.',
+  });
+  mailer.sendMail({ to, subject: `${isLoan ? '[VAY VỐN]' : '[TUẤN BANKER]'} ${name} - ${phone}`, text: mail.text, html: mail.html, replyTo: undefined })
     .catch((e) => console.error('[MAIL] Gửi thất bại:', e.message));
 }
 
@@ -378,6 +382,12 @@ app.get('/san-pham-vay', (req, res) =>
   })
 );
 
+const pick = (v, list) => (list.includes(v) ? v : '');
+const LOAN_AMOUNTS = ['Dưới 500 triệu', '500 triệu - 1 tỷ', '1 - 2 tỷ', '2 - 5 tỷ', 'Trên 5 tỷ'];
+const LOAN_INCOMES = ['Dưới 10 triệu', '10 - 20 triệu', '20 - 50 triệu', 'Trên 50 triệu'];
+const LOAN_INCOME_TYPES = ['Chuyển khoản', 'Tiền mặt / Tự doanh'];
+const LOAN_TIMES = ['Sáng (8h00 - 12h00)', 'Chiều (13h30 - 17h00)', 'Tối (sau 18h00)', 'Bất cứ lúc nào'];
+
 app.post('/san-pham-vay', formLimiter, (req, res) => {
   if (req.body.website) return res.redirect('/san-pham-vay'); // honeypot
   const b = req.body;
@@ -388,17 +398,30 @@ app.post('/san-pham-vay', formLimiter, (req, res) => {
     return res.redirect('/san-pham-vay#dang-ky');
   }
   const loan = LOANS.find((l) => l.key === b.product);
-  const ref = 'Đăng ký vay: ' + (loan ? loan.name : 'Chưa rõ, cần tư vấn');
-  const message = [
-    b.amount ? `Số tiền cần vay: ${clip(b.amount, 40)}` : '',
-    b.term ? `Thời gian vay: ${clip(b.term, 40)}` : '',
-    b.note ? `Ghi chú: ${clip(b.note, 800)}` : '',
-  ].filter(Boolean).join('\n');
+  const product = loan ? loan.name : 'Chưa rõ, cần tư vấn';
+  const ref = 'Đăng ký vay: ' + product;
+  const area = clip(b.area, 80);
+  const amount = pick(b.amount, LOAN_AMOUNTS);
+  const term = clip(b.term, 40);
+  const income = pick(b.income, LOAN_INCOMES);
+  const incomeType = pick(b.incomeType, LOAN_INCOME_TYPES);
+  const contactTime = pick(b.contactTime, LOAN_TIMES);
+  const note = clip(b.note, 800);
+  const extra = [
+    ['Dịch vụ quan tâm', product],
+    ['Khu vực', area],
+    ['Số tiền cần vay', amount],
+    ['Thời gian vay', term],
+    ['Thu nhập', income ? income + (incomeType ? ` (${incomeType})` : '') : incomeType],
+    ['Giờ tiện liên lạc', contactTime],
+    ['Ghi chú thêm', note],
+  ].filter((r) => r[1]);
+  const message = extra.slice(1).map(([k, v]) => `${k}: ${v}`).join('\n');
   db().messages.push({
     id: store.nextId('messages'), name, phone, message, ref, read: false, createdAt: new Date().toISOString(),
   });
   store.save();
-  notifyNewMessage({ name, phone, message, ref });
+  notifyNewMessage({ name, phone, message, ref, extra });
   flash(req, 'ok', 'Đã gửi thông tin. Tôi sẽ liên hệ lại với bạn sớm nhất!');
   res.redirect('/san-pham-vay');
 });
@@ -444,17 +467,27 @@ function notifyNewListing(item) {
     SITE_URL ? `Duyệt: ${SITE_URL}/admin/listings` : null,
   ].filter(Boolean).join('\n'));
   const to = process.env.NOTIFY_EMAIL || 'anh5nhatrang@gmail.com';
-  const text = [
-    'Có tin BĐS mới do khách đăng trên tuanbanker.com, đang chờ duyệt.',
-    '',
-    `Tiêu đề: ${item.title}`,
-    `Giá: ${item.price || '(không ghi)'} - ${item.area} m² - ${item.address}`,
-    `Người đăng: ${item.contactName} - ${item.contactPhone}`,
-    zaloLine(item.contactPhone) || '',
-    '',
-    SITE_URL ? `Duyệt tại: ${SITE_URL}/admin/listings` : '',
-  ].join('\n');
-  mailer.sendMail({ to, subject: `[TUẤN BANKER] Tin BĐS chờ duyệt: ${item.title}`, text })
+  const d = String(item.contactPhone || '').replace(/\D/g, '');
+  const mail = mailtpl.build({
+    heading: 'Tin BĐS mới chờ duyệt',
+    intro: 'Khách vừa đăng tin trên tuanbanker.com lúc ' + nowVN(),
+    rows: [
+      ['Tiêu đề', item.title],
+      ['Loại hình', item.type],
+      ['Giá', item.price || '(không ghi)'],
+      ['Diện tích', item.area + ' m²'],
+      ['Địa chỉ', item.address],
+      ['Pháp lý', item.legal],
+      ['Mô tả', clip(item.description, 600)],
+      ['Số ảnh', String((item.images || []).length)],
+      ['Người đăng', item.contactName],
+      ['Số điện thoại', item.contactPhone, { href: 'tel:' + String(item.contactPhone).replace(/\s/g, '') }],
+      d.length >= 9 ? ['Zalo', 'Mở chat Zalo', { href: 'https://zalo.me/' + d }] : null,
+    ],
+    link: SITE_URL ? SITE_URL + '/admin/listings' : '',
+    linkText: 'Duyệt tin',
+  });
+  mailer.sendMail({ to, subject: `[TIN BĐS] Chờ duyệt: ${item.title}`, text: mail.text, html: mail.html })
     .catch((e) => console.error('[MAIL] Gửi thất bại:', e.message));
 }
 
