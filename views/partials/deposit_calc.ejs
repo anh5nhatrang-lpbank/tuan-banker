@@ -1,17 +1,10 @@
-<% if (isAdmin) { %>
 <section class="calc card" id="depositCalc" aria-labelledby="depositTitle">
   <script type="application/json" id="depositRateData"><%- R.clientDeposit() %></script>
-  <h2 id="depositTitle">💰 Máy tính lãi tiền gửi LPBank <small>(🔒 chỉ admin)</small></h2>
-  <p class="muted">Chọn số tiền, kỳ hạn và hình thức lĩnh lãi để ước tính tiền lãi theo biểu lãi suất tiết kiệm tại quầy của LPBank (cùng số liệu với <a href="/lai-suat#tiet-kiem">bảng lãi suất tiết kiệm</a>).</p>
+  <h2 id="depositTitle">💰 Máy tính lãi tiền gửi LPBank</h2>
+  <p class="muted">Chọn số tiền, kỳ hạn và hình thức lĩnh lãi để ước tính tiền lãi theo biểu lãi suất tiết kiệm niêm yết của LPBank (cùng số liệu với <a href="/lai-suat#tiet-kiem">bảng lãi suất tiết kiệm</a>). Khách hàng Ưu tiên hoặc gửi mới có thể được lãi suất cao hơn, vui lòng liên hệ để được tư vấn.</p>
   <form id="depForm" class="calc-grid" novalidate>
     <label>Số tiền gửi (triệu đồng)
       <input type="number" id="dAmount" value="500" min="1" step="10" inputmode="numeric">
-    </label>
-    <label>Nhóm khách hàng
-      <select id="dSegment">
-        <option value="priority">Khách hàng Priority</option>
-        <option value="mass">Khách hàng thường (Mass)</option>
-      </select>
     </label>
     <label>Hình thức lĩnh lãi
       <select id="dMethod">
@@ -33,4 +26,3 @@
   </div>
   <p class="muted" id="dNote" style="margin-top:.8rem;font-size:.85rem"></p>
 </section>
-<% } %>
