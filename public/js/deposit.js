@@ -2,55 +2,13 @@
   var $ = function (id) { return document.getElementById(id); };
   if (!$('depForm')) return;
 
-  // ===== BIỂU LÃI SUẤT (%/năm) - hiệu lực từ 02/11/2026 =====
-  // Cập nhật lãi suất: chỉ cần sửa các số trong hai bảng dưới đây.
-  var RATES_DATE = '02/11/2026';
-
-  // Tiết kiệm thường tại quầy: kỳ hạn (tháng) -> [Trả trước, Hàng tháng, Hàng quý]; null = không áp dụng
-  var COUNTER = {
-    priority: {
-      6:  [8.00, 8.15, 8.20],
-      7:  [7.90, 8.15, null],
-      8:  [7.85, 8.10, null],
-      9:  [7.90, 8.10, 8.20],
-      10: [7.85, 8.15, null],
-      11: [7.80, 8.10, null],
-      12: [7.85, 8.20, 8.25]
-    },
-    mass: {
-      6:  [7.90, 8.05, 8.10],
-      7:  [7.80, 8.05, null],
-      8:  [7.75, 8.00, null],
-      9:  [7.80, 8.00, 8.10],
-      10: [7.75, 8.05, null],
-      11: [7.70, 8.01, null],
-      12: [7.75, 8.10, 8.15]
-    }
-  };
-
-  // Lãi cuối kỳ của KH Priority theo số tiền: kỳ hạn -> [từ 2 tỷ, 500tr-<2 tỷ, 100tr-<500tr]
-  // KH Mass = Priority - 0,1%
-  var END = {
-    1:  [4.75, 4.75, 4.75],
-    2:  [4.75, 4.75, 4.75],
-    3:  [4.75, 4.75, 4.75],
-    4:  [4.75, 4.75, 4.75],
-    5:  [4.75, 4.75, 4.75],
-    6:  [8.20, 8.10, 8.00],
-    7:  [8.20, 8.10, 8.00],
-    8:  [8.20, 8.10, 8.00],
-    9:  [8.20, 8.10, 8.00],
-    10: [8.20, 8.10, 8.00],
-    11: [8.20, 8.10, 8.00],
-    12: [8.30, 8.20, 8.10],
-    13: [8.00, 7.90, 7.80],
-    15: [8.00, 7.90, 7.80],
-    16: [8.00, 7.90, 7.80],
-    18: [8.00, 7.90, 7.80],
-    24: [8.10, 8.00, 7.90],
-    25: [8.10, 8.00, 7.90],
-    36: [7.70, 7.60, 7.50]
-  };
+  // ===== BIỂU LÃI SUẤT: đọc từ cùng nguồn dữ liệu với bảng lãi suất tiết kiệm trên website (lib/rates.js) =====
+  var DATA;
+  try { DATA = JSON.parse($('depositRateData').textContent); } catch (e) { return; }
+  var RATES_DATE = DATA.date;
+  var COUNTER = DATA.counter; // kỳ hạn -> [Trả trước, Hàng tháng, Hàng quý]
+  var END = DATA.end;         // kỳ hạn -> [từ 2 tỷ, 500tr-<2 tỷ, 100tr-<500tr] (KH Priority); KH Mass cộng massDelta
+  var MASS_DELTA = DATA.massDelta;
   // ==========================================================
 
   var METHOD_COL = { 'tra-truoc': 0, 'hang-thang': 1, 'hang-quy': 2 };
@@ -93,7 +51,7 @@
       if (!row || amountMillion < 100) return null;
       var tier = amountMillion >= 2000 ? 0 : (amountMillion >= 500 ? 1 : 2);
       var r = row[tier];
-      return segment === 'mass' ? Math.round((r - 0.1) * 100) / 100 : r;
+      return segment === 'mass' ? Math.round((r + MASS_DELTA) * 100) / 100 : r;
     }
     var rr = COUNTER[segment][term];
     return rr ? rr[METHOD_COL[method]] : null;

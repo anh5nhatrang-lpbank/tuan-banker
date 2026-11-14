@@ -1,0 +1,31 @@
+<%- include('partials/head') %>
+<section class="page-head"><div class="container">
+  <p class="eyebrow">📊 Bảng lãi suất cập nhật</p>
+  <h1>Lãi suất LPBank hôm nay</h1>
+  <p class="lead">Tiết kiệm, vay vốn và tỷ giá ngoại tệ, trình bày rõ ràng một nơi. Nhập số tiền để tính ngay tiền lãi hoặc tiền trả hằng tháng; mọi con số đều lấy từ cùng một bảng lãi suất bên dưới.</p>
+  <p>
+    <a class="btn btn-gold" href="/lien-he">Để lại thông tin nhận tư vấn</a>
+    <% if (s.phone) { %><a class="btn btn-ghost" href="tel:<%= s.phone.replace(/\s/g, '') %>">📞 Gọi <%= s.phone %></a><% } %>
+  </p>
+</div></section>
+
+<nav class="rate-nav" aria-label="Chuyển nhanh">
+  <div class="container">
+    <a href="#tiet-kiem">💰 Tiết kiệm</a>
+    <a href="#may-tinh-gui">🧮 Tính lãi tiền gửi</a>
+    <a href="#lai-suat-vay">🏦 Vay vốn</a>
+    <a href="#calc">🧮 Tính tiền vay</a>
+    <a href="/chuyen-tien-quoc-te#ty-gia">💱 Tỷ giá</a>
+  </div>
+</nav>
+
+<section class="section"><div class="container">
+  <%- include('partials/deposit_rates') %>
+  <div class="narrow" id="may-tinh-gui" style="margin-top:2rem"><%- include('partials/deposit_calc') %></div>
+</div></section>
+
+<section class="section alt"><div class="container">
+  <%- include('partials/loan_rates') %>
+  <div class="narrow" style="margin-top:2rem"><%- include('partials/calc') %></div>
+</div></section>
+<%- include('partials/foot', { calc: true, ratesJs: true }) %>

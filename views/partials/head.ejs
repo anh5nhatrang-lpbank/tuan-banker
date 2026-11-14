@@ -29,6 +29,7 @@
       <% Object.values(cats).forEach(function (c) { %>
         <a href="/<%= c.key %>" class="<%= path.indexOf('/' + c.key) === 0 ? 'on' : '' %>"><%= c.short %></a>
       <% }) %>
+      <a href="/lai-suat" class="<%= path === '/lai-suat' ? 'on' : '' %>">Lãi suất</a>
       <a href="/san-pham-vay" class="<%= path === '/san-pham-vay' ? 'on' : '' %>">Sản phẩm vay</a>
       <a href="/chuyen-tien-quoc-te" class="<%= path === '/chuyen-tien-quoc-te' ? 'on' : '' %>">Chuyển tiền quốc tế</a>
       <a href="/san-pham-bds" class="<%= path.indexOf('/san-pham-bds') === 0 ? 'on' : '' %>">Sản phẩm BĐS</a>

@@ -1,0 +1,59 @@
+<%# Bảng lãi suất huy động: dữ liệu từ lib/rates.js (cùng nguồn với máy tính tiền gửi) %>
+<% var segs = [['priority', 'Khách hàng Priority'], ['mass', 'Khách hàng thường']]; %>
+<section class="rates-block" id="tiet-kiem" data-seg="priority">
+  <div class="rates-head">
+    <div>
+      <h2>💰 Lãi suất tiết kiệm LPBank</h2>
+      <p class="muted">Áp dụng từ <b><%= R.DEPOSIT.date %></b> · Gửi tại quầy · Tiền Việt Nam đồng (VND) · Đơn vị: %/năm</p>
+    </div>
+    <div class="seg-toggle" role="tablist" aria-label="Nhóm khách hàng">
+      <% segs.forEach(function (sg, i) { %><button type="button" role="tab" class="<%= i === 0 ? 'on' : '' %>" data-seg-btn="<%= sg[0] %>" aria-selected="<%= i === 0 %>"><%= sg[1] %></button><% }) %>
+    </div>
+  </div>
+
+  <% segs.forEach(function (sg) { %>
+  <div class="rate-stats" data-seg-show="<%= sg[0] %>" <%= sg[0] !== 'priority' ? 'hidden' : '' %>>
+    <% R.depositHighlights(sg[0]).forEach(function (h) { %>
+      <div class="rate-stat"><b><%= R.pct(h.value) %></b><span><%= h.title %></span><small><%= h.sub %></small></div>
+    <% }) %>
+  </div>
+  <% }) %>
+
+  <h3 class="rates-sub">Lãi cuối kỳ <small>nhận cả gốc và lãi khi đến hạn, mức lãi tăng theo số tiền gửi</small></h3>
+  <% segs.forEach(function (sg) { var groups = R.endGroups(sg[0]); var maxV = 0; groups.forEach(function (g) { g.rates.forEach(function (v) { if (v > maxV) maxV = v; }); }); %>
+  <div class="rate-table-wrap" data-seg-show="<%= sg[0] %>" <%= sg[0] !== 'priority' ? 'hidden' : '' %>>
+    <table class="rate-table">
+      <thead><tr><th>Số tiền gửi</th><% groups.forEach(function (g) { %><th><%= g.label %></th><% }) %></tr></thead>
+      <tbody>
+        <% for (var ti = R.DEPOSIT.tiers.length - 1; ti >= 0; ti--) { %>
+        <tr>
+          <th scope="row"><%= R.DEPOSIT.tiers[ti] %></th>
+          <% groups.forEach(function (g) { var v = g.rates[ti]; %><td class="<%= v === maxV ? 'best' : '' %>"><%= R.pct(v) %></td><% }) %>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <% }) %>
+  <p class="muted rates-foot">Lãi cuối kỳ áp dụng cho số tiền từ 100 triệu đồng. Ô nền vàng là mức cao nhất trong bảng.</p>
+
+  <h3 class="rates-sub">Lĩnh lãi định kỳ và trả trước <small>kỳ hạn 6 – 12 tháng</small></h3>
+  <% segs.forEach(function (sg) {
+       var rows = R.DEPOSIT.counter[sg[0]]; var maxV = 0;
+       Object.keys(rows).forEach(function (k) { rows[k].forEach(function (v) { if (v != null && v > maxV) maxV = v; }); }); %>
+  <div class="rate-table-wrap" data-seg-show="<%= sg[0] %>" <%= sg[0] !== 'priority' ? 'hidden' : '' %>>
+    <table class="rate-table">
+      <thead><tr><th>Kỳ hạn</th><th>Trả lãi trước</th><th>Lãi hàng tháng</th><th>Lãi hàng quý</th></tr></thead>
+      <tbody>
+        <% Object.keys(rows).map(Number).sort(function (a, b) { return a - b; }).forEach(function (t) { %>
+        <tr>
+          <th scope="row"><%= t %> tháng</th>
+          <% rows[t].forEach(function (v) { %><td class="<%= v === maxV ? 'best' : '' %>"><%= R.pct(v) %></td><% }) %>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% }) %>
+  <p class="muted rates-foot">Dấu "–" nghĩa là kỳ hạn đó không có hình thức lĩnh lãi này. Lãi suất mang tính tham khảo, có thể thay đổi theo từng thời điểm; vui lòng liên hệ để được báo mức lãi suất và điều kiện áp dụng khi gửi.</p>
+</section>

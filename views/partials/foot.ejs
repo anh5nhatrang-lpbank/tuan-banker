@@ -10,6 +10,7 @@
       <h4>Chuyên mục</h4>
       <% Object.values(cats).forEach(function (c) { %><a href="/<%= c.key %>"><%= c.name %></a><% }) %>
       <a href="/san-pham-vay">Sản phẩm vay</a>
+      <a href="/lai-suat">Bảng lãi suất LPBank</a>
       <a href="/chuyen-tien-quoc-te">Chuyển tiền quốc tế &amp; ngoại tệ</a>
       <a href="/san-pham-bds">Sản phẩm BĐS</a>
       <a href="/cong-dong">Cộng đồng</a>
@@ -39,6 +40,7 @@
 <script src="/js/main.js?v=<%= assetV %>"></script>
 <% if (typeof compress !== 'undefined' && compress) { %><script src="/js/imgcompress.js"></script><% } %>
 <% if (typeof galleryJs !== 'undefined' && galleryJs) { %><script src="/js/gallery.js"></script><% } %>
-<% if (typeof calc !== 'undefined' && calc) { %><script src="/js/calc.js"></script><script src="/js/deposit.js"></script><% } %>
+<% if (typeof calc !== 'undefined' && calc) { %><script src="/js/calc.js?v=<%= assetV %>"></script><script src="/js/deposit.js?v=<%= assetV %>"></script><% } %>
+<% if (typeof ratesJs !== 'undefined' && ratesJs) { %><script src="/js/rates.js?v=<%= assetV %>"></script><% } %>
 </body>
 </html>

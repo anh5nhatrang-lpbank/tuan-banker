@@ -1,0 +1,50 @@
+<%# Bảng lãi suất cho vay: mỗi mục đích × thời hạn chỉ có MỘT mức lãi suất (đã cộng sẵn). Dữ liệu từ lib/rates.js %>
+<% var LT = R.loanTable(); var span = (LT.max - LT.min) || 1; %>
+<section class="rates-block" id="lai-suat-vay">
+  <div class="rates-head">
+    <div>
+      <h2>🏦 Lãi suất cho vay LPBank</h2>
+      <p class="muted">Khách hàng cá nhân · Vay bằng VND · Áp dụng từ <b><%= R.LOAN.date %></b> · Đơn vị: %/năm, tính trên dư nợ gốc thực tế</p>
+    </div>
+  </div>
+
+  <div class="rate-stats">
+    <% ['nha-dat', 'tieu-dung', 'sxkd'].forEach(function (k) { var row = LT.rows.filter(function (x) { return x.key === k; })[0]; %>
+      <div class="rate-stat"><small>Lãi suất từ</small><b><%= R.pct(row.min, 1) %></b><span><%= row.icon %> <%= row.name %></span></div>
+    <% }) %>
+  </div>
+
+  <div class="rate-table-wrap">
+    <table class="rate-table loan-rate-table">
+      <thead>
+        <tr>
+          <th>Mục đích vay</th>
+          <% R.LOAN.brackets.forEach(function (b) { %><th><%= b.label %><% if (b.sub) { %><small><%= b.sub %></small><% } %></th><% }) %>
+        </tr>
+      </thead>
+      <tbody>
+        <% LT.rows.forEach(function (row) { %>
+        <tr id="vay-<%= row.key %>">
+          <th scope="row"><span class="rt-icon"><%= row.icon %></span><span><b><%= row.name %></b><small><%= row.note %></small></span></th>
+          <% row.rates.forEach(function (v) { %>
+            <td class="heat <%= v === row.min ? 'best' : '' %>" style="--h: <%= ((v - LT.min) / span).toFixed(2) %>"><%= R.pct(v, 1) %></td>
+          <% }) %>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <p class="rate-legend"><span class="lg lg-lo"></span> Lãi suất thấp <span class="lg lg-hi"></span> Lãi suất cao hơn · Ô viền vàng là mức thấp nhất của từng loại vay</p>
+
+  <div class="rate-notes">
+    <h3>Cách đọc bảng</h3>
+    <ul class="check">
+      <li>Chọn dòng theo <b>mục đích vay</b>, chọn cột theo <b>thời gian vay</b>, ô giao nhau là lãi suất/năm. Không cần cộng thêm khoản nào khác.</li>
+      <li>Đây là mức lãi suất <b>từ</b> (thấp nhất) dành cho khách hàng thông thường. Mức cụ thể do LPBank quyết định theo hồ sơ, tài sản bảo đảm và xếp hạng tín dụng của từng khách hàng.</li>
+      <li>Lãi suất được điều chỉnh định kỳ 3 tháng một lần; công thức và mức lãi suất cụ thể được ghi trong hợp đồng tín dụng khi ký kết.</li>
+      <li><b>Vay cầm cố sổ tiết kiệm/giấy tờ có giá do LPBank phát hành:</b> lãi suất cố định, tối thiểu bằng lãi suất tiết kiệm cùng kỳ hạn cộng 2%/năm (vay từ 1 tháng). Liên hệ để được báo mức cụ thể.</li>
+    </ul>
+    <p class="muted rates-foot">Bảng chỉ mang tính tham khảo, có thể thay đổi theo từng thời kỳ. Phí trả nợ trước hạn theo biểu phí hiện hành của LPBank. Vui lòng liên hệ để được tư vấn mức lãi suất và điều kiện vay áp dụng cho hồ sơ của bạn.</p>
+    <p><a class="btn btn-gold" href="/san-pham-vay#dang-ky">Để lại thông tin nhận tư vấn lãi suất vay</a></p>
+  </div>
+</section>

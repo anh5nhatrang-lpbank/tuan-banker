@@ -28,6 +28,7 @@ const geo = require('./lib/geo');
 const { LOANS, COMMON } = require('./lib/loans');
 const { SERVICES: INTL, WHY: INTL_WHY } = require('./lib/intl');
 const fx = require('./lib/fxrate');
+const R = require('./lib/rates');
 const { uniqueSlug, fmtDate, clip, paginate } = require('./lib/util');
 
 const EXT_IMG = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp' };
@@ -92,6 +93,7 @@ app.use((req, res, next) => {
   res.locals.listingTypes = LISTING_TYPES;
   res.locals.areas = geo.AREAS;
   res.locals.assetV = ASSET_V;
+  res.locals.R = R; // dữ liệu lãi suất dùng chung (bảng + máy tính)
   res.locals.path = req.path;
   res.locals.siteUrl = SITE_URL;
   res.locals.fmtDate = fmtDate;
@@ -376,6 +378,13 @@ app.post('/lien-he', formLimiter, (req, res) => {
 
 
 // ---------- khay sản phẩm vay bán lẻ + form để lại thông tin ----------
+app.get('/lai-suat', (req, res) =>
+  res.render('lai-suat', {
+    title: 'Lãi suất LPBank: tiết kiệm, vay vốn',
+    desc: 'Bảng lãi suất tiết kiệm và lãi suất cho vay LPBank rõ ràng, dễ xem, kèm máy tính tiền lãi và tiền trả hằng tháng.',
+  })
+);
+
 app.get('/san-pham-vay', (req, res) =>
   res.render('loans', {
     title: 'Sản phẩm vay bán lẻ LPBank',
@@ -618,7 +627,7 @@ app.get('/robots.txt', (req, res) => {
 
 app.get('/sitemap.xml', (req, res) => {
   const base = SITE_URL || `${req.protocol}://${req.get('host')}`;
-  const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/hinh-anh', '/san-pham-bds', '/san-pham-vay', '/chuyen-tien-quoc-te', '/cong-dong', '/gioi-thieu', '/lien-he']
+  const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/hinh-anh', '/san-pham-bds', '/san-pham-vay', '/lai-suat', '/chuyen-tien-quoc-te', '/cong-dong', '/gioi-thieu', '/lien-he']
     .concat(publishedPosts().map((p) => '/bai-viet/' + p.slug))
     .concat(activeListings().map((l) => '/san-pham-bds/' + l.slug));
   res

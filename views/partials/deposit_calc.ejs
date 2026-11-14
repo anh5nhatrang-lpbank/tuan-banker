@@ -1,6 +1,7 @@
 <section class="calc card" id="depositCalc" aria-labelledby="depositTitle">
+  <script type="application/json" id="depositRateData"><%- R.clientDeposit() %></script>
   <h2 id="depositTitle">💰 Máy tính lãi tiền gửi LPBank</h2>
-  <p class="muted">Chọn số tiền, kỳ hạn và hình thức lĩnh lãi để ước tính tiền lãi theo biểu lãi suất tiết kiệm tại quầy của LPBank.</p>
+  <p class="muted">Chọn số tiền, kỳ hạn và hình thức lĩnh lãi để ước tính tiền lãi theo biểu lãi suất tiết kiệm tại quầy của LPBank (cùng số liệu với <a href="/lai-suat#tiet-kiem">bảng lãi suất tiết kiệm</a>).</p>
   <form id="depForm" class="calc-grid" novalidate>
     <label>Số tiền gửi (triệu đồng)
       <input type="number" id="dAmount" value="500" min="1" step="10" inputmode="numeric">

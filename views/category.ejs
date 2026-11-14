@@ -22,6 +22,9 @@
       </div></div>
     <% } %>
     <% if (cat.key === 'tai-chinh-ngan-hang' && page === 1 && !q) { %>
+      <div style="margin-bottom:2rem"><%- include('partials/deposit_rates') %>
+        <p style="margin-top:1rem"><a class="btn btn-gold" href="/lai-suat#lai-suat-vay">Xem bảng lãi suất cho vay →</a></p>
+      </div>
       <div class="narrow" style="margin-bottom:2rem"><%- include('partials/calc') %></div>
       <div class="narrow" style="margin-bottom:2rem"><%- include('partials/deposit_calc') %></div>
     <% } %>
@@ -37,4 +40,4 @@
     <% } %>
   </div>
 </section>
-<%- include('partials/foot', { calc: cat.key === 'tai-chinh-ngan-hang' }) %>
+<%- include('partials/foot', { calc: cat.key === 'tai-chinh-ngan-hang', ratesJs: cat.key === 'tai-chinh-ngan-hang' }) %>

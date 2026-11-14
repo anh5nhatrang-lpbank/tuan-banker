@@ -2,7 +2,7 @@
 <section class="page-head"><div class="container">
   <p class="eyebrow">🏦 Khay sản phẩm</p>
   <h1>Sản phẩm vay bán lẻ LPBank</h1>
-  <p class="lead">Vay mua nhà, mua xe, tiêu dùng, kinh doanh. Điều kiện, giấy tờ, thời hạn vay được tóm tắt dưới đây. Lãi suất thay đổi theo từng thời kỳ và hồ sơ khách hàng, vui lòng liên hệ để được báo mức lãi suất hiện hành.</p>
+  <p class="lead">Vay mua nhà, mua xe, tiêu dùng, kinh doanh. Điều kiện, giấy tờ, thời hạn vay được tóm tắt dưới đây. Bảng lãi suất cho vay hiện hành được công bố ngay bên dưới, mỗi loại vay chỉ có một mức lãi suất, dễ xem và dễ so sánh.</p>
   <p>
     <a class="btn btn-gold" href="#dang-ky">Để lại thông tin nhận tư vấn</a>
     <% if (s.phone) { %><a class="btn btn-ghost" href="tel:<%= s.phone.replace(/\s/g, '') %>">📞 Gọi <%= s.phone %></a><% } %>
@@ -10,7 +10,8 @@
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="card loan-common"><div class="card-body">
+  <%- include('partials/loan_rates') %>
+  <div class="card loan-common" style="margin-top:2rem"><div class="card-body">
     <h2>Điều kiện chung và giấy tờ cần chuẩn bị</h2>
     <div class="two-col-simple">
       <div>
@@ -37,7 +38,8 @@
         <li><span>Thời gian vay</span><b><%= l.term %></b></li>
         <li><span>Hạn mức vay</span><b><%= l.limit %></b></li>
         <li><span>Tài sản bảo đảm</span><b><%= l.collateral %></b></li>
-        <li><span>Lãi suất</span><b>Liên hệ<% if (s.phone) { %>: <a href="tel:<%= s.phone.replace(/\s/g, '') %>"><%= s.phone %></a><% } %></b></li>
+        <% var rk = { 'nha-dat': 'nha-dat', 'tieu-dung': 'tieu-dung', 'sxkd': 'sxkd' }[l.key]; var rrow = rk ? R.loanTable().rows.filter(function (x) { return x.key === rk; })[0] : null; %>
+        <li><span>Lãi suất</span><% if (rrow) { %><b>Từ <%= R.pct(rrow.min, 1) %>/năm <a href="#vay-<%= rk %>">(xem bảng)</a></b><% } else { %><b>Liên hệ<% if (s.phone) { %>: <a href="tel:<%= s.phone.replace(/\s/g, '') %>"><%= s.phone %></a><% } %></b><% } %></li>
       </ul>
       <h4>Hồ sơ cần chuẩn bị</h4>
       <ul class="check"><% l.docs.forEach(function (t) { %><li><%= t %></li><% }) %></ul>
