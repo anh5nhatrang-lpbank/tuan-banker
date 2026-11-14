@@ -39,7 +39,7 @@
         <li><span>Thời gian vay</span><b><%= l.term %></b></li>
         <li><span>Hạn mức vay</span><b><%= l.limit %></b></li>
         <li><span>Tài sản bảo đảm</span><b><%= l.collateral %></b></li>
-        <% var pm = R.promoMin(l.key); %>
+        <% var pm = isAdmin ? R.promoMin(l.key) : null; %>
         <li><span>Lãi suất ưu đãi</span><% if (pm) { %><b>Từ <%= R.pct(pm, 2) %>/năm <a href="#lai-suat-vay">(xem bảng)</a></b><% } else { %><b>Liên hệ<% if (s.phone) { %>: <a href="tel:<%= s.phone.replace(/\s/g, '') %>"><%= s.phone %></a><% } %></b><% } %></li>
       </ul>
       <h4>Hồ sơ cần chuẩn bị</h4>

@@ -1,6 +1,23 @@
 <%# Lãi suất cho vay ưu đãi (công khai). Dữ liệu từ lib/rates.js (PROMO) %>
 <% var P = R.PROMO; var short = P.short; %>
+<% if (!isAdmin) { %>
 <section class="rates-block" id="lai-suat-vay">
+  <div class="rates-head"><div>
+    <h2>🏦 Lãi suất cho vay LPBank</h2>
+    <p class="muted">Lãi suất vay phụ thuộc loại vay, thời gian vay, tài sản bảo đảm và hồ sơ của từng khách hàng, đồng thời thay đổi theo từng thời kỳ.</p>
+  </div></div>
+  <div class="card"><div class="card-body">
+    <h3>📞 Liên hệ để được báo lãi suất ưu đãi mới nhất</h3>
+    <p>Gọi hoặc nhắn Zalo <b><%= s.phone || '0905 491 125' %></b>, tôi sẽ báo mức lãi suất và điều kiện phù hợp với hồ sơ của bạn, hoàn toàn miễn phí.</p>
+    <p>
+      <a class="btn btn-gold" href="tel:<%= (s.phone || '0905491125').replace(/\s/g, '') %>">📞 Gọi <%= s.phone || '0905 491 125' %></a>
+      <a class="btn btn-ghost" href="/san-pham-vay#dang-ky">Để lại thông tin nhận tư vấn</a>
+    </p>
+  </div></div>
+</section>
+<% } else { %>
+<section class="rates-block admin-only" id="lai-suat-vay">
+  <div class="admin-lock">🔒 Chỉ admin nhìn thấy bảng này. Khách truy cập chỉ thấy lời mời liên hệ.</div>
   <div class="rates-head">
     <div>
       <h2>🎁 Lãi suất cho vay ưu đãi LPBank</h2>
@@ -56,3 +73,4 @@
     <p><a class="btn btn-gold" href="/san-pham-vay#dang-ky">Để lại thông tin nhận tư vấn lãi suất vay</a></p>
   </div>
 </section>
+<% } %>

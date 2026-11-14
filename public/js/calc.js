@@ -18,7 +18,7 @@
     var o = data.options.filter(function (x) { return x.key === sel.value; })[0];
     if (o) $('cRate').value = o.rate;
   }
-  if (data && sel) {
+  if (data && data.options && data.options.length && sel) {
     data.options.forEach(function (p) {
       var opt = document.createElement('option');
       opt.value = p.key; opt.textContent = p.name;
