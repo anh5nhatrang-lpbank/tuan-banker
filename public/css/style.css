@@ -300,3 +300,13 @@ body.pm-lock-scroll { overflow: hidden; }
 .intl-promo h2 { margin: .3rem 0; }
 .intl-example { background: #f7f4ee; border-left: 3px solid var(--gold-d); padding: .6rem .9rem; border-radius: 6px; margin: .8rem 0; font-size: .93rem; }
 .intl-example p { margin: .25rem 0 0; }
+
+/* bảng tỷ giá */
+.fx-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.fx-table { width: 100%; border-collapse: collapse; min-width: 520px; font-variant-numeric: tabular-nums; }
+.fx-table th, .fx-table td { padding: .55rem .7rem; border-bottom: 1px solid #eadfd2; text-align: right; white-space: nowrap; }
+.fx-table th:first-child, .fx-table td:first-child { text-align: left; }
+.fx-table thead th { background: var(--navy); color: #fff; font-size: .85rem; }
+.fx-table tbody tr:nth-child(even) { background: #faf6ef; }
+.fx-table td small { display: block; color: var(--muted); font-size: .74rem; }
+.fx-note { margin-top: 0; }

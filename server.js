@@ -27,6 +27,7 @@ const { CATS, LISTING_TYPES } = require('./lib/config');
 const geo = require('./lib/geo');
 const { LOANS, COMMON } = require('./lib/loans');
 const { SERVICES: INTL, WHY: INTL_WHY } = require('./lib/intl');
+const fx = require('./lib/fxrate');
 const { uniqueSlug, fmtDate, clip, paginate } = require('./lib/util');
 
 const EXT_IMG = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp' };
@@ -433,8 +434,11 @@ app.post('/san-pham-vay', formLimiter, (req, res) => {
 const INTL_AMOUNTS = ['Dưới 100 triệu', '100 - 500 triệu', '500 triệu - 1 tỷ', 'Trên 1 tỷ'];
 const INTL_TIMES = ['Sáng (8h00 - 12h00)', 'Chiều (13h30 - 17h00)', 'Tối (sau 18h00)', 'Bất cứ lúc nào'];
 
-app.get('/chuyen-tien-quoc-te', (req, res) =>
+app.get('/chuyen-tien-quoc-te', async (req, res) => {
+  const rates = await fx.getRates();
   res.render('intl', {
+    rates,
+    fx,
     title: 'Chuyển tiền quốc tế & ngoại tệ LPBank',
     desc: 'Chuyển tiền du học, khám chữa bệnh, định cư, thừa kế, nhận tiền từ nước ngoài, mua ngoại tệ tiền mặt đi du lịch tại LPBank. Để lại số điện thoại nhận tư vấn.',
     services: INTL,
@@ -442,8 +446,8 @@ app.get('/chuyen-tien-quoc-te', (req, res) =>
     amounts: INTL_AMOUNTS,
     times: INTL_TIMES,
     sel: clip(req.query.sp, 30),
-  })
-);
+  });
+});
 
 app.post('/chuyen-tien-quoc-te', formLimiter, (req, res) => {
   if (req.body.website) return res.redirect('/chuyen-tien-quoc-te'); // honeypot

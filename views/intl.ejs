@@ -9,6 +9,31 @@
   </p>
 </div></section>
 
+<section class="section fx-section" id="ty-gia"><div class="container">
+  <div class="section-head"><h2>💱 Tỷ giá ngoại tệ LPBank</h2></div>
+  <div class="card"><div class="card-body">
+    <p class="muted fx-note">
+      <% if (rates.updatedAt) { %>Cập nhật lúc <b><%= fx.stamp(rates.updatedAt) %></b>. <% } %>Đơn vị: đồng Việt Nam (VND) cho 1 đơn vị ngoại tệ.
+      <% if (rates.source === 'snapshot') { %><br><b>Lưu ý:</b> chưa cập nhật được tỷ giá mới nhất, vui lòng liên hệ để biết tỷ giá hiện hành.<% } %>
+    </p>
+    <div class="fx-wrap">
+      <table class="fx-table">
+        <thead><tr><th>Ngoại tệ</th><th>Mua tiền mặt</th><th>Mua chuyển khoản</th><th>Bán tiền mặt</th><th>Bán chuyển khoản</th></tr></thead>
+        <tbody>
+          <% rates.rows.forEach(function (r) { %>
+          <tr>
+            <td><b><%= r.code %></b><small><%= fx.viName(r.code, r.name) %></small></td>
+            <td><%= fx.fmt(r.buyTm) %></td><td><%= fx.fmt(r.buyCk) %></td><td><%= fx.fmt(r.sellTm) %></td><td><%= fx.fmt(r.sellCk) %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted"><small>"Mua" là giá LPBank mua vào từ khách; "Bán" là giá LPBank bán ra cho khách. Dấu "–" nghĩa là không áp dụng. Tỷ giá thay đổi trong ngày, mang tính tham khảo; tỷ giá giao dịch thực tế theo thời điểm thực hiện. Nguồn: <a href="https://lpbank.com.vn/ca-nhan/ty-gia" target="_blank" rel="noopener">lpbank.com.vn/ca-nhan/ty-gia</a>. Liên hệ để được báo tỷ giá và hỗ trợ giao dịch.</small></p>
+    <p><a class="btn btn-gold" href="#dang-ky">Để lại số điện thoại, nhận báo tỷ giá</a></p>
+  </div></div>
+</div></section>
+
 <section class="section"><div class="container">
   <div class="section-head"><h2>Dịch vụ được quan tâm nhiều</h2></div>
   <div class="loan-grid">
