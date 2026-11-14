@@ -341,17 +341,16 @@ body.pm-lock-scroll { overflow: hidden; }
 .rates-foot { font-size: .84rem; margin: .8rem 0 0; }
 /* bảng lãi suất vay: ô đổi màu theo mức lãi (xanh = thấp, cam = cao) */
 .loan-rate-table { min-width: 680px; }
-.loan-rate-table tbody th { display: table-cell; min-width: 230px; }
-.loan-rate-table tbody th > span { display: inline-block; vertical-align: top; }
-.loan-rate-table .rt-icon { font-size: 1.4rem; margin-right: .6rem; line-height: 1.3; }
+.loan-rate-table tbody th { min-width: 240px; }
+.loan-rate-table .rt-name { display: flex; align-items: flex-start; gap: .6rem; }
+.loan-rate-table .rt-icon { font-size: 1.4rem; line-height: 1.3; flex: 0 0 auto; }
 .loan-rate-table tbody th small { display: block; font-weight: 400; color: var(--muted); font-size: .78rem; line-height: 1.35; }
 .loan-rate-table tbody th b { display: block; font-size: .95rem; line-height: 1.3; }
-.loan-rate-table td.heat { background: hsl(calc(142 - var(--h, 0) * 112), 62%, 91%) !important; font-size: 1.1rem; }
-.loan-rate-table td.heat.best { box-shadow: inset 0 0 0 2px var(--gold); color: #0f5a29; }
+.loan-rate-table td.heat { font-size: 1.1rem; color: #3a2a1c; }
 .rate-legend { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .6rem; font-size: .82rem; color: var(--muted); margin: .7rem 0 0; }
 .rate-legend .lg { display: inline-block; width: 22px; height: 12px; border-radius: 4px; border: 1px solid var(--line); }
-.rate-legend .lg-lo { background: hsl(142, 62%, 91%); }
-.rate-legend .lg-hi { background: hsl(30, 62%, 91%); margin-left: .6rem; }
+.rate-legend .lg-lo { background: hsl(142, 62%, 90%); }
+.rate-legend .lg-hi { background: hsl(30, 62%, 90%); margin-left: .6rem; }
 .rate-notes { margin-top: 1.4rem; background: var(--alt); border-radius: 12px; padding: 1rem 1.2rem; }
 .rate-notes h3 { margin-bottom: .4rem; }
 .rate-nav { position: sticky; top: 64px; z-index: 20; background: rgba(255, 255, 255, .96); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }

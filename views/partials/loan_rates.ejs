@@ -25,16 +25,16 @@
       <tbody>
         <% LT.rows.forEach(function (row) { %>
         <tr id="vay-<%= row.key %>">
-          <th scope="row"><span class="rt-icon"><%= row.icon %></span><span><b><%= row.name %></b><small><%= row.note %></small></span></th>
+          <th scope="row"><div class="rt-name"><span class="rt-icon"><%= row.icon %></span><span><b><%= row.name %></b><small><%= row.note %></small></span></div></th>
           <% row.rates.forEach(function (v) { %>
-            <td class="heat <%= v === row.min ? 'best' : '' %>" style="--h: <%= ((v - LT.min) / span).toFixed(2) %>"><%= R.pct(v, 1) %></td>
+            <td class="heat" style="background-color: hsl(<%= Math.round(142 - ((v - LT.min) / span) * 112) %>, 62%, 90%)"><%= R.pct(v, 1) %></td>
           <% }) %>
         </tr>
         <% }) %>
       </tbody>
     </table>
   </div>
-  <p class="rate-legend"><span class="lg lg-lo"></span> Lãi suất thấp <span class="lg lg-hi"></span> Lãi suất cao hơn · Ô viền vàng là mức thấp nhất của từng loại vay</p>
+  <p class="rate-legend"><span class="lg lg-lo"></span> Lãi suất thấp <span class="lg lg-hi"></span> Lãi suất cao hơn</p>
 
   <div class="rate-notes">
     <h3>Cách đọc bảng</h3>
