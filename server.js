@@ -314,7 +314,7 @@ const nowVN = () => new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_
 function notifyNewMessage({ name, phone, message, ref, extra, kind }) {
   const isLoan = !!(extra && extra.length);
   const isIntl = kind === 'intl';
-  const tagLabel = isIntl ? '[CHUYỂN TIỀN QT]' : isLoan ? '[VAY VỐN]' : '[TUẤN BANKER]';
+  const tagLabel = isIntl ? '[CHUYỂN TIỀN QUỐC TẾ]' : isLoan ? '[VAY VỐN]' : '[TUẤN BANKER]';
   pushTelegram([
     isIntl ? '🌐 Khách đăng ký tư vấn chuyển tiền quốc tế/ngoại tệ' : isLoan ? '🏦 Khách đăng ký tư vấn vay mới' : '📩 Tin nhắn liên hệ mới',
     `Họ tên: ${name}`,
@@ -456,7 +456,7 @@ app.post('/chuyen-tien-quoc-te', formLimiter, (req, res) => {
   }
   const svc = INTL.find((x) => x.key === b.product);
   const product = svc ? svc.name : 'Chưa rõ, cần tư vấn';
-  const ref = 'Đăng ký chuyển tiền QT/ngoại tệ: ' + product;
+  const ref = 'Đăng ký chuyển tiền quốc tế/ngoại tệ: ' + product;
   const extra = [
     ['Dịch vụ quan tâm', product],
     ['Quốc gia / đồng tiền', clip(b.country, 60)],
