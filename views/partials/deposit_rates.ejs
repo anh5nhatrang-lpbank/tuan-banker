@@ -1,6 +1,7 @@
 <%# Bảng lãi suất huy động: dữ liệu từ lib/rates.js (cùng nguồn với máy tính tiền gửi) %>
-<% var segs = [['priority', 'Khách hàng Priority'], ['mass', 'Khách hàng thường']]; %>
-<section class="rates-block" id="tiet-kiem" data-seg="priority">
+<% if (!isAdmin) { %><%- include('partials/rate_contact', { id: 'tiet-kiem', title: '💰 Lãi suất tiết kiệm LPBank' }) %><% } else { var segs = [['priority', 'Khách hàng Priority'], ['mass', 'Khách hàng thường']]; %>
+<section class="rates-block admin-only" id="tiet-kiem" data-seg="priority">
+  <div class="admin-lock">🔒 Chỉ admin nhìn thấy bảng này. Khách truy cập chỉ thấy lời mời liên hệ.</div>
   <div class="rates-head">
     <div>
       <h2>💰 Lãi suất tiết kiệm LPBank</h2>
@@ -57,3 +58,4 @@
   <% }) %>
   <p class="muted rates-foot">Dấu "–" nghĩa là kỳ hạn đó không có hình thức lĩnh lãi này. Lãi suất mang tính tham khảo, có thể thay đổi theo từng thời điểm; vui lòng liên hệ để được báo mức lãi suất và điều kiện áp dụng khi gửi.</p>
 </section>
+<% } %>
