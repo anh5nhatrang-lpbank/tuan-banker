@@ -392,3 +392,5 @@ body.pm-lock-scroll { overflow: hidden; }
 .vip-note { background: #fff4d6; border: 1px solid #f0c96a; border-radius: 12px; padding: .9rem 1.1rem; margin: 0 0 1.2rem; line-height: 1.55; }
 .rate-table thead th[rowspan], .rate-table thead th[colspan] { text-align: center; vertical-align: middle; }
 .rate-table thead th small { display: block; font-weight: 400; font-size: .72rem; opacity: .85; }
+.cta-row { display: flex; flex-wrap: wrap; gap: .6rem; margin: .8rem 0 0; }
+.calc .vip-note { margin: 1.2rem 0 0; }
