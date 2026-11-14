@@ -342,9 +342,9 @@ body.pm-lock-scroll { overflow: hidden; }
 /* bảng lãi suất vay: ô đổi màu theo mức lãi (xanh = thấp, cam = cao) */
 .loan-rate-table { min-width: 680px; }
 .loan-rate-table tbody th { min-width: 240px; }
-.loan-rate-table .rt-name { display: flex; align-items: flex-start; gap: .6rem; }
-.loan-rate-table .rt-icon { font-size: 1.4rem; line-height: 1.3; flex: 0 0 auto; }
-.loan-rate-table tbody th small { display: block; font-weight: 400; color: var(--muted); font-size: .78rem; line-height: 1.35; }
+.loan-rate-table .rt-name, .promo-long .rt-name { display: flex; align-items: flex-start; gap: .6rem; }
+.loan-rate-table .rt-icon, .promo-long .rt-icon { font-size: 1.4rem; line-height: 1.3; flex: 0 0 auto; }
+.loan-rate-table tbody th small, .promo-long tbody th small { display: block; font-weight: 400; color: var(--muted); font-size: .78rem; line-height: 1.35; }
 .loan-rate-table tbody th b { display: block; font-size: .95rem; line-height: 1.3; }
 .loan-rate-table td.heat { font-size: 1.1rem; color: #3a2a1c; }
 .rate-legend { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .6rem; font-size: .82rem; color: var(--muted); margin: .7rem 0 0; }
