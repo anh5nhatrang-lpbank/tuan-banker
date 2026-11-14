@@ -1,0 +1,78 @@
+<%- include('partials/head') %>
+<section class="page-head"><div class="container">
+  <p class="eyebrow">🌐 Danh mục tài chính</p>
+  <h1>Chuyển tiền quốc tế &amp; ngoại tệ LPBank</h1>
+  <p class="lead">Chuyển tiền du học, khám chữa bệnh, định cư, thừa kế, nhận tiền từ nước ngoài và mua ngoại tệ tiền mặt đi du lịch. Để lại số điện thoại, tôi sẽ gọi tư vấn thủ tục, hồ sơ và báo tỷ giá hiện hành.</p>
+  <p>
+    <a class="btn btn-gold" href="#dang-ky">Để lại số điện thoại nhận tư vấn</a>
+    <% if (s.phone) { %><a class="btn btn-ghost" href="tel:<%= s.phone.replace(/\s/g, '') %>">📞 Gọi <%= s.phone %></a><% } %>
+  </p>
+</div></section>
+
+<section class="section"><div class="container">
+  <div class="section-head"><h2>Dịch vụ được quan tâm nhiều</h2></div>
+  <div class="loan-grid">
+    <% services.filter(function (x) { return x.flag === 'hot'; }).forEach(function (x) { %>
+    <article class="card loan-card intl-hot" id="<%= x.key %>"><div class="card-body">
+      <span class="tag">⭐ <%= x.tag %></span>
+      <h2><%= x.icon %> <%= x.name %></h2>
+      <p><%= x.summary %></p>
+      <ul class="check"><% x.perks.forEach(function (t) { %><li><%= t %></li><% }) %></ul>
+      <% if (x.example) { %><div class="intl-example"><b>Ví dụ minh hoạ</b><p><%= x.example %></p></div><% } %>
+      <a class="btn btn-gold block" href="/chuyen-tien-quoc-te?sp=<%= x.key %>#dang-ky">Đăng ký tư vấn dịch vụ này</a>
+    </div></article>
+    <% }) %>
+  </div>
+
+  <div class="section-head" style="margin-top:2.2rem"><h2>Các dịch vụ khác</h2></div>
+  <div class="loan-grid">
+    <% services.filter(function (x) { return x.flag !== 'hot'; }).forEach(function (x) { %>
+    <article class="card loan-card" id="<%= x.key %>"><div class="card-body">
+      <span class="tag"><%= x.tag %></span>
+      <h2><%= x.icon %> <%= x.name %></h2>
+      <p><%= x.summary %></p>
+      <ul class="check"><% x.perks.forEach(function (t) { %><li><%= t %></li><% }) %></ul>
+      <% if (x.example) { %><div class="intl-example"><b>Ví dụ minh hoạ</b><p><%= x.example %></p></div><% } %>
+      <a class="btn btn-gold block" href="/chuyen-tien-quoc-te?sp=<%= x.key %>#dang-ky">Đăng ký tư vấn</a>
+    </div></article>
+    <% }) %>
+  </div>
+
+  <div class="card loan-common" style="margin-top:2rem"><div class="card-body">
+    <h2>Vì sao chọn chuyển tiền quốc tế tại LPBank?</h2>
+    <div class="loan-grid" style="margin-top:.6rem">
+      <% why.forEach(function (w) { %><div><h3><%= w[0] %> <%= w[1] %></h3><p class="muted"><%= w[2] %></p></div><% }) %>
+    </div>
+    <p class="muted"><small>Tỷ giá, phí và hồ sơ cụ thể thay đổi theo từng thời điểm, quốc gia, đồng tiền và mục đích chuyển tiền. Vui lòng liên hệ để được cập nhật thông tin hiện hành. Các ví dụ chỉ mang tính minh hoạ, tên và tình huống là giả định. Nội dung tham khảo từ trang lpbank.com.vn.</small></p>
+  </div></div>
+
+  <div class="card" id="dang-ky" style="margin-top:2rem"><div class="card-body">
+    <h2>Để lại số điện thoại, tôi sẽ gọi tư vấn</h2>
+    <p class="muted">Miễn phí, không ràng buộc. Tôi sẽ hướng dẫn hồ sơ, báo tỷ giá hiện hành và hỗ trợ thực hiện giao dịch.</p>
+    <form class="form" method="post" action="/chuyen-tien-quoc-te">
+      <div class="row">
+        <label>Họ và tên<input name="name" maxlength="60" required></label>
+        <label>Số điện thoại<input name="phone" type="tel" maxlength="20" required inputmode="tel"></label>
+      </div>
+      <div class="row">
+        <label>Dịch vụ quan tâm
+          <select name="product"><% services.forEach(function (x) { %><option value="<%= x.key %>" <%= sel === x.key ? 'selected' : '' %>><%= x.name %></option><% }) %><option value="khac">Chưa rõ, cần tư vấn</option></select>
+        </label>
+        <label>Quốc gia / đồng tiền (nếu có)<input name="country" maxlength="60" placeholder="Ví dụ: Úc - AUD, Mỹ - USD"></label>
+      </div>
+      <div class="row">
+        <label>Số tiền dự kiến
+          <select name="amount"><option value="">- Chọn -</option><% amounts.forEach(function (t) { %><option><%= t %></option><% }) %></select>
+        </label>
+        <label>Thời điểm cần thực hiện<input name="when" maxlength="40" placeholder="Ví dụ: đầu tháng sau"></label>
+        <label>Giờ tiện liên lạc
+          <select name="contactTime"><option value="">- Chọn -</option><% times.forEach(function (t) { %><option><%= t %></option><% }) %></select>
+        </label>
+      </div>
+      <label>Ghi chú thêm<textarea name="note" rows="3" maxlength="800"></textarea></label>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="btn btn-primary">Gửi thông tin</button>
+    </form>
+  </div></div>
+</div></section>
+<%- include('partials/foot') %>

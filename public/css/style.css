@@ -293,3 +293,10 @@ body.pm-lock-scroll { overflow: hidden; }
 .pm-pop-go { font-weight: 700; font-size: .85rem; }
 .leaflet-popup-content { margin: 10px 12px; }
 @media (max-width: 640px) { .pm-pin { font-size: .76rem; padding: .36rem .55rem; } .pm-chip { font-size: .8rem; padding: .32rem .7rem; } }
+
+/* danh mục chuyển tiền quốc tế */
+.intl-hot { border: 2px solid var(--gold-d); }
+.intl-promo { background: linear-gradient(135deg, #fff8ef, #f6e9dc); }
+.intl-promo h2 { margin: .3rem 0; }
+.intl-example { background: #f7f4ee; border-left: 3px solid var(--gold-d); padding: .6rem .9rem; border-radius: 6px; margin: .8rem 0; font-size: .93rem; }
+.intl-example p { margin: .25rem 0 0; }

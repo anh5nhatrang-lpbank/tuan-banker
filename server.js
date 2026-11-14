@@ -26,6 +26,7 @@ function pushTelegram(text) {
 const { CATS, LISTING_TYPES } = require('./lib/config');
 const geo = require('./lib/geo');
 const { LOANS, COMMON } = require('./lib/loans');
+const { SERVICES: INTL, WHY: INTL_WHY } = require('./lib/intl');
 const { uniqueSlug, fmtDate, clip, paginate } = require('./lib/util');
 
 const EXT_IMG = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp' };
@@ -310,10 +311,12 @@ app.post('/cong-dong', formLimiter, (req, res) => {
 // Gửi mail báo cho chủ website mỗi khi có tin nhắn liên hệ mới (lỗi mail không ảnh hưởng người gửi form).
 // extra: [[nhãn, giá trị]] các trường chi tiết (form vay vốn).
 const nowVN = () => new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
-function notifyNewMessage({ name, phone, message, ref, extra }) {
+function notifyNewMessage({ name, phone, message, ref, extra, kind }) {
   const isLoan = !!(extra && extra.length);
+  const isIntl = kind === 'intl';
+  const tagLabel = isIntl ? '[CHUYỂN TIỀN QT]' : isLoan ? '[VAY VỐN]' : '[TUẤN BANKER]';
   pushTelegram([
-    isLoan ? '🏦 Khách đăng ký tư vấn vay mới' : '📩 Tin nhắn liên hệ mới',
+    isIntl ? '🌐 Khách đăng ký tư vấn chuyển tiền quốc tế/ngoại tệ' : isLoan ? '🏦 Khách đăng ký tư vấn vay mới' : '📩 Tin nhắn liên hệ mới',
     `Họ tên: ${name}`,
     `SĐT: ${phone}`,
     zaloLine(phone),
@@ -325,7 +328,7 @@ function notifyNewMessage({ name, phone, message, ref, extra }) {
   const to = process.env.NOTIFY_EMAIL || 'anh5nhatrang@gmail.com';
   const d = String(phone || '').replace(/\D/g, '');
   const mail = mailtpl.build({
-    heading: isLoan ? 'Khách hàng đăng ký tư vấn vay' : 'Tin nhắn liên hệ mới',
+    heading: isIntl ? 'Khách hàng đăng ký tư vấn chuyển tiền quốc tế/ngoại tệ' : isLoan ? 'Khách hàng đăng ký tư vấn vay' : 'Tin nhắn liên hệ mới',
     intro: 'Ghi nhận từ tuanbanker.com lúc ' + nowVN(),
     rows: [
       ['Họ và tên', name],
@@ -337,7 +340,7 @@ function notifyNewMessage({ name, phone, message, ref, extra }) {
     linkText: 'Xem trong trang quản trị',
     footer: 'Vui lòng liên hệ khách hàng sớm.',
   });
-  mailer.sendMail({ to, subject: `${isLoan ? '[VAY VỐN]' : '[TUẤN BANKER]'} ${name} - ${phone}`, text: mail.text, html: mail.html, replyTo: undefined })
+  mailer.sendMail({ to, subject: `${tagLabel} ${name} - ${phone}`, text: mail.text, html: mail.html, replyTo: undefined })
     .catch((e) => console.error('[MAIL] Gửi thất bại:', e.message));
 }
 
@@ -424,6 +427,52 @@ app.post('/san-pham-vay', formLimiter, (req, res) => {
   notifyNewMessage({ name, phone, message, ref, extra });
   flash(req, 'ok', 'Đã gửi thông tin. Tôi sẽ liên hệ lại với bạn sớm nhất!');
   res.redirect('/san-pham-vay');
+});
+
+// ---------- danh mục chuyển tiền quốc tế & ngoại tệ + form để lại số điện thoại ----------
+const INTL_AMOUNTS = ['Dưới 100 triệu', '100 - 500 triệu', '500 triệu - 1 tỷ', 'Trên 1 tỷ'];
+const INTL_TIMES = ['Sáng (8h00 - 12h00)', 'Chiều (13h30 - 17h00)', 'Tối (sau 18h00)', 'Bất cứ lúc nào'];
+
+app.get('/chuyen-tien-quoc-te', (req, res) =>
+  res.render('intl', {
+    title: 'Chuyển tiền quốc tế & ngoại tệ LPBank',
+    desc: 'Chuyển tiền du học, khám chữa bệnh, định cư, thừa kế, nhận tiền từ nước ngoài, mua ngoại tệ tiền mặt đi du lịch tại LPBank. Để lại số điện thoại nhận tư vấn.',
+    services: INTL,
+    why: INTL_WHY,
+    amounts: INTL_AMOUNTS,
+    times: INTL_TIMES,
+    sel: clip(req.query.sp, 30),
+  })
+);
+
+app.post('/chuyen-tien-quoc-te', formLimiter, (req, res) => {
+  if (req.body.website) return res.redirect('/chuyen-tien-quoc-te'); // honeypot
+  const b = req.body;
+  const name = clip(b.name, 60);
+  const phone = clip(b.phone, 20);
+  if (!name || !/^[0-9+\s.()-]{8,20}$/.test(phone)) {
+    flash(req, 'error', 'Vui lòng nhập họ tên và số điện thoại hợp lệ.');
+    return res.redirect('/chuyen-tien-quoc-te#dang-ky');
+  }
+  const svc = INTL.find((x) => x.key === b.product);
+  const product = svc ? svc.name : 'Chưa rõ, cần tư vấn';
+  const ref = 'Đăng ký chuyển tiền QT/ngoại tệ: ' + product;
+  const extra = [
+    ['Dịch vụ quan tâm', product],
+    ['Quốc gia / đồng tiền', clip(b.country, 60)],
+    ['Số tiền dự kiến', pick(b.amount, INTL_AMOUNTS)],
+    ['Thời điểm cần thực hiện', clip(b.when, 40)],
+    ['Giờ tiện liên lạc', pick(b.contactTime, INTL_TIMES)],
+    ['Ghi chú thêm', clip(b.note, 800)],
+  ].filter((r) => r[1]);
+  const message = extra.slice(1).map(([k, v]) => `${k}: ${v}`).join('\n');
+  db().messages.push({
+    id: store.nextId('messages'), name, phone, message, ref, read: false, createdAt: new Date().toISOString(),
+  });
+  store.save();
+  notifyNewMessage({ name, phone, message, ref, extra, kind: 'intl' });
+  flash(req, 'ok', 'Đã gửi thông tin. Tôi sẽ liên hệ lại với bạn sớm nhất!');
+  res.redirect('/chuyen-tien-quoc-te');
 });
 
 // ---------- khách tự đăng tin BĐS (chờ admin duyệt mới hiện) ----------
@@ -565,7 +614,7 @@ app.get('/robots.txt', (req, res) => {
 
 app.get('/sitemap.xml', (req, res) => {
   const base = SITE_URL || `${req.protocol}://${req.get('host')}`;
-  const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/hinh-anh', '/san-pham-bds', '/san-pham-vay', '/cong-dong', '/gioi-thieu', '/lien-he']
+  const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/hinh-anh', '/san-pham-bds', '/san-pham-vay', '/chuyen-tien-quoc-te', '/cong-dong', '/gioi-thieu', '/lien-he']
     .concat(publishedPosts().map((p) => '/bai-viet/' + p.slug))
     .concat(activeListings().map((l) => '/san-pham-bds/' + l.slug));
   res
