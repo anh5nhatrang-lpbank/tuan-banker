@@ -1,5 +1,9 @@
 <%- include('_head') %>
 <h1>Tổng quan</h1>
+<% if (weakPassword) { %><div class="sec-warn">⚠️ Mật khẩu quản trị còn ngắn (dưới 12 ký tự) hoặc chưa đặt. Hãy đặt <b>ADMIN_PASSWORD</b> dài, khó đoán trong Setup Node.js App.</div><% } %>
+<% if (noSecret) { %><div class="sec-warn">⚠️ Chưa đặt <b>SESSION_SECRET</b> (chuỗi ngẫu nhiên dài) nên mỗi lần máy chủ khởi động lại bạn sẽ bị đăng xuất.</div><% } %>
+<% if (defaultUser) { %><div class="sec-warn">⚠️ Tên đăng nhập quản trị đang là mặc định "admin". Nên đổi <b>ADMIN_USER</b> sang tên khó đoán hơn.</div><% } %>
+<p class="muted">🛡️ Sao lưu dữ liệu tự động mỗi ngày (đang có <%= backups %> bản). <a href="/admin/backup">Tải bản sao lưu về máy</a> · <a href="/admin/loan-rates">Lãi suất vay nội bộ</a></p>
 <div class="stat-grid">
   <a class="stat card" href="/admin/posts"><b><%= stats.posts %></b><span>Bài viết</span></a>
   <a class="stat card" href="/admin/listings"><b><%= stats.listings %></b><span>Sản phẩm BĐS</span></a>

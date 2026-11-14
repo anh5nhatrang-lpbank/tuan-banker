@@ -1,0 +1,13 @@
+<%- include('_head') %>
+<h1>🔒 Lãi suất vay (nội bộ LPBank)</h1>
+<p class="muted">Dữ liệu này <b>chỉ lưu trên máy chủ</b> (không nằm trong mã nguồn/GitHub) và <b>chỉ admin xem được</b>. Khách truy cập chỉ thấy lời mời liên hệ.</p>
+<p>
+  Trạng thái: lãi suất thông thường <b><%= hasLoan ? '✅ đã nhập' : '⚠️ chưa có' %></b> · lãi suất ưu đãi <b><%= hasPromo ? '✅ đã nhập' : '⚠️ chưa có' %></b>
+</p>
+<form method="post" action="/admin/loan-rates" class="card"><div class="card-body">
+  <label for="json"><b>Nội dung (định dạng JSON: LOAN và PROMO)</b></label>
+  <textarea id="json" name="json" rows="28" spellcheck="false" class="mono-area"><%= text %></textarea>
+  <p class="muted">Khi lưu, hệ thống kiểm tra cấu trúc; nếu sai sẽ báo lỗi và không ghi đè dữ liệu cũ. Để cập nhật lãi suất mới, sửa các con số rồi bấm Lưu.</p>
+  <button class="btn btn-primary">Lưu</button>
+</div></form>
+<%- include('_foot') %>

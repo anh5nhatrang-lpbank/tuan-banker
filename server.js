@@ -54,37 +54,84 @@ app.use(
   helmet({
     // Cần gửi Referer cho máy chủ ảnh bản đồ (OpenStreetMap từ chối khi không có Referer)
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    hsts: PROD ? { maxAge: 31536000, includeSubDomains: true } : false,
+    frameguard: { action: 'sameorigin' },
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        // unpkg.com: thư viện bản đồ Leaflet (có kiểm tra SRI trong view)
-        scriptSrc: ["'self'", 'https://unpkg.com'],
-        styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://unpkg.com'],
+        // unpkg.com: chỉ đúng thư viện bản đồ Leaflet (có kiểm tra SRI trong view)
+        scriptSrc: ["'self'", 'https://unpkg.com/leaflet@1.9.4/dist/', 'https://unpkg.com/leaflet.markercluster@1.5.3/dist/'],
+        styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://unpkg.com/leaflet@1.9.4/dist/', 'https://unpkg.com/leaflet.markercluster@1.5.3/dist/'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         imgSrc: ["'self'", 'data:', 'https:'],
         frameSrc: ["'self'", 'https://www.youtube.com', 'https://www.google.com'],
         formAction: ["'self'"],
+        baseUri: ["'self'"],
+        objectSrc: ["'none'"],
+        frameAncestors: ["'self'"],
         upgradeInsecureRequests: PROD ? [] : null,
       },
     },
   })
 );
+// Tắt các quyền trình duyệt không dùng; chặn lập chỉ mục trang quản trị
+app.use((req, res, next) => {
+  res.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()');
+  if (req.path.startsWith('/admin')) res.set('X-Robots-Tag', 'noindex, nofollow');
+  next();
+});
 app.use(express.urlencoded({ extended: false, limit: '200kb' }));
+
+// Chống CSRF: mọi yêu cầu ghi (POST...) phải đến từ chính website này
+const SITE_HOST = (() => { try { return SITE_URL ? new URL(SITE_URL).host : ''; } catch (e) { return ''; } })();
+app.use((req, res, next) => {
+  if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') return next();
+  const sfs = req.get('sec-fetch-site');
+  if (sfs) {
+    if (sfs === 'same-origin' || sfs === 'none') return next();
+    return res.status(403).send('Yêu cầu bị từ chối.');
+  }
+  const origin = req.get('origin');
+  if (!origin) return next(); // công cụ không phải trình duyệt; cookie SameSite=Lax đã chặn gửi chéo trang
+  let host = '';
+  try { host = new URL(origin).host; } catch (e) { /* host rỗng => từ chối */ }
+  if (host && (host === req.get('host') || host === SITE_HOST)) return next();
+  return res.status(403).send('Yêu cầu bị từ chối.');
+});
+
 app.use(
   cookieSession({
-    name: 'tb_sess',
+    // __Host-: cookie chỉ gắn với đúng tên miền, bắt buộc HTTPS, không bị tên miền con ghi đè
+    name: PROD ? '__Host-tb_sess' : 'tb_sess',
     keys: [SESSION_SECRET],
     maxAge: 1000 * 60 * 60 * 8,
     httpOnly: true,
     sameSite: 'lax',
     secure: PROD,
+    path: '/',
   })
 );
 
 const UPLOAD_DIR = path.join(store.DATA_DIR, 'uploads');
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-app.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '7d' }));
+// Tệp tải lên chỉ là ảnh: không cho chạy script, không đoán kiểu tệp
+app.use('/uploads', (req, res, next) => {
+  res.set('Content-Security-Policy', "default-src 'none'; img-src 'self'; sandbox");
+  res.set('X-Content-Type-Options', 'nosniff');
+  next();
+}, express.static(UPLOAD_DIR, { maxAge: '7d', dotfiles: 'deny', index: false }));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: PROD ? '1d' : 0 }));
+
+// Giới hạn chung chống quét/DoS nhẹ (không tính tệp tĩnh ở trên): 240 yêu cầu/phút/IP
+app.use(
+  rateLimit({
+    windowMs: 60 * 1000,
+    limit: 240,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => res.status(429).send('Quá nhiều yêu cầu, vui lòng thử lại sau ít phút.'),
+  })
+);
 
 // ---------- helpers dùng chung cho view ----------
 app.use((req, res, next) => {
@@ -517,6 +564,12 @@ function isRealImage(file) {
   }
 }
 const dropFiles = (files) => (files || []).forEach((f) => fs.unlink(f.path, () => {}));
+// Quản trị: loại bỏ tệp tải lên không đúng định dạng ảnh thật (kiểm tra chữ ký đầu tệp)
+function realImages(req, res, next) {
+  if (req.file && !isRealImage(req.file)) { dropFiles([req.file]); req.file = undefined; }
+  if (req.files) { const good = req.files.filter(isRealImage); dropFiles(req.files.filter((f) => !good.includes(f))); req.files = good; }
+  next();
+}
 
 function notifyNewListing(item) {
   pushTelegram([
@@ -668,17 +721,45 @@ admin.use((req, res, next) => {
   next();
 });
 
+// Báo động đăng nhập: gửi Telegram (và email nếu có NOTIFY_EMAIL), tối đa 1 tin/10 phút cho mỗi loại
+const alertAt = {};
+function securityAlert(kind, text) {
+  const now = Date.now();
+  if (alertAt[kind] && now - alertAt[kind] < 10 * 60 * 1000) return;
+  alertAt[kind] = now;
+  pushTelegram('🔐 ' + text);
+  if (process.env.NOTIFY_EMAIL && mailer.enabled()) {
+    mailer.sendMail({ to: process.env.NOTIFY_EMAIL, subject: '[TUẤN BANKER] Cảnh báo bảo mật', text })
+      .catch((e) => console.error('[MAIL] Gửi thất bại:', e.message));
+  }
+}
+const uaHash = (req) => crypto.createHash('sha256').update(String(req.get('user-agent') || '')).digest('hex').slice(0, 16);
+// Đếm đăng nhập sai toàn hệ thống: quá 20 lần/15 phút thì khóa tạm mọi lần đăng nhập
+const failLog = [];
+const globalLocked = () => {
+  const t = Date.now() - 15 * 60 * 1000;
+  while (failLog.length && failLog[0] < t) failLog.shift();
+  return failLog.length >= 20;
+};
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const IDLE_MS = 60 * 60 * 1000; // tự đăng xuất sau 60 phút không thao tác
+
 admin.get('/login', (req, res) => res.render('admin/login', { title: 'Đăng nhập' }));
-admin.post('/login', loginLimiter, (req, res) => {
+admin.post('/login', loginLimiter, async (req, res) => {
+  if (globalLocked()) return res.status(429).send('Đăng nhập tạm khóa do có nhiều lần thử sai. Vui lòng quay lại sau 15 phút.');
   const ok =
     ADMIN_PASSWORD &&
     safeEqual(req.body.user || '', ADMIN_USER) &&
     safeEqual(req.body.password || '', ADMIN_PASSWORD);
   if (!ok) {
+    failLog.push(Date.now());
+    await sleep(800); // làm chậm việc dò mật khẩu
+    if (failLog.length >= 5) securityAlert('fail', `Có ${failLog.length} lần đăng nhập quản trị sai trong 15 phút gần đây (IP ${req.ip}).`);
     flash(req, 'error', 'Sai tài khoản hoặc mật khẩu.');
     return res.redirect('/admin/login');
   }
-  req.session.admin = true;
+  req.session = { admin: true, at: Date.now(), ua: uaHash(req) }; // phiên mới, tránh dùng lại phiên cũ
+  securityAlert('login', `Đăng nhập quản trị thành công lúc ${nowVN()} (IP ${req.ip}). Nếu không phải bạn, hãy đổi mật khẩu ngay.`);
   res.redirect('/admin');
 });
 admin.post('/logout', (req, res) => {
@@ -686,13 +767,47 @@ admin.post('/logout', (req, res) => {
   res.redirect('/admin/login');
 });
 
-// Mọi route bên dưới cần đăng nhập
-admin.use((req, res, next) => (req.session.admin ? next() : res.redirect('/admin/login')));
+// Mọi route bên dưới cần đăng nhập, còn hạn (không quá 60 phút nhàn rỗi) và đúng trình duyệt đã đăng nhập
+admin.use((req, res, next) => {
+  const s = req.session;
+  if (s && s.admin) {
+    if (!s.at || Date.now() - s.at > IDLE_MS || s.ua !== uaHash(req)) {
+      req.session = null;
+      return res.redirect('/admin/login');
+    }
+    s.at = Date.now();
+    return next();
+  }
+  res.redirect('/admin/login');
+});
+
+// Bảng lãi suất cho vay nội bộ LPBank: lưu riêng trên máy chủ (DATA_DIR/loan-rates.json), không nằm trong mã nguồn/GitHub
+admin.get('/loan-rates', (req, res) => res.render('admin/loan_rates', { title: 'Lãi suất vay (nội bộ)', text: R.privateText(), hasLoan: R.hasLoan(), hasPromo: R.hasPromo() }));
+admin.post('/loan-rates', (req, res) => {
+  try {
+    R.savePrivate(String(req.body.json || '').slice(0, 100000));
+    flash(req, 'ok', 'Đã lưu bảng lãi suất nội bộ.');
+  } catch (e) {
+    flash(req, 'error', 'Chưa lưu: ' + e.message);
+  }
+  res.redirect('/admin/loan-rates');
+});
+
+// Tải bản sao lưu dữ liệu (bài viết, tin nhắn khách...) về máy
+admin.get('/backup', (req, res) => {
+  const stamp = new Date(Date.now() + 7 * 3600 * 1000).toISOString().slice(0, 10);
+  res.set('Content-Disposition', `attachment; filename="tuanbanker-backup-${stamp}.json"`);
+  res.type('application/json').send(JSON.stringify(db(), null, 2));
+});
 
 admin.get('/', (req, res) => {
   const d = db();
   res.render('admin/dashboard', {
     title: 'Tổng quan',
+    weakPassword: !ADMIN_PASSWORD || ADMIN_PASSWORD.length < 12,
+    defaultUser: ADMIN_USER === 'admin',
+    noSecret: !process.env.SESSION_SECRET,
+    backups: store.listBackups().length,
     stats: {
       posts: d.posts.length,
       listings: d.listings.length,
@@ -722,7 +837,7 @@ admin.get('/posts/:id/edit', (req, res, next) => {
   if (!post) return next();
   res.render('admin/post_form', { title: 'Sửa bài viết', post });
 });
-admin.post('/posts/save', upload.single('image'), (req, res) => {
+admin.post('/posts/save', upload.single('image'), realImages, (req, res) => {
   const b = req.body;
   const id = +b.id || 0;
   const title = clip(b.title, 200);
@@ -778,7 +893,7 @@ admin.get('/listings/:id/edit', (req, res, next) => {
   if (!item) return next();
   res.render('admin/listing_form', { title: 'Sửa sản phẩm', item });
 });
-admin.post('/listings/save', upload.array('images', 6), async (req, res) => {
+admin.post('/listings/save', upload.array('images', 6), realImages, async (req, res) => {
   const b = req.body;
   const id = +b.id || 0;
   const title = clip(b.title, 200);
@@ -934,7 +1049,7 @@ admin.get('/gallery/:id/edit', (req, res, next) => {
   if (!item) return next();
   res.render('admin/gallery_form', { title: 'Sửa hình ảnh', item, kinds: GALLERY_KINDS });
 });
-admin.post('/gallery/save', galleryUpload.array('images', 12), (req, res) => {
+admin.post('/gallery/save', galleryUpload.array('images', 12), realImages, (req, res) => {
   const b = req.body;
   const id = +b.id || 0;
   const title = clip(b.title, 200);

@@ -1,5 +1,7 @@
 <%# Bảng lãi suất cho vay: mỗi mục đích × thời hạn chỉ có MỘT mức lãi suất (đã cộng sẵn). Dữ liệu từ lib/rates.js %>
-<% if (isAdmin) { var LT = R.loanTable(); var span = (LT.max - LT.min) || 1; %>
+<% if (isAdmin && !R.hasLoan()) { %>
+<section class="rates-block admin-only"><div class="admin-lock">🔒 Chưa có bảng lãi suất thông thường. <a href="/admin/loan-rates">Nhập tại Quản trị → Lãi suất vay</a> (dữ liệu lưu riêng trên máy chủ, không nằm trong mã nguồn).</div></section>
+<% } else if (isAdmin) { var LT = R.loanTable(); var span = (LT.max - LT.min) || 1; %>
 <section class="rates-block admin-only" id="lai-suat-thong-thuong">
   <div class="admin-lock">🔒 Chỉ admin nhìn thấy mục này. Khách truy cập chỉ thấy bảng lãi suất ưu đãi.</div>
   <div class="rates-head">

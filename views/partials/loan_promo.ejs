@@ -15,6 +15,8 @@
     </p>
   </div></div>
 </section>
+<% } else if (!R.hasPromo()) { %>
+<section class="rates-block admin-only" id="lai-suat-vay"><div class="admin-lock">🔒 Chưa có bảng lãi suất ưu đãi. <a href="/admin/loan-rates">Nhập tại Quản trị → Lãi suất vay</a>.</div></section>
 <% } else { %>
 <section class="rates-block admin-only" id="lai-suat-vay">
   <div class="admin-lock">🔒 Chỉ admin nhìn thấy bảng này. Khách truy cập chỉ thấy lời mời liên hệ.</div>

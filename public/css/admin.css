@@ -29,3 +29,6 @@ td.actions form { margin: 0; }
 .warn { color: #b7791f; }
 .login-page { display: grid; place-items: center; min-height: 100vh; padding: 1rem; }
 .login-box { width: min(380px, 100%); }
+
+.mono-area{width:100%;font-family:ui-monospace,Consolas,monospace;font-size:13px}
+.sec-warn{background:#fff3cd;border:1px solid #e0b84c;color:#5c4400;padding:10px 14px;border-radius:8px;margin:0 0 12px}
