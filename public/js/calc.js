@@ -8,36 +8,26 @@
     return m.toLocaleString('vi-VN', { maximumFractionDigits: 1 }) + ' triệu';
   };
 
-  // ===== Lãi suất theo mục đích vay: đọc từ bảng lãi suất cho vay (cùng nguồn với bảng trên trang) =====
+  // ===== Lãi suất ưu đãi theo gói vay: đọc từ bảng lãi suất ưu đãi (cùng nguồn lib/rates.js) =====
   var data = null;
   try { data = JSON.parse($('loanRateData').textContent); } catch (e) {}
   var sel = $('cPurpose');
 
-  // Nhóm thời hạn: <3 | 3-<6 | 6-12 | >12-60 | >60 (tháng)
-  function bracket(months) {
-    if (months < 3) return 0;
-    if (months < 6) return 1;
-    if (months <= 12) return 2;
-    if (months <= 60) return 3;
-    return 4;
-  }
   function autoRate() {
     if (!data || !sel || sel.value === 'tu-nhap') return;
-    var p = data.purposes.filter(function (x) { return x.key === sel.value; })[0];
-    var years = parseFloat($('cYears').value);
-    if (!p || !(years > 0)) return;
-    $('cRate').value = p.rates[bracket(Math.round(years * 12))];
+    var o = data.options.filter(function (x) { return x.key === sel.value; })[0];
+    if (o) $('cRate').value = o.rate;
   }
   if (data && sel) {
-    data.purposes.forEach(function (p) {
-      var o = document.createElement('option');
-      o.value = p.key; o.textContent = p.name;
-      sel.appendChild(o);
+    data.options.forEach(function (p) {
+      var opt = document.createElement('option');
+      opt.value = p.key; opt.textContent = p.name;
+      sel.appendChild(opt);
     });
     var custom = document.createElement('option');
     custom.value = 'tu-nhap'; custom.textContent = 'Tự nhập lãi suất';
     sel.appendChild(custom);
-    sel.value = 'nha-dat';
+    sel.value = 'nha-dat-1';
     autoRate();
   } else if (sel) {
     sel.parentNode.style.display = 'none';
@@ -67,7 +57,7 @@
   }
 
   if (sel) sel.addEventListener('change', function () { autoRate(); calc(); });
-  $('cYears').addEventListener('input', function () { autoRate(); calc(); });
+  $('cYears').addEventListener('input', calc);
   $('cRate').addEventListener('input', function () { if (sel) sel.value = 'tu-nhap'; calc(); });
   ['cAmount', 'cMethod'].forEach(function (id) {
     $(id).addEventListener('input', calc);

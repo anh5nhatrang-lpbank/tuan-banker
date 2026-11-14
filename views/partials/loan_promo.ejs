@@ -1,0 +1,58 @@
+<%# Lãi suất cho vay ưu đãi (công khai). Dữ liệu từ lib/rates.js (PROMO) %>
+<% var P = R.PROMO; var short = P.short; %>
+<section class="rates-block" id="lai-suat-vay">
+  <div class="rates-head">
+    <div>
+      <h2>🎁 Lãi suất cho vay ưu đãi LPBank</h2>
+      <p class="muted">Khách hàng cá nhân · Vay bằng VND · Chương trình ưu đãi áp dụng từ <b><%= P.from %></b> đến hết <b><%= P.until %></b> hoặc đến khi hết hạn mức · Đơn vị: %/năm</p>
+    </div>
+  </div>
+
+  <div class="rate-stats">
+    <div class="rate-stat"><small>Vay kinh doanh từ</small><b><%= R.pct(R.promoMin('sxkd'), 2) %></b><span>🏪 Vay SXKD ngắn hạn đến 12 tháng</span></div>
+    <div class="rate-stat"><small>Vay mua nhà dự án từ</small><b><%= R.pct(R.promoMin('nha-dat'), 2) %></b><span>🏙️ Cố định 12 tháng đầu</span></div>
+    <div class="rate-stat"><small>Vay thế chấp từ</small><b><%= R.pct(R.promoMin('tieu-dung'), 2) %></b><span>🏠 Nhà đất, tiêu dùng, SXKD</span></div>
+  </div>
+
+  <h3 class="promo-h">🏪 Vay sản xuất kinh doanh ngắn hạn (đến 12 tháng) · lãi suất cố định</h3>
+  <div class="rate-table-wrap">
+    <table class="rate-table promo-table">
+      <thead><tr><% short.forEach(function (x) { %><th><%= x.label %></th><% }) %></tr></thead>
+      <tbody><tr><% short.forEach(function (x) { %><td class="<%= x.rate == null ? 'na' : 'best' %>"><%= x.rate == null ? 'Không áp dụng' : R.pct(x.rate, 2) %></td><% }) %></tr></tbody>
+    </table>
+  </div>
+
+  <h3 class="promo-h">🏠 Vay trung – dài hạn (trên 12 tháng) · cố định kỳ đầu, kỳ tiếp theo thả nổi</h3>
+  <div class="rate-table-wrap">
+    <table class="rate-table promo-table promo-long">
+      <thead>
+        <tr><th>Mục đích vay</th><th>Lựa chọn</th><th>Lãi suất cố định kỳ đầu</th><th>Kỳ tiếp theo</th><th>Thời gian vay</th><th>Phí trả nợ trước hạn</th></tr>
+      </thead>
+      <tbody>
+        <% P.long.forEach(function (g) { g.options.forEach(function (o, i) { %>
+        <tr>
+          <% if (i === 0) { %><th scope="row" rowspan="<%= g.options.length %>"><div class="rt-name"><span class="rt-icon"><%= g.icon %></span><span><b><%= g.name %></b><small><%= g.note %></small></span></div></th><% } %>
+          <td class="opt"><%= o.opt %></td>
+          <td class="best"><b><%= R.pct(o.rate, 2) %></b><small>cố định <%= o.fixed %> tháng</small></td>
+          <td>Lãi suất cơ sở + <%= R.pct(o.margin, 1).replace('%', '') %>%</td>
+          <td><%= o.minTerm %></td>
+          <td class="fee"><%= o.fee %></td>
+        </tr>
+        <% }) }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="rate-notes">
+    <h3>Điều kiện hưởng ưu đãi</h3>
+    <ul class="check"><% P.conditions.forEach(function (t) { %><li><%= t %></li><% }) %></ul>
+    <h3>Lưu ý</h3>
+    <ul class="check">
+      <li>Đây là mức lãi suất <b>từ</b> (thấp nhất). Mức cụ thể có thể cao hơn tùy xếp hạng tín dụng và tài sản bảo đảm của từng khách hàng.</li>
+      <li>Hết thời gian cố định kỳ đầu, lãi suất được điều chỉnh theo lãi suất cơ sở LPBank công bố từng thời kỳ cộng biên độ ghi ở cột "Kỳ tiếp theo".</li>
+      <li>Nếu khoản vay chuyển sang nhóm nợ cao hơn, LPBank có thể dừng áp dụng lãi suất ưu đãi theo quy định.</li>
+    </ul>
+    <p class="muted rates-foot">Bảng chỉ mang tính tham khảo, có thể thay đổi theo từng thời kỳ và không phải cam kết cho vay. Vui lòng liên hệ để được tư vấn mức lãi suất và điều kiện áp dụng cho hồ sơ của bạn.</p>
+    <p><a class="btn btn-gold" href="/san-pham-vay#dang-ky">Để lại thông tin nhận tư vấn lãi suất vay</a></p>
+  </div>
+</section>

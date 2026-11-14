@@ -378,3 +378,14 @@ body.pm-lock-scroll { overflow: hidden; }
 .loan-rate-table td.heat.h7 { background-color: hsl(55, 62%, 90%); }
 .loan-rate-table td.heat.h8 { background-color: hsl(42, 62%, 90%); }
 .loan-rate-table td.heat.h9 { background-color: hsl(30, 62%, 90%); }
+
+/* lãi suất vay ưu đãi */
+.promo-h { margin: 1.6rem 0 .6rem; font-size: 1.1rem; color: var(--navy); }
+.promo-table td { text-align: center; font-variant-numeric: tabular-nums; }
+.promo-table td.best { background: #e7f6ea; font-size: 1.15rem; }
+.promo-table td.na { color: #8a7d70; font-style: italic; background: #f3ece4; }
+.promo-long td small { display: block; font-size: .78rem; color: #6d5f52; }
+.promo-long td.opt { font-weight: 700; white-space: nowrap; }
+.promo-long td.fee { text-align: left; font-size: .86rem; }
+.admin-only { border: 2px dashed #c0392b; border-radius: 14px; padding: 1rem; margin-top: 2rem; }
+.admin-lock { background: #fdecea; color: #a02a1f; border-radius: 8px; padding: .55rem .9rem; margin-bottom: 1rem; font-weight: 600; }

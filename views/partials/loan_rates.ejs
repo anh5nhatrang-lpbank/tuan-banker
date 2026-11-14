@@ -1,10 +1,11 @@
 <%# Bảng lãi suất cho vay: mỗi mục đích × thời hạn chỉ có MỘT mức lãi suất (đã cộng sẵn). Dữ liệu từ lib/rates.js %>
-<% var LT = R.loanTable(); var span = (LT.max - LT.min) || 1; %>
-<section class="rates-block" id="lai-suat-vay">
+<% if (isAdmin) { var LT = R.loanTable(); var span = (LT.max - LT.min) || 1; %>
+<section class="rates-block admin-only" id="lai-suat-thong-thuong">
+  <div class="admin-lock">🔒 Chỉ admin nhìn thấy mục này. Khách truy cập chỉ thấy bảng lãi suất ưu đãi.</div>
   <div class="rates-head">
     <div>
-      <h2>🏦 Lãi suất cho vay LPBank</h2>
-      <p class="muted">Khách hàng cá nhân · Vay bằng VND · Áp dụng từ <b><%= R.LOAN.date %></b> · Đơn vị: %/năm, tính trên dư nợ gốc thực tế</p>
+      <h2>🏦 Lãi suất cho vay thông thường (áp dụng từ <%= R.LOAN.date %>)</h2>
+      <p class="muted">Khách hàng cá nhân · Vay bằng VND · Mức thông thường trong quá trình vay, khi không có ưu đãi · Đơn vị: %/năm, tính trên dư nợ gốc thực tế</p>
     </div>
   </div>
 
@@ -48,3 +49,4 @@
     <p><a class="btn btn-gold" href="/san-pham-vay#dang-ky">Để lại thông tin nhận tư vấn lãi suất vay</a></p>
   </div>
 </section>
+<% } %>
