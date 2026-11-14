@@ -27,7 +27,7 @@
         <tr id="vay-<%= row.key %>">
           <th scope="row"><div class="rt-name"><span class="rt-icon"><%= row.icon %></span><span><b><%= row.name %></b><small><%= row.note %></small></span></div></th>
           <% row.rates.forEach(function (v) { %>
-            <td class="heat" style="background-color: hsl(<%= Math.round(142 - ((v - LT.min) / span) * 112) %>, 62%, 90%)"><%= R.pct(v, 1) %></td>
+            <td class="heat h<%= Math.round(((v - LT.min) / span) * 9) %>"><%= R.pct(v, 1) %></td>
           <% }) %>
         </tr>
         <% }) %>

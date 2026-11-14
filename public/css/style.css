@@ -364,3 +364,17 @@ body.pm-lock-scroll { overflow: hidden; }
   .rate-table tbody td { font-size: .95rem; padding: .6rem .5rem; }
   .loan-rate-table tbody th { min-width: 180px; }
 }
+
+/* khoảng cách (thay cho style="" vì CSP của website chặn style nội tuyến) */
+.mt-06 { margin-top: .6rem; } .mt-1 { margin-top: 1rem; } .mt-2 { margin-top: 2rem; } .mt-22 { margin-top: 2.2rem; } .mb-2 { margin-bottom: 2rem; }
+/* màu ô bảng lãi suất vay: h0 = thấp nhất (xanh) ... h9 = cao nhất (cam) */
+.loan-rate-table td.heat.h0 { background-color: hsl(142, 62%, 90%); }
+.loan-rate-table td.heat.h1 { background-color: hsl(130, 62%, 90%); }
+.loan-rate-table td.heat.h2 { background-color: hsl(117, 62%, 90%); }
+.loan-rate-table td.heat.h3 { background-color: hsl(105, 62%, 90%); }
+.loan-rate-table td.heat.h4 { background-color: hsl(92, 62%, 90%); }
+.loan-rate-table td.heat.h5 { background-color: hsl(80, 62%, 90%); }
+.loan-rate-table td.heat.h6 { background-color: hsl(67, 62%, 90%); }
+.loan-rate-table td.heat.h7 { background-color: hsl(55, 62%, 90%); }
+.loan-rate-table td.heat.h8 { background-color: hsl(42, 62%, 90%); }
+.loan-rate-table td.heat.h9 { background-color: hsl(30, 62%, 90%); }

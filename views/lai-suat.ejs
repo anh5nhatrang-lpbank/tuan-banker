@@ -21,11 +21,11 @@
 
 <section class="section"><div class="container">
   <%- include('partials/deposit_rates') %>
-  <div class="narrow" id="may-tinh-gui" style="margin-top:2rem"><%- include('partials/deposit_calc') %></div>
+  <div class="mt-2 narrow" id="may-tinh-gui"><%- include('partials/deposit_calc') %></div>
 </div></section>
 
 <section class="section alt"><div class="container">
   <%- include('partials/loan_rates') %>
-  <div class="narrow" style="margin-top:2rem"><%- include('partials/calc') %></div>
+  <div class="mt-2 narrow"><%- include('partials/calc') %></div>
 </div></section>
 <%- include('partials/foot', { calc: true, ratesJs: true }) %>

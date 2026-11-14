@@ -14,7 +14,7 @@
 <section class="section">
   <div class="container">
     <% if (cat.key === 'tai-chinh-ngan-hang' && page === 1 && !q) { %>
-      <div class="card intl-promo" style="margin-bottom:2rem"><div class="card-body">
+      <div class="mb-2 card intl-promo"><div class="card-body">
         <span class="tag">🌐 Danh mục mới</span>
         <h2>Chuyển tiền quốc tế &amp; ngoại tệ LPBank</h2>
         <p>Chuyển tiền du học, khám chữa bệnh, định cư, thừa kế; nhận tiền từ nước ngoài; mua ngoại tệ tiền mặt đi du lịch. Để lại số điện thoại, tôi gọi tư vấn và báo tỷ giá hiện hành.</p>
@@ -22,11 +22,11 @@
       </div></div>
     <% } %>
     <% if (cat.key === 'tai-chinh-ngan-hang' && page === 1 && !q) { %>
-      <div style="margin-bottom:2rem"><%- include('partials/deposit_rates') %>
-        <p style="margin-top:1rem"><a class="btn btn-gold" href="/lai-suat#lai-suat-vay">Xem bảng lãi suất cho vay →</a></p>
+      <div class="mb-2"><%- include('partials/deposit_rates') %>
+        <p class="mt-1"><a class="btn btn-gold" href="/lai-suat#lai-suat-vay">Xem bảng lãi suất cho vay →</a></p>
       </div>
-      <div class="narrow" style="margin-bottom:2rem"><%- include('partials/calc') %></div>
-      <div class="narrow" style="margin-bottom:2rem"><%- include('partials/deposit_calc') %></div>
+      <div class="mb-2 narrow"><%- include('partials/calc') %></div>
+      <div class="mb-2 narrow"><%- include('partials/deposit_calc') %></div>
     <% } %>
     <% if (!items.length && !listings.length) { %>
       <p class="empty">Chưa có bài viết phù hợp.</p>
@@ -35,7 +35,7 @@
       <%- include('partials/pager', { base: '/' + cat.key, extra: q ? '&q=' + encodeURIComponent(q) : '' }) %>
     <% } %>
     <% if (listings.length) { %>
-      <div class="section-head" style="margin-top:2rem"><h2>Bất động sản đang bán</h2><a href="/san-pham-bds">Xem tất cả →</a></div>
+      <div class="mt-2 section-head"><h2>Bất động sản đang bán</h2><a href="/san-pham-bds">Xem tất cả →</a></div>
       <div class="grid"><% listings.forEach(function (l) { %><%- include('partials/listing_card', { l: l }) %><% }) %></div>
     <% } %>
   </div>

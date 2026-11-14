@@ -49,7 +49,7 @@
     <% }) %>
   </div>
 
-  <div class="section-head" style="margin-top:2.2rem"><h2>Các dịch vụ khác</h2></div>
+  <div class="mt-22 section-head"><h2>Các dịch vụ khác</h2></div>
   <div class="loan-grid">
     <% services.filter(function (x) { return x.flag !== 'hot'; }).forEach(function (x) { %>
     <article class="card loan-card" id="<%= x.key %>"><div class="card-body">
@@ -63,15 +63,15 @@
     <% }) %>
   </div>
 
-  <div class="card loan-common" style="margin-top:2rem"><div class="card-body">
+  <div class="mt-2 card loan-common"><div class="card-body">
     <h2>Vì sao chọn chuyển tiền quốc tế tại LPBank?</h2>
-    <div class="loan-grid" style="margin-top:.6rem">
+    <div class="mt-06 loan-grid">
       <% why.forEach(function (w) { %><div><h3><%= w[0] %> <%= w[1] %></h3><p class="muted"><%= w[2] %></p></div><% }) %>
     </div>
     <p class="muted"><small>Tỷ giá, phí và hồ sơ cụ thể thay đổi theo từng thời điểm, quốc gia, đồng tiền và mục đích chuyển tiền. Vui lòng liên hệ để được cập nhật thông tin hiện hành. Các ví dụ chỉ mang tính minh hoạ, tên và tình huống là giả định. Nội dung tham khảo từ trang lpbank.com.vn.</small></p>
   </div></div>
 
-  <div class="card" id="dang-ky" style="margin-top:2rem"><div class="card-body">
+  <div class="mt-2 card" id="dang-ky"><div class="card-body">
     <h2>Để lại số điện thoại, tôi sẽ gọi tư vấn</h2>
     <p class="muted">Miễn phí, không ràng buộc. Tôi sẽ hướng dẫn hồ sơ, báo tỷ giá hiện hành và hỗ trợ thực hiện giao dịch.</p>
     <form class="form" method="post" action="/chuyen-tien-quoc-te">
