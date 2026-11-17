@@ -29,7 +29,9 @@
 
   <div class="loan-grid">
     <% loans.forEach(function (l) { %>
-    <article class="card loan-card" id="<%= l.key %>"><div class="card-body">
+    <article class="card loan-card" id="<%= l.key %>">
+      <% if (l.image) { %><img class="loan-img" src="<%= l.image %>" alt="<%= l.name %>" width="800" height="450" loading="lazy"><% } %>
+      <div class="card-body">
       <span class="tag"><%= l.tag %></span>
       <h2><%= l.icon %> <%= l.name %></h2>
       <p><%= l.summary %></p>

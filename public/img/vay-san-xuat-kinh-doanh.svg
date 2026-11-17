@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Vay sản xuất kinh doanh cá nhân, hộ kinh doanh">
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf1dc"/><stop offset="1" stop-color="#f7d9a4"/></linearGradient></defs>
+<rect width="800" height="450" fill="url(#sky)"/>
+<rect y="380" width="800" height="70" fill="#7a3a1a"/>
+<!-- shop -->
+<rect x="150" y="190" width="400" height="190" fill="#fffaf0" stroke="#7a3a1a" stroke-width="5"/>
+<rect x="150" y="150" width="400" height="50" fill="#a8452a" stroke="#7a3a1a" stroke-width="5"/>
+<text x="350" y="186" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="28" fill="#fffaf0" letter-spacing="3">CỬA HÀNG</text>
+<!-- awning stripes -->
+<g><path d="M140 200 H560 L545 240 H155Z" fill="#f2b84b" stroke="#7a3a1a" stroke-width="4" stroke-linejoin="round"/>
+<g fill="#fffaf0" opacity=".9"><path d="M190 200 h35 l-5 40 h-25z"/><path d="M260 200 h35 l-5 40 h-25z"/><path d="M330 200 h35 l-5 40 h-25z"/><path d="M400 200 h35 l-5 40 h-25z"/><path d="M470 200 h35 l-5 40 h-25z"/></g></g>
+<!-- window with goods -->
+<rect x="180" y="265" width="170" height="115" fill="#bfe3f2" stroke="#7a3a1a" stroke-width="4"/>
+<rect x="195" y="330" width="40" height="50" fill="#a8452a"/><rect x="245" y="315" width="40" height="65" fill="#4f8a4b"/><rect x="295" y="340" width="40" height="40" fill="#f2b84b"/>
+<!-- door -->
+<rect x="400" y="265" width="110" height="115" fill="#7a3a1a"/><rect x="412" y="277" width="86" height="103" fill="#9a5326"/><circle cx="486" cy="330" r="4" fill="#f2b84b"/>
+<!-- crates -->
+<g stroke="#7a3a1a" stroke-width="3"><rect x="580" y="320" width="70" height="60" fill="#c98f5a"/><rect x="650" y="340" width="60" height="40" fill="#d9a86a"/><rect x="600" y="262" width="60" height="58" fill="#b87a45"/></g>
+<!-- growth chart -->
+<g transform="translate(640 120)"><rect x="-70" y="-60" width="140" height="100" rx="10" fill="#fffaf0" stroke="#7a3a1a" stroke-width="4"/>
+<rect x="-52" y="10" width="20" height="20" fill="#d9a86a"/><rect x="-22" y="-5" width="20" height="35" fill="#c98f5a"/><rect x="8" y="-22" width="20" height="52" fill="#b87a45"/>
+<path d="M-55 0 L-20 -20 L10 -35 L50 -50" fill="none" stroke="#4f8a4b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><polygon points="55,-56 38,-52 50,-38" fill="#4f8a4b"/></g>
+<!-- coin -->
+<circle cx="90" cy="345" r="30" fill="#f2b84b" stroke="#7a3a1a" stroke-width="4"/><text x="90" y="356" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="32" fill="#7a3a1a">₫</text>
+<circle cx="90" cy="150" r="40" fill="#f2b84b" opacity=".85"/>
+</svg>

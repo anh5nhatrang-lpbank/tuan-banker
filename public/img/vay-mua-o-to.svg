@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Vay mua ô tô">
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf1dc"/><stop offset="1" stop-color="#f7d9a4"/></linearGradient></defs>
+<rect width="800" height="450" fill="url(#sky)"/>
+<circle cx="130" cy="100" r="44" fill="#f2b84b" opacity=".9"/>
+<g fill="#fff" opacity=".85"><ellipse cx="520" cy="80" rx="64" ry="18"/><ellipse cx="560" cy="68" rx="38" ry="13"/></g>
+<!-- hills -->
+<path d="M0 300 Q150 230 300 290 T600 280 T800 290 V450 H0Z" fill="#d9a86a"/>
+<path d="M0 340 Q200 290 400 330 T800 320 V450 H0Z" fill="#c4894c"/>
+<!-- road -->
+<rect y="355" width="800" height="95" fill="#5b3a22"/>
+<g fill="#fdf1dc"><rect x="40" y="398" width="70" height="8"/><rect x="190" y="398" width="70" height="8"/><rect x="340" y="398" width="70" height="8"/><rect x="490" y="398" width="70" height="8"/><rect x="640" y="398" width="70" height="8"/></g>
+<!-- shadow -->
+<ellipse cx="400" cy="368" rx="230" ry="14" fill="#000" opacity=".25"/>
+<!-- car body -->
+<path d="M150 335 L150 295 Q150 275 175 270 L275 262 Q310 200 370 195 L470 195 Q520 200 548 262 L630 272 Q655 278 655 300 L655 335 Z" fill="#a8452a" stroke="#7a3a1a" stroke-width="5" stroke-linejoin="round"/>
+<!-- windows -->
+<path d="M300 258 Q325 215 375 213 L400 213 L400 258Z" fill="#bfe3f2" stroke="#7a3a1a" stroke-width="4" stroke-linejoin="round"/>
+<path d="M415 213 L465 213 Q500 217 520 258 L415 258Z" fill="#bfe3f2" stroke="#7a3a1a" stroke-width="4" stroke-linejoin="round"/>
+<line x1="407" y1="213" x2="407" y2="300" stroke="#7a3a1a" stroke-width="4"/>
+<rect x="420" y="285" width="34" height="8" rx="4" fill="#7a3a1a"/><rect x="345" y="285" width="34" height="8" rx="4" fill="#7a3a1a"/>
+<!-- lights -->
+<path d="M628 288 h22 v22 h-22z" fill="#f2b84b" stroke="#7a3a1a" stroke-width="3"/><rect x="152" y="292" width="16" height="18" fill="#e25a3b" stroke="#7a3a1a" stroke-width="3"/>
+<!-- wheels -->
+<g><circle cx="243" cy="338" r="44" fill="#2e1c10"/><circle cx="243" cy="338" r="24" fill="#d8c7a8"/><circle cx="243" cy="338" r="8" fill="#7a3a1a"/>
+<circle cx="563" cy="338" r="44" fill="#2e1c10"/><circle cx="563" cy="338" r="24" fill="#d8c7a8"/><circle cx="563" cy="338" r="8" fill="#7a3a1a"/></g>
+<!-- price tag / coin -->
+<g transform="translate(655 120) rotate(12)"><rect x="-55" y="-30" width="110" height="60" rx="10" fill="#fffaf0" stroke="#7a3a1a" stroke-width="4"/><circle cx="-33" cy="-8" r="6" fill="#7a3a1a"/><rect x="-14" y="-12" width="56" height="9" rx="4" fill="#a8452a"/><rect x="-14" y="6" width="38" height="9" rx="4" fill="#d9a86a"/></g>
+<circle cx="90" cy="410" r="24" fill="#f2b84b" stroke="#7a3a1a" stroke-width="4"/><text x="90" y="419" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="26" fill="#7a3a1a">₫</text>
+</svg>

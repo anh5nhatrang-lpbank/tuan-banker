@@ -394,3 +394,5 @@ body.pm-lock-scroll { overflow: hidden; }
 .rate-table thead th small { display: block; font-weight: 400; font-size: .72rem; opacity: .85; }
 .cta-row { display: flex; flex-wrap: wrap; gap: .6rem; margin: .8rem 0 0; }
 .calc .vip-note { margin: 1.2rem 0 0; }
+
+.loan-card .loan-img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: #fdf1dc; }

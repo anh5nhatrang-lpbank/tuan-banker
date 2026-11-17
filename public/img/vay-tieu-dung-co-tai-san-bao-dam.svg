@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Vay tiêu dùng có tài sản bảo đảm">
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdf1dc"/><stop offset="1" stop-color="#f7d9a4"/></linearGradient></defs>
+<rect width="800" height="450" fill="url(#sky)"/>
+<rect y="370" width="800" height="80" fill="#7a3a1a"/>
+<!-- small house (collateral) -->
+<rect x="90" y="230" width="150" height="110" fill="#fffaf0" stroke="#7a3a1a" stroke-width="4"/>
+<polygon points="72,235 165,160 258,235" fill="#a8452a" stroke="#7a3a1a" stroke-width="4" stroke-linejoin="round"/>
+<rect x="150" y="275" width="34" height="65" fill="#7a3a1a"/><rect x="105" y="255" width="30" height="30" fill="#bfe3f2" stroke="#7a3a1a" stroke-width="3"/><rect x="195" y="255" width="30" height="30" fill="#bfe3f2" stroke="#7a3a1a" stroke-width="3"/>
+<!-- shield -->
+<g transform="translate(400 215)"><path d="M0 -100 L85 -70 V10 Q85 80 0 115 Q-85 80 -85 10 V-70Z" fill="#f2b84b" stroke="#7a3a1a" stroke-width="6" stroke-linejoin="round"/>
+<path d="M0 -75 L62 -53 V8 Q62 60 0 88 Q-62 60 -62 8 V-53Z" fill="#fffaf0" stroke="#7a3a1a" stroke-width="3"/>
+<path d="M-28 5 L-8 27 L32 -20" fill="none" stroke="#4f8a4b" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></g>
+<!-- shopping bag -->
+<g transform="translate(570 250)"><path d="M-60 -50 H60 L72 100 H-72Z" fill="#a8452a" stroke="#7a3a1a" stroke-width="5" stroke-linejoin="round"/><path d="M-30 -50 Q-30 -95 0 -95 Q30 -95 30 -50" fill="none" stroke="#7a3a1a" stroke-width="6"/><circle cx="0" cy="25" r="26" fill="#f2b84b" stroke="#7a3a1a" stroke-width="4"/><text x="0" y="35" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="28" fill="#7a3a1a">₫</text></g>
+<!-- laptop -->
+<g transform="translate(690 330)"><rect x="-50" y="-60" width="100" height="62" rx="5" fill="#2e1c10"/><rect x="-43" y="-53" width="86" height="48" fill="#bfe3f2"/><rect x="-62" y="2" width="124" height="10" rx="4" fill="#9a7a5b"/></g>
+<!-- coins stack -->
+<g><ellipse cx="330" cy="352" rx="30" ry="10" fill="#d99a2b" stroke="#7a3a1a" stroke-width="3"/><ellipse cx="330" cy="340" rx="30" ry="10" fill="#f2b84b" stroke="#7a3a1a" stroke-width="3"/><ellipse cx="330" cy="328" rx="30" ry="10" fill="#f2b84b" stroke="#7a3a1a" stroke-width="3"/></g>
+<g fill="#f2b84b" opacity=".85"><circle cx="300" cy="70" r="6"/><circle cx="510" cy="60" r="8"/><circle cx="700" cy="110" r="5"/></g>
+</svg>
