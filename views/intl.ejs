@@ -38,7 +38,9 @@
   <div class="section-head"><h2>Dịch vụ được quan tâm nhiều</h2></div>
   <div class="loan-grid">
     <% services.filter(function (x) { return x.flag === 'hot'; }).forEach(function (x) { %>
-    <article class="card loan-card intl-hot" id="<%= x.key %>"><div class="card-body">
+    <article class="card loan-card intl-hot" id="<%= x.key %>">
+      <% if (x.image) { %><img class="loan-img" src="<%= x.image %>" alt="<%= x.name %>" width="800" height="450" loading="lazy"><% } %>
+      <div class="card-body">
       <span class="tag">⭐ <%= x.tag %></span>
       <h2><%= x.icon %> <%= x.name %></h2>
       <p><%= x.summary %></p>
@@ -52,7 +54,9 @@
   <div class="mt-22 section-head"><h2>Các dịch vụ khác</h2></div>
   <div class="loan-grid">
     <% services.filter(function (x) { return x.flag !== 'hot'; }).forEach(function (x) { %>
-    <article class="card loan-card" id="<%= x.key %>"><div class="card-body">
+    <article class="card loan-card" id="<%= x.key %>">
+      <% if (x.image) { %><img class="loan-img" src="<%= x.image %>" alt="<%= x.name %>" width="800" height="450" loading="lazy"><% } %>
+      <div class="card-body">
       <span class="tag"><%= x.tag %></span>
       <h2><%= x.icon %> <%= x.name %></h2>
       <p><%= x.summary %></p>
