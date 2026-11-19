@@ -181,22 +181,5 @@
  <p class="ht-disc">Thông tin mang tính tham khảo, có thể thay đổi theo quy định của LPBank từng thời kỳ. Việc cho vay phụ thuộc thẩm định và phê duyệt của ngân hàng. Lãi suất và phí thực hiện theo quy định hiện hành của LPBank; vui lòng liên hệ để được tư vấn. Không giao dịch qua tài khoản cá nhân.</p>
 </div></div>
 </div>
-<script>
-(function(){
- var A=document.getElementById('rA'),G=document.getElementById('rG'),M=document.getElementById('rM');
- function fmt(n){return n.toLocaleString('vi-VN',{maximumFractionDigits:1})}
- function upd(){
-  var age=+G.value, cap=Math.min(84,Math.floor((75-age)*12/6)*6);
-  if(cap<12)cap=Math.max(6,(75-age)*12);
-  M.max=cap; if(+M.value>cap)M.value=cap;
-  var a=+A.value,m=+M.value;
-  document.getElementById('vA').textContent=a+' triệu';
-  document.getElementById('vG').textContent=age+' tuổi';
-  document.getElementById('vM').textContent=m+' tháng';
-  document.getElementById('out').textContent=fmt(a/m)+' triệu';
-  document.getElementById('cap').textContent='Với tuổi '+age+', thời gian vay tối đa khoảng '+cap+' tháng (không quá 84 tháng, tuổi kết thúc không quá 75).';
- }
- [A,G,M].forEach(function(e){e.addEventListener('input',upd)});upd();
-})();
-</script>
+<script src="/js/huu-tri.js?v=<%= assetV %>"></script>
 <%- include('partials/foot') %>
