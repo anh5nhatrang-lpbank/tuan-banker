@@ -486,6 +486,44 @@ app.post('/san-pham-vay', formLimiter, (req, res) => {
   res.redirect('/san-pham-vay');
 });
 
+// ---------- danh mục Cho vay Hưu trí (trang riêng) + form để lại số điện thoại ----------
+// Chỉ đăng thông tin dành cho khách hàng; không công bố lãi suất và các quy định nội bộ của LPBank.
+const HT_AMOUNTS = ['Dưới 100 triệu', '100 - 300 triệu', '300 - 500 triệu'];
+const HT_TIMES = ['Sáng (8h00 - 12h00)', 'Chiều (13h30 - 17h00)', 'Tối (sau 18h00)', 'Bất cứ lúc nào'];
+
+app.get('/cho-vay-huu-tri', (req, res) =>
+  res.render('huu-tri', {
+    title: 'Cho vay Hưu trí LPBank: vay tín chấp đến 500 triệu',
+    desc: 'Vay tín chấp dành cho người hưởng lương hưu tại LPBank: hạn mức đến 500 triệu, thời hạn đến 84 tháng, không cần tài sản bảo đảm. Tư vấn tại LPBank Diên Khánh.',
+  })
+);
+
+app.post('/cho-vay-huu-tri', formLimiter, (req, res) => {
+  if (req.body.website) return res.redirect('/cho-vay-huu-tri'); // honeypot
+  const b = req.body;
+  const name = clip(b.name, 60);
+  const phone = clip(b.phone, 20);
+  if (!name || !/^[0-9+\s.()-]{8,20}$/.test(phone)) {
+    flash(req, 'error', 'Vui lòng nhập họ tên và số điện thoại hợp lệ.');
+    return res.redirect('/cho-vay-huu-tri#dang-ky');
+  }
+  const ref = 'Đăng ký vay: Cho vay Hưu trí';
+  const extra = [
+    ['Dịch vụ quan tâm', 'Cho vay Hưu trí'],
+    ['Khu vực', clip(b.area, 80)],
+    ['Số tiền dự kiến vay', pick(b.amount, HT_AMOUNTS)],
+    ['Giờ tiện liên lạc', pick(b.contactTime, HT_TIMES)],
+  ].filter((r) => r[1]);
+  const message = extra.slice(1).map(([k, v]) => `${k}: ${v}`).join('\n');
+  db().messages.push({
+    id: store.nextId('messages'), name, phone, message, ref, read: false, createdAt: new Date().toISOString(),
+  });
+  store.save();
+  notifyNewMessage({ name, phone, message, ref, extra });
+  flash(req, 'ok', 'Đã gửi thông tin. Tôi sẽ liên hệ lại với bạn sớm nhất!');
+  res.redirect('/cho-vay-huu-tri');
+});
+
 // ---------- danh mục chuyển tiền quốc tế & ngoại tệ + form để lại số điện thoại ----------
 const INTL_AMOUNTS = ['Dưới 100 triệu', '100 - 500 triệu', '500 triệu - 1 tỷ', 'Trên 1 tỷ'];
 const INTL_TIMES = ['Sáng (8h00 - 12h00)', 'Chiều (13h30 - 17h00)', 'Tối (sau 18h00)', 'Bất cứ lúc nào'];
@@ -680,7 +718,7 @@ app.get('/robots.txt', (req, res) => {
 
 app.get('/sitemap.xml', (req, res) => {
   const base = SITE_URL || `${req.protocol}://${req.get('host')}`;
-  const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/hinh-anh', '/san-pham-bds', '/san-pham-vay', '/lai-suat', '/chuyen-tien-quoc-te', '/cong-dong', '/gioi-thieu', '/lien-he']
+  const urls = ['/', ...Object.keys(CATS).map((k) => '/' + k), '/hinh-anh', '/san-pham-bds', '/san-pham-vay', '/cho-vay-huu-tri', '/lai-suat', '/chuyen-tien-quoc-te', '/cong-dong', '/gioi-thieu', '/lien-he']
     .concat(publishedPosts().map((p) => '/bai-viet/' + p.slug))
     .concat(activeListings().map((l) => '/san-pham-bds/' + l.slug));
   res

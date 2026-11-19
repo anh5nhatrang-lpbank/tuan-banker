@@ -1,0 +1,202 @@
+<%- include('partials/head') %>
+<link rel="stylesheet" href="/css/huu-tri.css?v=<%= assetV %>">
+<div class="ht-page">
+<div class="ht-hero">
+ <div class="ht-wrap ht-grid">
+  <div>
+   <span class="ht-badge">🌅 Sản phẩm nổi bật · LPBank</span>
+   <h1>Cho vay <em>Hưu trí</em><br>Vốn vững vàng, tuổi vàng an yên</h1>
+   <p class="ht-lead">Vay tín chấp dành riêng cho người hưởng lương hưu và trợ cấp bảo hiểm xã hội hằng tháng. Lo việc gia đình, sức khỏe, nhà cửa nhẹ nhàng, không cần tài sản bảo đảm.</p>
+   <div class="ht-cta">
+    <a class="ht-btn ht-primary" href="#dang-ky">Để lại thông tin nhận tư vấn</a>
+    <a class="ht-btn ht-ghost" href="tel:<%= (s.phone||'0905491125').replace(/\s/g, '') %>">📞 Gọi <%= s.phone || '0905 491 125' %></a>
+   </div>
+  </div>
+  <!-- Minh hoạ: cặp vợ chồng hưu trí trước ngôi nhà, hoàng hôn -->
+  <svg viewBox="0 0 520 380" role="img" aria-label="Minh họa cặp vợ chồng nghỉ hưu bên ngôi nhà nhỏ và hàng cây lúc hoàng hôn">
+   <defs>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffe9b0"/><stop offset="1" stop-color="#f5b94c"/></radialGradient>
+   </defs>
+   <circle cx="400" cy="120" r="110" fill="#ffd27a" opacity=".18"/>
+   <circle cx="400" cy="120" r="70" fill="url(#sun)"/>
+   <path d="M0 300 Q130 250 260 285 T520 270 V380 H0Z" fill="#2f8a5a"/>
+   <path d="M0 330 Q150 290 300 325 T520 315 V380 H0Z" fill="#256f48"/>
+   <!-- nhà -->
+   <rect x="300" y="190" width="150" height="100" rx="6" fill="#fff3dc"/>
+   <path d="M285 195 L375 120 L465 195Z" fill="#c0562b"/>
+   <rect x="352" y="225" width="46" height="65" rx="4" fill="#8a4a24"/>
+   <rect x="315" y="212" width="28" height="28" rx="3" fill="#8fd0e0"/>
+   <rect x="410" y="212" width="28" height="28" rx="3" fill="#8fd0e0"/>
+   <rect x="400" y="140" width="18" height="34" fill="#8a4a24"/>
+   <!-- cây -->
+   <rect x="58" y="205" width="12" height="90" fill="#6b3f22"/>
+   <circle cx="64" cy="190" r="48" fill="#3aa56b"/><circle cx="36" cy="215" r="30" fill="#2f8a5a"/><circle cx="96" cy="212" r="32" fill="#2f8a5a"/>
+   <!-- ông -->
+   <g>
+    <circle cx="170" cy="190" r="22" fill="#f2c9a0"/>
+    <path d="M148 186 Q170 158 192 186 Q180 172 170 172 Q160 172 148 186Z" fill="#e8e3da"/>
+    <rect x="150" y="212" width="40" height="64" rx="16" fill="#1f7a74"/>
+    <rect x="154" y="270" width="14" height="48" rx="6" fill="#3b2a1e"/><rect x="174" y="270" width="14" height="48" rx="6" fill="#3b2a1e"/>
+    <path d="M190 230 L214 262" stroke="#f2c9a0" stroke-width="9" stroke-linecap="round"/>
+    <path d="M212 252 L218 318" stroke="#6b3f22" stroke-width="5" stroke-linecap="round"/>
+   </g>
+   <!-- bà -->
+   <g>
+    <circle cx="250" cy="196" r="20" fill="#f2c9a0"/>
+    <path d="M229 194 Q250 164 271 194 Q262 178 250 178 Q238 178 229 194Z" fill="#d9d3c8"/>
+    <circle cx="250" cy="170" r="10" fill="#d9d3c8"/>
+    <path d="M230 218 H270 L280 300 H220Z" fill="#e8a93b"/>
+    <rect x="232" y="296" width="12" height="24" rx="5" fill="#3b2a1e"/><rect x="256" y="296" width="12" height="24" rx="5" fill="#3b2a1e"/>
+    <path d="M232 230 L204 246" stroke="#f2c9a0" stroke-width="9" stroke-linecap="round"/>
+   </g>
+   <!-- tim -->
+   <path d="M210 150 c-8-12-26 0-14 14 l14 14 l14-14 c12-14-6-26-14-14z" fill="#ff7a7a" transform="translate(0,-18)"/>
+   <!-- đồng xu -->
+   <g transform="translate(118,110)"><circle r="22" fill="#f6c453" stroke="#c98a1c" stroke-width="3"/><text y="7" text-anchor="middle" font-size="22" font-weight="800" fill="#8a5a0f" font-family="sans-serif">₫</text></g>
+   <g transform="translate(70,70)"><circle r="14" fill="#f6c453" stroke="#c98a1c" stroke-width="2.5"/><text y="5" text-anchor="middle" font-size="14" font-weight="800" fill="#8a5a0f" font-family="sans-serif">₫</text></g>
+  </svg>
+ </div>
+</div>
+
+<div class="ht-wrap ht-stats"><div class="ht-row">
+ <div class="ht-stat"><b>500<small> triệu</small></b><span>Hạn mức vay tối đa</span></div>
+ <div class="ht-stat"><b>84<small> tháng</small></b><span>Thời hạn vay tối đa (7 năm)</span></div>
+ <div class="ht-stat"><b>0<small> đồng</small></b><span>Tài sản bảo đảm: vay tín chấp</span></div>
+ <div class="ht-stat"><b>3<small> tháng</small></b><span>Thời gian nhận nợ kể từ khi được duyệt</span></div>
+</div></div>
+
+<div class="ht-sec"><div class="ht-wrap">
+ <div class="ht-eyebrow">Đối tượng vay</div>
+ <h2>Ai có thể vay Hưu trí?</h2>
+ <p class="ht-sub">Sản phẩm dành cho khách hàng cá nhân đang có nguồn thu nhập ổn định từ chế độ bảo hiểm xã hội hằng tháng.</p>
+ <div class="ht-who">
+  <div class="ht-big ht-a"><h3>👴 Người đã nghỉ hưu</h3><p>Đang được hưởng lương hưu hằng tháng theo quy định của pháp luật.</p><span class="ht-tag">🏡</span></div>
+  <div class="ht-big ht-b"><h3>🤝 Người mất sức lao động</h3><p>Người suy giảm khả năng lao động, được chi trả trợ cấp bảo hiểm xã hội hằng tháng.</p><span class="ht-tag">💛</span></div>
+ </div>
+ <div class="ht-conds"><ul>
+  <li>Công dân Việt Nam từ đủ 18 tuổi, đầy đủ năng lực hành vi dân sự</li>
+  <li>Thường trú hoặc tạm trú cùng địa bàn tỉnh/thành với đơn vị LPBank cho vay</li>
+  <li>Có giấy tờ chứng minh đang hưởng lương hưu / trợ cấp BHXH</li>
+  <li>Lương hưu đang nhận qua LPBank, hoặc cam kết chuyển về tài khoản LPBank</li>
+  <li>Lịch sử tín dụng tốt, không có nợ xấu</li>
+  <li>Tuổi khi kết thúc khoản vay không quá 75</li>
+ </ul></div>
+</div></div>
+
+<div class="ht-sec ht-needs"><div class="ht-wrap">
+ <div class="ht-eyebrow">Nhu cầu vốn</div>
+ <h2>Vốn cho cuộc sống của bạn và gia đình</h2>
+ <p class="ht-sub">Khoản vay phục vụ nhu cầu đời sống của khách hàng và người thân trong gia đình (bố mẹ, vợ/chồng, con, anh chị em ruột). Vốn vay phải được sử dụng hợp pháp, đúng mục đích đã cam kết với ngân hàng.</p>
+ <div class="ht-cards ht-c3">
+  <div class="ht-card"><div class="ht-ico">🩺</div><h3>Chăm sóc sức khỏe</h3><p>Khám chữa bệnh, điều trị dài ngày, mua thiết bị y tế cho bản thân và người thân.</p></div>
+  <div class="ht-card"><div class="ht-ico">🏠</div><h3>Sửa sang tổ ấm</h3><p>Sửa chữa, cải tạo nhà ở, mua sắm nội thất, thiết bị gia dụng.</p></div>
+  <div class="ht-card"><div class="ht-ico">🎓</div><h3>Con cháu học hành</h3><p>Học phí, chi phí học tập, hỗ trợ con cháu trong những bước ngoặt cuộc đời.</p></div>
+  <div class="ht-card"><div class="ht-ico">💍</div><h3>Việc hiếu hỉ gia đình</h3><p>Cưới hỏi, sinh nhật, giỗ chạp, họp mặt dòng họ trọn vẹn nghĩa tình.</p></div>
+  <div class="ht-card"><div class="ht-ico">✈️</div><h3>Du lịch dưỡng già</h3><p>Những chuyến đi thăm con cháu, thăm quê, du lịch cùng bạn bè.</p></div>
+  <div class="ht-card"><div class="ht-ico">🧰</div><h3>Chi tiêu đời sống khác</h3><p>Mua sắm, xoay xở tài chính cần thiết, chủ động không phụ thuộc người khác.</p></div>
+ </div>
+ <p class="ht-note">* Các nhóm trên là ví dụ minh họa cho "nhu cầu đời sống". Mục đích vay cụ thể được xác định khi làm hồ sơ cùng chuyên viên.</p>
+</div></div>
+
+<div class="ht-strength"><div class="ht-wrap">
+ <div class="ht-eyebrow">Điểm mạnh sản phẩm</div>
+ <h2>Vì sao chọn Cho vay Hưu trí LPBank?</h2>
+ <p class="ht-sub">Thiết kế riêng cho người hưởng lương hưu: điều kiện rõ ràng, trả nợ nhẹ nhàng, thủ tục gọn.</p>
+ <div class="ht-sgrid">
+  <div class="ht-s"><div class="ht-n">01</div><h3>Vay tín chấp</h3><p>Không cần thế chấp tài sản. Giữ nguyên sổ đỏ, sổ hồng, an tâm sinh hoạt.</p></div>
+  <div class="ht-s"><div class="ht-n">02</div><h3>Hạn mức đến 500 triệu</h3><p>Số tiền cụ thể tùy nhu cầu, thời gian vay và khả năng trả nợ từ lương hưu.</p></div>
+  <div class="ht-s"><div class="ht-n">03</div><h3>Thời hạn dài đến 84 tháng</h3><p>Chia nhỏ nghĩa vụ trả nợ theo tháng, áp lực nhẹ hơn.</p></div>
+  <div class="ht-s"><div class="ht-n">04</div><h3>Trả gốc cố định hằng tháng</h3><p>Biết trước số gốc phải trả mỗi tháng, dễ cân đối chi tiêu. Lãi tính hằng tháng theo dư nợ.</p></div>
+  <div class="ht-s"><div class="ht-n">05</div><h3>Vay từng lần, linh hoạt nhận nợ</h3><p>Được nhận nợ một hoặc nhiều lần trong 3 tháng kể từ ngày khoản vay được phê duyệt.</p></div>
+  <div class="ht-s"><div class="ht-n">06</div><h3>Hồ sơ gọn, được hỗ trợ</h3><p>Khoản vay đến 400 triệu chỉ cần bảng kê khai và cam kết mục đích sử dụng vốn. Nhận lương hưu qua LPBank, ngân hàng hỗ trợ xuất sao kê giúp bạn.</p></div>
+ </div>
+</div></div>
+
+<div class="ht-sec"><div class="ht-wrap">
+ <div class="ht-eyebrow">Tính nhanh</div>
+ <h2>Ước tính số gốc phải trả mỗi tháng</h2>
+ <p class="ht-sub">Công cụ tham khảo nhanh số gốc hằng tháng (chưa gồm lãi). Lãi suất và số tiền được duyệt cụ thể sẽ do chuyên viên tư vấn theo hồ sơ của bạn.</p>
+ <div class="ht-calc">
+  <div>
+   <div class="ht-field"><label>Số tiền muốn vay <span id="vA">200 triệu</span></label><input id="rA" type="range" min="20" max="500" step="10" value="200"></div>
+   <div class="ht-field"><label>Tuổi hiện tại <span id="vG">60 tuổi</span></label><input id="rG" type="range" min="50" max="74" step="1" value="60"></div>
+   <div class="ht-field"><label>Thời gian vay <span id="vM">60 tháng</span></label><input id="rM" type="range" min="12" max="84" step="6" value="60"></div>
+  </div>
+  <div class="ht-result">
+   <small>Số gốc phải trả mỗi tháng (ước tính)</small>
+   <div class="ht-big" id="out">3,3 triệu</div>
+   <small id="cap">Tối đa 84 tháng, tuổi kết thúc khoản vay không quá 75.</small>
+   <div class="ht-warn">* Chưa bao gồm lãi. Kết quả mang tính tham khảo, không phải cam kết cho vay.</div>
+  </div>
+ </div>
+</div></div>
+
+<div class="ht-sec"><div class="ht-wrap">
+ <div class="ht-eyebrow">Danh mục hồ sơ</div>
+ <h2>Cần chuẩn bị những gì?</h2>
+ <p class="ht-sub">Danh mục tham khảo. Chuyên viên sẽ hướng dẫn chi tiết theo từng trường hợp (nhận lương hưu tiền mặt, qua thẻ hoặc qua tài khoản).</p>
+ <div class="ht-docs">
+  <div class="ht-doc"><h3>🪪 Hồ sơ pháp lý &amp; chứng minh lương hưu</h3><ul>
+   <li>CCCD / Căn cước / hộ chiếu của khách hàng</li>
+   <li>Giấy tờ xác nhận nơi cư trú theo quy định</li>
+   <li>Quyết định hưởng chế độ hưu trí, giấy chứng nhận hưu trí, phiếu lĩnh lương hoặc thẻ chi trả lương hưu</li>
+   <li>Sao kê tài khoản nhận lương hưu tháng gần nhất (LPBank hỗ trợ xuất nếu nhận lương tại LPBank)</li>
+   <li>Xác nhận của BHXH về tình trạng nhận lương hưu (áp dụng một số trường hợp như mới nghỉ hưu)</li>
+  </ul></div>
+  <div class="ht-doc"><h3>📝 Hồ sơ vay vốn</h3><ul>
+   <li>Giấy đề nghị vay vốn kiêm phương án trả nợ (mẫu của LPBank)</li>
+   <li>Bảng kê khai và cam kết mục đích sử dụng vốn (khoản vay đến 400 triệu)</li>
+   <li>Hợp đồng tín dụng kiêm khế ước nhận nợ</li>
+   <li>Tùy hồ sơ, có thể cần thêm người cùng vay hoặc đồng trách nhiệm trả nợ là vợ/chồng hoặc con ruột</li>
+  </ul></div>
+ </div>
+</div></div>
+
+<div class="ht-sec"><div class="ht-wrap">
+ <div class="ht-eyebrow">Quy trình</div>
+ <h2>4 bước nhận vốn</h2>
+ <p class="ht-sub">&nbsp;</p>
+ <div class="ht-steps">
+  <div class="ht-step"><div class="ht-dot">1</div><h3>Liên hệ tư vấn</h3><p>Gọi/Zalo để được tư vấn điều kiện và nhu cầu vốn.</p></div>
+  <div class="ht-step"><div class="ht-dot">2</div><h3>Nộp hồ sơ</h3><p>Chuẩn bị giấy tờ theo danh mục, nộp trực tiếp tại LPBank Diên Khánh.</p></div>
+  <div class="ht-step"><div class="ht-dot">3</div><h3>Thẩm định &amp; phê duyệt</h3><p>Ngân hàng đánh giá khả năng trả nợ từ lương hưu và thông báo kết quả.</p></div>
+  <div class="ht-step"><div class="ht-dot">4</div><h3>Nhận vốn</h3><p>Ký hợp đồng và nhận nợ trong 3 tháng kể từ ngày được duyệt.</p></div>
+ </div>
+ <div class="ht-final" id="dang-ky">
+  <div class="ht-final-text"><h2>Sẵn sàng cho kế hoạch của bạn?</h2><p>Để lại số điện thoại, Tuấn Banker sẽ gọi tư vấn hạn mức, lãi suất hiện hành và hồ sơ phù hợp. Giao dịch trực tiếp tại quầy LPBank Diên Khánh, 62 Lạc Long Quân, Diên Khánh, Khánh Hòa.</p>
+   <div class="ht-final-btns">
+    <a class="ht-btn ht-dark" href="tel:<%= (s.phone||'0905491125').replace(/\s/g, '') %>">📞 <%= s.phone || '0905 491 125' %></a>
+    <a class="ht-btn ht-light" href="https://zalo.me/<%= (s.zalo||'0905491125') %>">💬 Chat Zalo</a>
+   </div></div>
+  <form class="ht-form" method="post" action="/cho-vay-huu-tri">
+   <label>Họ và tên<input name="name" maxlength="60" required></label>
+   <label>Số điện thoại<input name="phone" type="tel" maxlength="20" required inputmode="tel"></label>
+   <label>Khu vực (phường/xã)<input name="area" maxlength="80" placeholder="Ví dụ: Diên Khánh"></label>
+   <label>Số tiền dự kiến vay<select name="amount"><option value="">- Chọn -</option><% ['Dưới 100 triệu','100 - 300 triệu','300 - 500 triệu'].forEach(function (t) { %><option><%= t %></option><% }) %></select></label>
+   <label>Giờ tiện liên lạc<select name="contactTime"><option value="">- Chọn -</option><% ['Sáng (8h00 - 12h00)','Chiều (13h30 - 17h00)','Tối (sau 18h00)','Bất cứ lúc nào'].forEach(function (t) { %><option><%= t %></option><% }) %></select></label>
+   <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+   <button class="ht-btn ht-primary" type="submit">Gửi thông tin</button>
+  </form>
+ </div>
+ <p class="ht-disc">Thông tin mang tính tham khảo, có thể thay đổi theo quy định của LPBank từng thời kỳ. Việc cho vay phụ thuộc thẩm định và phê duyệt của ngân hàng. Lãi suất và phí thực hiện theo quy định hiện hành của LPBank; vui lòng liên hệ để được tư vấn. Không giao dịch qua tài khoản cá nhân.</p>
+</div></div>
+</div>
+<script>
+(function(){
+ var A=document.getElementById('rA'),G=document.getElementById('rG'),M=document.getElementById('rM');
+ function fmt(n){return n.toLocaleString('vi-VN',{maximumFractionDigits:1})}
+ function upd(){
+  var age=+G.value, cap=Math.min(84,Math.floor((75-age)*12/6)*6);
+  if(cap<12)cap=Math.max(6,(75-age)*12);
+  M.max=cap; if(+M.value>cap)M.value=cap;
+  var a=+A.value,m=+M.value;
+  document.getElementById('vA').textContent=a+' triệu';
+  document.getElementById('vG').textContent=age+' tuổi';
+  document.getElementById('vM').textContent=m+' tháng';
+  document.getElementById('out').textContent=fmt(a/m)+' triệu';
+  document.getElementById('cap').textContent='Với tuổi '+age+', thời gian vay tối đa khoảng '+cap+' tháng (không quá 84 tháng, tuổi kết thúc không quá 75).';
+ }
+ [A,G,M].forEach(function(e){e.addEventListener('input',upd)});upd();
+})();
+</script>
+<%- include('partials/foot') %>
