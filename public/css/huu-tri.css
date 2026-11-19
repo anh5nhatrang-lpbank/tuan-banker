@@ -12,4 +12,9 @@
 .ht-page .ht-form input,.ht-page .ht-form select{width:100%;padding:11px 12px;border:1px solid #d9c39a;border-radius:10px;font:inherit;background:#fff}
 .ht-page .ht-form button{border:0;cursor:pointer;justify-content:center}
 .ht-page .ht-sec{padding:64px 0 0}
+/* ép màu tiêu đề để không bị CSS chung của website ghi đè */
+.ht-page .ht-hero h1{color:#fff}
+.ht-page .ht-hero h1 em{color:#f6d28b}
+.ht-page .ht-who .ht-big h3,.ht-page .ht-s h3{color:#fff}
+.ht-page .ht-final h2{color:#3b2414}
 @media(max-width:860px){.ht-page .ht-final{grid-template-columns:1fr}}
